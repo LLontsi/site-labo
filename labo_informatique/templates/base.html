@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Laboratoire Informatique{% endblock %}</title>
+    <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Header avec vague -->
+    <header class="header">
+        <div class="particles-container">
+            <!-- Les particules seront ajoutées en JS -->
+        </div>
+        <div class="header-content">
+            <div class="container">
+                <div class="nav-container">
+                    <a href="{% url 'core:home' %}" class="logo">
+                        <img src="{{ STATIC_URL }}images/logo.png" alt="Logo">
+                        <span>Labo Info</span>
+                    </a>
+                    <nav>
+                        <div class="hamburger-menu">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                        <ul class="nav-menu">
+                            <li><a href="{% url 'core:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Accueil</a></li>
+                            <li><a href="{% url 'core:about' %}" {% if 'about' in request.path %}class="active"{% endif %}>À propos</a></li>
+                            <li><a href="{% url 'membres:team' %}" {% if 'membres' in request.path %}class="active"{% endif %}>Équipe</a></li>
+                            <li><a href="{% url 'blogs:liste' %}" {% if 'blogs' in request.path %}class="active"{% endif %}>Blog</a></li>
+                            <li><a href="{% url 'presentations:liste' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Présentations</a></li>
+                            <li
