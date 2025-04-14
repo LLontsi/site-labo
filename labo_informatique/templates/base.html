@@ -17,7 +17,7 @@
         <div class="header-content">
             <div class="container">
                 <div class="nav-container">
-                    <a href="{% url 'core:home' %}" class="logo">
+                    <a href="{% url 'labo:home' %}" class="logo">
                         <img src="{{ STATIC_URL }}images/logo.png" alt="Logo">
                         <span>Labo Info</span>
                     </a>
@@ -29,12 +29,12 @@
                             <span></span>
                         </div>
                         <ul class="nav-menu">
-                            <li><a href="{% url 'core:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Accueil</a></li>
-                            <li><a href="{% url 'core:about' %}" {% if 'about' in request.path %}class="active"{% endif %}>À propos</a></li>
-                            <li><a href="{% url 'membres:team' %}" {% if 'membres' in request.path %}class="active"{% endif %}>Équipe</a></li>
-                            <li><a href="{% url 'blogs:liste' %}" {% if 'blogs' in request.path %}class="active"{% endif %}>Blog</a></li>
-                            <li><a href="{% url 'presentations:liste' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Présentations</a></li>
-                            <li><a href="{% url 'core:contact' %}" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>
+                            <li><a href="{% url 'labo:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Accueil</a></li>
+                            <li><a href="{% url 'labo:about' %}" {% if 'about' in request.path %}class="active"{% endif %}>À propos</a></li>
+                            <li><a href="{% url 'labo:team' %}" {% if 'membres' in request.path %}class="active"{% endif %}>Équipe</a></li>
+                            <li><a href="{% url 'labo:liste' %}" {% if 'blogs' in request.path %}class="active"{% endif %}>Blog</a></li>
+                            <li><a href="{% url 'labo:liste' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Présentations</a></li>
+                            <li><a href="{% url 'labo:contact' %}" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>
                        </ul>
                    </nav>
                </div>
@@ -78,19 +78,19 @@
                    <div class="footer-col">
                        <h4>Liens rapides</h4>
                        <ul>
-                           <li><a href="{% url 'core:home' %}">Accueil</a></li>
-                           <li><a href="{% url 'core:about' %}">À propos</a></li>
-                           <li><a href="{% url 'membres:team' %}">Équipe</a></li>
-                           <li><a href="{% url 'blogs:liste' %}">Blog</a></li>
-                           <li><a href="{% url 'presentations:liste' %}">Présentations</a></li>
-                           <li><a href="{% url 'core:contact' %}">Contact</a></li>
+                           <li><a href="{% url 'labo:home' %}">Accueil</a></li>
+                           <li><a href="{% url 'labo:about' %}">À propos</a></li>
+                           <li><a href="{% url 'labo:team' %}">Équipe</a></li>
+                           <li><a href="{% url 'labo:liste' %}">Blog</a></li>
+                           <li><a href="{% url 'labo:liste' %}">Présentations</a></li>
+                           <li><a href="{% url 'labo:contact' %}">Contact</a></li>
                        </ul>
                    </div>
                    <div class="footer-col">
                        <h4>Contact</h4>
                        <ul>
-                           <li><i class="fas fa-map-marker-alt"></i> 123 Rue de l'Innovation, 75000 Paris</li>
-                           <li><i class="fas fa-phone"></i> +33 1 23 45 67 89</li>
+                           <li><i class="fas fa-map-marker-alt"></i> fmsb ,yaounde, cameroun</li>
+                           <li><i class="fas fa-phone"></i> +237 670 92 83 63</li>
                            <li><i class="fas fa-envelope"></i> contact@labo-info.fr</li>
                        </ul>
                    </div>
