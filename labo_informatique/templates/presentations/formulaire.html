@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if action == 'Créer' %}Nouvelle présentation{% else %}Modifier la présentation{% endif %} | Laboratoire Informatique{% endblock %}
+
+{% block content %}
+<section class="form-section section">
+    <div class="container">
+        <h1 class="section-title">{% if action == 'Créer' %}Ajouter une nouvelle présentation{% else %}Modifier la présentation{% endif %}</h1>
+        
+        <div class="form-card">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.titre.id_for_label }}" class="form-label">Titre</label>
+                    {{ form.titre }}
+                    {% if form.titre.errors %}
+                    <div class="form-error">{{ form.titre.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}" class="form-label">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                    <div class="form-error">{{ form.description.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group form-group-half">
+                        <label for="{{ form.theme.id_for_label }}" class="form-label">Thème</label>
+                        {{ form.theme }}
+                        {% if form.theme.errors %}
+                        <div class="form-error">{{ form.theme.errors }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="form-group form-group-half">
+                        <label for="{{ form.type_fichier.id_for_label }}" class="form-label">Type de fichier</label>
+                        {{ form.type_fichier }}
+                        {% if form.type_fichier.errors %}
+                        <div class="form-error">{{ form.type_fichier.errors }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.fichier.id_for_label }}" class="form-label">Fichier principal</label>
+                    {% if presentation and presentation.fichier %}
+                    <div class="current-file">
+                        Fichier actuel : <a href="{{ presentation.fichier.url }}" target="_blank">{{ presentation.fichier.name }}</a>
+                    </div>
+                    {% endif %}
+                    {{ form.fichier }}
+                    {% if form.fichier.errors %}
+                    <div class="form-error">{{ form.fichier.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.images_supplementaires.id_for_label }}" class="form-label">Images supplémentaires</label>
+                    {{ form.images_supplementaires }}
+                    <small class="form-help">Vous pouvez sélectionner plusieurs images à la fois.</small>
+                    {% if form.images_supplementaires.errors %}
+                    <div class="form-error">{{ form.images_supplementaires.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                {% if images %}
+                <div class="current-images">
+                    <h3>Images actuelles</h3>
+                    <div class="images-grid">
+                        {% for image in images %}
+                        <div class="image-item">
+                            <img src="{{ image.image.url }}" alt="{{ image.legende|default:'Image' }}">
+                            <div class="image-actions">
+                                <a href="{% url 'presentations:delete_image' image.id %}" class="btn btn-danger btn-sm" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cette image ?')">Supprimer</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">{% if action == 'Créer' %}Créer la présentation{% else %}Enregistrer les modifications{% endif %}</button>
+                    <a href="{% if presentation %}{% url 'presentations:detail' presentation.id %}{% else %}{% url 'presentations:liste' %}{% endif %}" class="btn btn-outline">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

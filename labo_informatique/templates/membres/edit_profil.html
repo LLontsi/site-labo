@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Modifier mon profil | Laboratoire Informatique{% endblock %}
+
+{% block content %}
+<section class="profile-edit-section section">
+    <div class="container">
+        <h1 class="section-title animate-on-scroll">Modifier mon profil</h1>
+        
+        <div class="form-card animate-on-scroll delay-200">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="form-group">
+                    <label for="{{ form.photo.id_for_label }}" class="form-label">Photo de profil</label>
+                    {% if user.profil.photo %}
+                    <div class="current-photo">
+                        <img src="{{ user.profil.photo.url }}" alt="{{ user.profil }}" class="profile-photo-preview">
+                    </div>
+                    {% endif %}
+                    {{ form.photo }}
+                    {% if form.photo.errors %}
+                    <div class="form-error">{{ form.photo.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.titre.id_for_label }}" class="form-label">Titre / Fonction</label>
+                    {{ form.titre }}
+                    {% if form.titre.errors %}
+                    <div class="form-error">{{ form.titre.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.theme.id_for_label }}" class="form-label">Thème de recherche</label>
+                    {{ form.theme }}
+                    {% if form.theme.errors %}
+                    <div class="form-error">{{ form.theme.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.bio.id_for_label }}" class="form-label">Biographie</label>
+                    {{ form.bio }}
+                    {% if form.bio.errors %}
+                    <div class="form-error">{{ form.bio.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.linkedin.id_for_label }}" class="form-label">LinkedIn</label>
+                    {{ form.linkedin }}
+                    {% if form.linkedin.errors %}
+                    <div class="form-error">{{ form.linkedin.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.github.id_for_label }}" class="form-label">GitHub</label>
+                    {{ form.github }}
+                    {% if form.github.errors %}
+                    <div class="form-error">{{ form.github.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+                    <a href="{% url 'labo:profil' user.profil.id %}" class="btn btn-outline">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

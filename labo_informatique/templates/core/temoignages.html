@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}Témoignages | Laboratoire Informatique{% endblock %}
+
+{% block header_content %}
+<div class="page-header">
+    <h1 class="page-title fade-in">Témoignages</h1>
+    <p class="page-subtitle fade-in delay-200">Ce que disent nos partenaires et collaborateurs</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="testimonials-section section">
+    <div class="container">
+        {% for temoignage in temoignages %}
+        <div class="testimonial-card animate-on-scroll {% if not forloop.first %}delay-{{ forloop.counter }}00{% endif %}">
+            <div class="testimonial-content">
+                {{ temoignage.contenu }}
+            </div>
+            <div class="testimonial-author">
+                {% if temoignage.photo %}
+                <img src="{{ temoignage.photo.url }}" alt="{{ temoignage.nom }}" class="testimonial-author-image">
+                {% else %}
+                <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ temoignage.nom }}" class="testimonial-author-image">
+                {% endif %}
+                <div class="testimonial-author-info">
+                    <h4>{{ temoignage.nom }}</h4>
+                    <div class="testimonial-author-role">{{ temoignage.role }}</div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>Aucun témoignage disponible pour le moment.</p>
+        {% endfor %}
+    </div>
+</section>
+
+<!-- Section partagez votre expérience -->
+<section class="share-experience-section section bg-light">
+    <div class="container">
+        <div class="share-card animate-on-scroll">
+            <h2>Partagez votre expérience</h2>
+            <p>Vous avez collaboré avec notre laboratoire ou participé à l'un de nos événements ? Nous serions ravis de connaître votre expérience.</p>
+            <a href="{% url 'core:contact' %}" class="btn btn-primary">Laissez un témoignage</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
