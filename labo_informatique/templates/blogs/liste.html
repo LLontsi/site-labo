@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog | Laboratoire Informatique{% endblock %}
+
+{% block header_content %}
+<div class="page-header">
+    <h1 class="page-title fade-in">Blog</h1>
+    <p class="page-subtitle fade-in delay-200">Actualités, événements et articles de notre laboratoire</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="blog-section section">
+    <div class="container">
+        <!-- Filtres par catégorie -->
+        <div class="blog-filters animate-on-scroll">
+            <button class="blog-filter-btn active" data-filter="all">Toutes les catégories</button>
+            {% for categorie in categories %}
+            <button class="blog-filter-btn" data-filter="{{ categorie.id }}">{{ categorie.nom }}</button>
+            {% endfor %}
+        </div>
+        
+        <!-- Grille des articles -->
+        <div class="blog-grid">
+            {% for article in articles %}
+            <div class="blog-card animate-on-scroll" data-categories="{% for cat in article.categories.all %}{{ cat.id }} {% endfor %}">
+                {% if article.image_principale %}
+                <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}" class="blog-image">
+                {% else %}
+                <img src="{{ STATIC_URL }}images/blog-placeholder.jpg" alt="{{ article.titre }}" class="blog-image">
+                {% endif %}
+                <div class="blog-content">
+                    <div class="blog-categories">
+                        {% for categorie in article.categories.all %}
+                        <span class="blog-category">{{ categorie.nom }}</span>
+                        {% endfor %}
+                    </div>
+                    <div class="blog-date">{{ article.date_creation|date:"d F Y" }}</div>
+                    <h3 class="blog-title">{{ article.titre }}</h3>
+                    <p class="blog-excerpt">{{ article.contenu|truncatewords:30 }}</p>
+                    <a href="{% url 'blogs:detail' article.id %}" class="btn btn-outline">Lire plus</a>
+                </div>
+                <div class="blog-author">
+                    {% if article.auteur.photo %}
+                    <img src="{{ article.auteur.photo.url }}" alt="{{ article.auteur }}" class="blog-author-image">
+                    {% else %}
+                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ article.auteur }}" class="blog-author-image">
+                    {% endif %}
+                    <span class="blog-author-name">{{ article.auteur }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <p>Aucun article disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+        
+        {% if user.is_authenticated and user.profil %}
+        <div class="blog-actions animate-on-scroll">
+            <a href="{% url 'blogs:nouveau' %}" class="btn btn-primary">Écrire un article</a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
