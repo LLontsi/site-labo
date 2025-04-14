@@ -26,3 +26,20 @@ class ArticleForm(forms.ModelForm):
             'contenu': forms.Textarea(attrs={'rows': 10}),
         }
 
+class PresentationForm(forms.ModelForm):
+    images_supplementaires = forms.FileField(
+        required=False,
+        widget=forms.ClearableFileInput(attrs={'multiple': True})
+    )
+    
+    class Meta:
+        model = Presentation
+        fields = ['titre', 'description', 'fichier', 'type_fichier', 'theme']
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 5}),
+        }
+
+class ImagePresentationForm(forms.ModelForm):
+    class Meta:
+        model = ImagePresentation
+        fields = ['image', 'legende']
