@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{% block title %}Notre équipe | Laboratoire Informatique{% endblock %}
+
+{% block header_content %}
+<div class="page-header">
+    <h1 class="page-title fade-in">Notre équipe</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="team-section section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Rencontrez nos chercheurs</h2>
+        
+        <!-- Filtres par thème -->
+        <div class="team-filters animate-on-scroll">
+            <button class="team-filter-btn {% if not theme_selectionne %}active{% endif %}" data-filter="all">Tous</button>
+            {% for theme in themes %}
+            <button class="team-filter-btn {% if theme_selectionne == theme.id|stringformat:'i' %}active{% endif %}" data-filter="{{ theme.id }}">{{ theme.nom }}</button>
+            {% endfor %}
+        </div>
+        
+        <!-- Grille des membres -->
+        <div class="team-grid">
+            {% for membre in membres %}
+            <div class="team-card animate-on-scroll" data-theme="{{ membre.theme.id }}">
+                <div class="team-image-container">
+                    {% if membre.photo %}
+                    <img src="{{ membre.photo.url }}" alt="{{ membre }}" class="team-image">
+                    {% else %}
+                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ membre }}" class="team-image">
+                    {% endif %}
+                </div>
+                <div class="team-info">
+                    <h3 class="team-name">{{ membre }}</h3>
+                    <div class="team-role">{{ membre.titre }}</div>
+                    <p class="team-theme">{{ membre.theme.nom }}</p>
+                    <p class="team-bio">{{ membre.bio|truncatewords:25 }}</p>
+                    <div class="team-actions">
+                        <a href="{% url 'membres:profil' membre.id %}" class="btn btn-outline btn-sm">Voir le profil</a>
+                        <div class="team-social">
+                            {% if membre.linkedin %}
+                            <a href="{{ membre.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                            {% endif %}
+                            {% if membre.github %}
+                            <a href="{{ membre.github }}" target="_blank"><i class="fab fa-github"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Aucun membre disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Section rejoindre l'équipe -->
+<section class="join-section section bg-light">
+    <div class="container">
+        <div class="join-card animate-on-scroll">
+            <h2>Rejoignez notre équipe</h2>
+            <p>Nous sommes toujours à la recherche de talents passionnés par l'innovation et la recherche en informatique. Consultez nos offres d'emploi et de stages ou contactez-nous directement.</p>
+            <div class="join-buttons">
+                <a href="#" class="btn btn-primary">Offres d'emploi</a>
+                <a href="{% url 'core:contact' %}" class="btn btn-outline">Nous contacter</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

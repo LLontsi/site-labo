@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ membre }} | Laboratoire Informatique{% endblock %}
+
+{% block content %}
+<section class="profile-section section">
+    <div class="container">
+        <div class="profile-header">
+            <div class="profile-header-grid">
+                <div class="profile-image-container animate-on-scroll">
+                    {% if membre.photo %}
+                    <img src="{{ membre.photo.url }}" alt="{{ membre }}" class="profile-image">
+                    {% else %}
+                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ membre }}" class="profile-image">
+                    {% endif %}
+                </div>
+                <div class="profile-info animate-on-scroll delay-200">
+                    <h1 class="profile-name">{{ membre }}</h1>
+                    <div class="profile-role">{{ membre.titre }}</div>
+                    <div class="profile-theme">Thème de recherche : {{ membre.theme.nom }}</div>
+                    <div class="profile-social">
+                        {% if membre.linkedin %}
+                        <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
+                        {% endif %}
+                        {% if membre.github %}
+                        <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i> GitHub</a>
+                        {% endif %}
+                    </div>
+                    {% if request.user.profil == membre %}
+                    <a href="{% url 'membres:edit_profil' %}" class="btn btn-primary btn-sm mt-3">Modifier mon profil</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="profile-bio-section animate-on-scroll">
+            <h2 class="section-title">Biographie</h2>
+            <div class="profile-bio">
+                {{ membre.bio|linebreaks }}
+            </div>
+        </div>
+        
+        <div class="profile-presentations-section animate-on-scroll">
+            <h2 class="section-title">Présentations</h2>
+            {% if presentations %}
+            <div class="presentations-list">
+                {% for presentation in presentations %}
+                <div class="presentation-card">
+                    <div class="presentation-content">
+                        <h3 class="presentation-title">{{ presentation.titre }}</h3>
+                        <div class="presentation-meta">
+                            <span><i class="far fa-calendar-alt"></i> {{ presentation.date_creation|date:"d F Y" }}</span>
+                            <span><i class="far fa-file-alt"></i> {{ presentation.get_type_fichier_display }}</span>
+                        </div>
+                        <p class="presentation-description">{{ presentation.description|truncatewords:50 }}</p>
+                        <div class="presentation-actions">
+                            <a href="{% url 'presentations:detail' presentation.id %}" class="btn btn-outline btn-sm">Voir les détails</a>
+                            {% if request.user.profil == membre %}
+                            <a href="{% url 'presentations:edit' presentation.id %}" class="btn btn-secondary btn-sm">Modifier</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <p>Aucune présentation disponible pour le moment.</p>
+            {% endif %}
+            
+            {% if request.user.profil == membre %}
+            <div class="add-presentation">
+                <a href="{% url 'presentations:nouvelle' %}" class="btn btn-primary">Ajouter une présentation</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+{% endblock %}
