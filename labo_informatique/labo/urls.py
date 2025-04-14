@@ -28,4 +28,5 @@ urlpatterns = [
     path('presentations/detail/<int:presentation_id>/', views.detail_presentation, name='detail_presentation'),
     path('presentations/nouvelle/', views.nouvelle_presentation, name='nouvelle_presentation'),
     path('presentations/edit/<int:presentation_id>/', views.edit_presentation, name='edit_presentation'),
+    path('presentations/image/<int:image_id>/delete/', views.delete_image, name='delete_image'),
 ]
