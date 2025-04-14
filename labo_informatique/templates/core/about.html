@@ -1,0 +1,195 @@
+{% extends 'base.html' %}
+
+{% block title %}À propos | Laboratoire Informatique{% endblock %}
+
+{% block header_content %}
+<div class="page-header">
+    <h1 class="page-title fade-in">À propos de notre laboratoire</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Section présentation -->
+<section class="about-section section">
+    <div class="container">
+        <div class="about-grid">
+            <div class="about-content animate-on-scroll">
+                <h2>Notre histoire</h2>
+                <p>Fondé en 2010, notre laboratoire d'informatique est né de la vision commune de chercheurs passionnés souhaitant repousser les frontières de l'innovation technologique. Depuis plus d'une décennie, nous nous consacrons à la recherche et au développement de solutions numériques avant-gardistes.</p>
+                <p>Situé au cœur de la ville, notre laboratoire bénéficie d'un environnement propice à la créativité et à l'innovation. Nous collaborons étroitement avec des universités prestigieuses, des entreprises technologiques et des organismes de recherche du monde entier.</p>
+            </div>
+            <div class="about-image animate-on-scroll delay-200">
+                <img src="{{ STATIC_URL }}images/about-lab.jpg" alt="Notre laboratoire">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section mission et valeurs -->
+<section class="mission-section section bg-light">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Notre mission</h2>
+        <div class="mission-content animate-on-scroll delay-200">
+            <p class="mission-text">Nous nous engageons à explorer et développer des technologies innovantes qui façonnent l'avenir numérique. Notre objectif est de créer des solutions informatiques qui répondent aux défis complexes de notre société tout en formant la prochaine génération de chercheurs et d'innovateurs.</p>
+        </div>
+        
+        <h2 class="section-title animate-on-scroll">Nos valeurs</h2>
+        <div class="values-grid">
+            <div class="value-card animate-on-scroll">
+                <div class="value-icon">
+                    <i class="fas fa-lightbulb"></i>
+                </div>
+                <h3>Innovation</h3>
+                <p>Nous encourageons la pensée créative et l'exploration de nouvelles approches pour résoudre les défis technologiques.</p>
+            </div>
+            <div class="value-card animate-on-scroll delay-200">
+                <div class="value-icon">
+                    <i class="fas fa-hands-helping"></i>
+                </div>
+                <h3>Collaboration</h3>
+                <p>Nous croyons en la puissance du travail d'équipe et des partenariats pour atteindre des résultats exceptionnels.</p>
+            </div>
+            <div class="value-card animate-on-scroll delay-400">
+                <div class="value-icon">
+                    <i class="fas fa-shield-alt"></i>
+                </div>
+                <h3>Intégrité</h3>
+                <p>Nous maintenons les plus hauts standards d'éthique et de transparence dans toutes nos activités de recherche.</p>
+            </div>
+            <div class="value-card animate-on-scroll delay-600">
+                <div class="value-icon">
+                    <i class="fas fa-globe"></i>
+                </div>
+                <h3>Impact</h3>
+                <p>Nous visons à créer des technologies qui ont un impact positif sur la société et l'environnement.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section domaines de recherche -->
+<section class="research-section section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Nos domaines de recherche</h2>
+        <div class="research-grid">
+            <div class="research-area animate-on-scroll">
+                <h3>Intelligence Artificielle</h3>
+                <p>Nous développons des algorithmes d'apprentissage automatique et d'intelligence artificielle pour résoudre des problèmes complexes dans divers domaines.</p>
+                <ul>
+                    <li>Apprentissage profond</li>
+                    <li>Traitement du langage naturel</li>
+                    <li>Vision par ordinateur</li>
+                    <li>Systèmes de recommandation</li>
+                </ul>
+            </div>
+            <div class="research-area animate-on-scroll delay-200">
+                <h3>Cybersécurité</h3>
+                <p>Nous travaillons sur des solutions innovantes pour protéger les systèmes informatiques et les données contre les menaces numériques.</p>
+                <ul>
+                    <li>Cryptographie avancée</li>
+                    <li>Détection d'intrusion</li>
+                    <li>Sécurité des applications</li>
+                    <li>Protection de la vie privée</li>
+                </ul>
+            </div>
+            <div class="research-area animate-on-scroll delay-400">
+                <h3>Systèmes Distribués</h3>
+                <p>Nous explorons les architectures distribuées pour améliorer la performance, la fiabilité et l'évolutivité des systèmes informatiques.</p>
+                <ul>
+                    <li>Cloud computing</li>
+                    <li>Edge computing</li>
+                    <li>Technologies blockchain</li>
+                    <li>Systèmes décentralisés</li>
+                </ul>
+            </div>
+            <div class="research-area animate-on-scroll delay-600">
+                <h3>Développement Logiciel</h3>
+                <p>Nous créons des méthodologies et des outils pour améliorer la qualité et l'efficacité du développement logiciel.</p>
+                <ul>
+                    <li>DevOps et CI/CD</li>
+                    <li>Architecture logicielle</li>
+                    <li>Tests automatisés</li>
+                    <li>Qualité du code</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section statistiques -->
+<section class="stats-section section bg-primary text-light">
+    <div class="container">
+        <h2 class="section-title light animate-on-scroll">Notre impact en chiffres</h2>
+        <div class="stats-grid">
+            <div class="stat-item animate-on-scroll">
+                <div class="stat-number counter" data-target="50">0</div>
+                <div class="stat-label">Chercheurs</div>
+            </div>
+            <div class="stat-item animate-on-scroll delay-200">
+                <div class="stat-number counter" data-target="120">0</div>
+                <div class="stat-label">Publications</div>
+            </div>
+            <div class="stat-item animate-on-scroll delay-400">
+                <div class="stat-number counter" data-target="25">0</div>
+                <div class="stat-label">Projets actifs</div>
+            </div>
+            <div class="stat-item animate-on-scroll delay-600">
+                <div class="stat-number counter" data-target="30">0</div>
+                <div class="stat-label">Partenaires</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section équipements -->
+<section class="equipment-section section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Nos équipements</h2>
+        <div class="equipment-grid">
+            <div class="equipment-item animate-on-scroll">
+                <img src="{{ STATIC_URL }}images/equipment-1.jpg" alt="Serveurs de calcul">
+                <h3>Serveurs de calcul haute performance</h3>
+                <p>Notre infrastructure de calcul permet d'exécuter des modèles complexes d'IA et de traiter de grands volumes de données.</p>
+            </div>
+            <div class="equipment-item animate-on-scroll delay-200">
+                <img src="{{ STATIC_URL }}images/equipment-2.jpg" alt="Laboratoire de tests">
+                <h3>Laboratoire de tests sécurisé</h3>
+                <p>Un environnement isolé pour tester la résistance des systèmes aux attaques informatiques.</p>
+            </div>
+            <div class="equipment-item animate-on-scroll delay-400">
+                <img src="{{ STATIC_URL }}images/equipment-3.jpg" alt="Salle de réalité virtuelle">
+                <h3>Salle de réalité virtuelle et augmentée</h3>
+                <p>Équipements avancés pour le développement et le test d'applications immersives.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section partenaires -->
+<section class="partners-section section bg-light">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Nos partenaires</h2>
+        <div class="partners-grid animate-on-scroll delay-200">
+            <!-- Logos des partenaires -->
+            <div class="partner-logo">
+                <img src="{{ STATIC_URL }}images/partner-1.png" alt="Université de Paris">
+            </div>
+            <div class="partner-logo">
+                <img src="{{ STATIC_URL }}images/partner-2.png" alt="Tech Solutions">
+            </div>
+            <div class="partner-logo">
+                <img src="{{ STATIC_URL }}images/partner-3.png" alt="Institut National de Recherche">
+            </div>
+            <div class="partner-logo">
+                <img src="{{ STATIC_URL }}images/partner-4.png" alt="Future Labs">
+            </div>
+            <div class="partner-logo">
+                <img src="{{ STATIC_URL }}images/partner-5.png" alt="Data Sciences Corp">
+            </div>
+            <div class="partner-logo">
+                <img src="{{ STATIC_URL }}images/partner-6.png" alt="Innovation Center">
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
