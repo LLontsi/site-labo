@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+
+{% block title %}Accueil | Laboratoire Informatique{% endblock %}
+
+{% block header_content %}
+<div class="hero">
+    <div class="hero-content">
+        <h1 class="hero-title fade-in">Bienvenue au Laboratoire Informatique</h1>
+        <p class="hero-subtitle fade-in delay-200">Un espace de recherche et d'innovation technologique</p>
+        <div class="hero-buttons fade-in delay-400">
+            <a href="{% url 'presentations:liste' %}" class="btn btn-primary">Découvrir nos travaux</a>
+            <a href="{% url 'core:contact' %}" class="btn btn-outline">Nous contacter</a>
+        </div>
+    </div>
+    <img src="{{ STATIC_URL }}images/hero-image.png" alt="Illustration numérique" class="hero-image floating">
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Section caractéristiques -->
+<section class="features section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Nos domaines d'expertise</h2>
+        <div class="features-grid">
+            <div class="feature-card animate-on-scroll">
+                <div class="feature-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
+                <h3 class="feature-title">Intelligence Artificielle</h3>
+                <p class="feature-text">Développement d'algorithmes d'IA et de solutions de machine learning adaptées aux besoins modernes.</p>
+            </div>
+            <div class="feature-card animate-on-scroll delay-200">
+                <div class="feature-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
+                <h3 class="feature-title">Cybersécurité</h3>
+                <p class="feature-text">Protection des systèmes et des données contre les menaces informatiques actuelles et émergentes.</p>
+            </div>
+            <div class="feature-card animate-on-scroll delay-400">
+                <div class="feature-icon">
+                    <i class="fas fa-cloud"></i>
+                </div>
+                <h3 class="feature-title">Cloud Computing</h3>
+                <p class="feature-text">Optimisation des infrastructures cloud et développement de solutions évolutives.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section derniers articles -->
+<section class="blog-preview section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Actualités récentes</h2>
+        <div class="blog-grid">
+            {% for article in derniers_articles %}
+            <div class="blog-card animate-on-scroll delay-{{ forloop.counter }}00">
+                {% if article.image_principale %}
+                <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}" class="blog-image">
+                {% else %}
+                <img src="{{ STATIC_URL }}images/blog-placeholder.jpg" alt="{{ article.titre }}" class="blog-image">
+                {% endif %}
+                <div class="blog-content">
+                    <div class="blog-date">{{ article.date_creation|date:"d F Y" }}</div>
+                    <h3 class="blog-title">{{ article.titre }}</h3>
+                    <p class="blog-excerpt">{{ article.contenu|truncatewords:30 }}</p>
+                    <a href="{% url 'blogs:detail' article.id %}" class="btn btn-outline">Lire plus</a>
+                </div>
+                <div class="blog-author">
+                    {% if article.auteur.photo %}
+                    <img src="{{ article.auteur.photo.url }}" alt="{{ article.auteur }}" class="blog-author-image">
+                    {% else %}
+                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ article.auteur }}" class="blog-author-image">
+                    {% endif %}
+                    <span class="blog-author-name">{{ article.auteur }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <p>Aucun article disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+        <div class="text-center animate-on-scroll">
+            <a href="{% url 'blogs:liste' %}" class="btn btn-primary">Voir tous les articles</a>
+        </div>
+    </div>
+</section>
+
+<!-- Section témoignages -->
+<section class="testimonials section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Témoignages</h2>
+        <div class="testimonials-slider">
+            {% for temoignage in temoignages %}
+            <div class="testimonial-card animate-on-scroll delay-{{ forloop.counter }}00">
+                <div class="testimonial-content">
+                    {{ temoignage.contenu }}
+                </div>
+                <div class="testimonial-author">
+                    {% if temoignage.photo %}
+                    <img src="{{ temoignage.photo.url }}" alt="{{ temoignage.nom }}" class="testimonial-author-image">
+                    {% else %}
+                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ temoignage.nom }}" class="testimonial-author-image">
+                    {% endif %}
+                    <div class="testimonial-author-info">
+                        <h4>{{ temoignage.nom }}</h4>
+                        <div class="testimonial-author-role">{{ temoignage.role }}</div>
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Aucun témoignage disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Section équipe -->
+<section class="team-preview section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Notre équipe</h2>
+        <div class="team-grid">
+            {% for membre in membres|slice:":3" %}
+            <div class="team-card animate-on-scroll delay-{{ forloop.counter }}00">
+                <div class="team-image-container">
+                    {% if membre.photo %}
+                    <img src="{{ membre.photo.url }}" alt="{{ membre }}" class="team-image">
+                    {% else %}
+                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ membre }}" class="team-image">
+                    {% endif %}
+                </div>
+                <div class="team-info">
+                    <h3 class="team-name">{{ membre }}</h3>
+                    <div class="team-role">{{ membre.titre }}</div>
+                    <p class="team-bio">{{ membre.bio|truncatewords:20 }}</p>
+                    <div class="team-social">
+                        {% if membre.linkedin %}
+                        <a href="{{ membre.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        {% endif %}
+                        {% if membre.github %}
+                        <a href="{{ membre.github }}" target="_blank"><i class="fab fa-github"></i></a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Aucun membre disponible pour le moment.</p>
+            {% endfor %}
+        </div>
+        <div class="text-center animate-on-scroll">
+            <a href="{% url 'membres:team' %}" class="btn btn-primary">Voir toute l'équipe</a>
+        </div>
+    </div>
+</section>
+
+<!-- Section événements -->
+<section class="events-preview section">
+    <div class="container">
+        <h2 class="section-title animate-on-scroll">Événements à venir</h2>
+        <div class="events-grid">
+            {% for evenement in evenements %}
+            <div class="event-card animate-on-scroll delay-{{ forloop.counter }}00">
+                {% if evenement.image %}
+                <img src="{{ evenement.image.url }}" alt="{{ evenement.titre }}" class="event-image">
+                {% else %}
+                <img src="{{ STATIC_URL }}images/event-placeholder.jpg" alt="{{ evenement.titre }}" class="event-image">
+                {% endif %}
+                <div class="event-content">
+                    <div class="event-date">{{ evenement.date_debut|date:"d F Y" }} - {{ evenement.date_fin|date:"d F Y" }}</div>
+                    <h3 class="event-title">{{ evenement.titre }}</h3>
+                    <div class="event-type">{{ evenement.get_type_evenement_display }}</div>
+                    <p class="event-excerpt">{{ evenement.description|truncatewords:20 }}</p>
+                    <div class="event-location">
+                        <i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}
+                    </div>
+                </div>
+            </div>
+            {% empty %}
+            <p>Aucun événement à venir pour le moment.</p>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<!-- Section contact rapide -->
+<section class="quick-contact section">
+    <div class="container">
+        <div class="contact-card animate-on-scroll">
+            <h2>Une question ou un projet ?</h2>
+            <p>N'hésitez pas à nous contacter pour discuter de vos besoins ou pour en savoir plus sur nos activités de recherche.</p>
+            <a href="{% url 'core:contact' %}" class="btn btn-primary">Contactez-nous</a>
+        </div>
+    </div>
+</section>
+{% endblock %}
