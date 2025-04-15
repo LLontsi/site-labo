@@ -32,10 +32,10 @@ def home(request):
         'temoignages': temoignages,
         'membres': membres,
     }
-    return render(request, 'pages/home.html', context)
+    return render(request, 'core/home.html', context)
 
 def about(request):
-    return render(request, 'pages/about.html')
+    return render(request, 'core/about.html')
 
 def contact(request):
     if request.method == 'POST':
@@ -47,7 +47,7 @@ def contact(request):
     else:
         form = ContactForm()
     
-    return render(request, 'pages/contact.html', {'form': form})
+    return render(request, 'core/contact.html', {'form': form})
 
 def temoignages(request):
     temoignages = Temoignage.objects.all().order_by('-date')
@@ -69,7 +69,7 @@ def team(request):
         'themes': themes,
         'theme_selectionne': theme_id,
     }
-    return render(request, 'membres/team.html', context)
+    return render(request, 'core/team.html', context)
 
 def profil_membre(request, membre_id):
     membre = get_object_or_404(Membre, id=membre_id)
@@ -211,6 +211,9 @@ def detail_presentation(request, presentation_id):
     return render(request, 'presentations/detail.html', context)
 
 @login_required
+# Dans labo/views.py, modifiez les fonctions :
+
+@login_required
 def nouvelle_presentation(request):
     # Vérifier que l'utilisateur a un profil de membre
     try:
@@ -226,8 +229,9 @@ def nouvelle_presentation(request):
             presentation.membre = membre
             presentation.save()
             
-            # Traiter les images supplémentaires s'il y en a
-            for img in request.FILES.getlist('images_supplementaires'):
+            # Traiter l'image supplémentaire si elle existe
+            if 'images_supplementaires' in request.FILES:
+                img = request.FILES['images_supplementaires']
                 ImagePresentation.objects.create(
                     presentation=presentation,
                     image=img
@@ -254,8 +258,9 @@ def edit_presentation(request, presentation_id):
         if form.is_valid():
             form.save()
             
-            # Traiter les images supplémentaires s'il y en a
-            for img in request.FILES.getlist('images_supplementaires'):
+            # Traiter l'image supplémentaire si elle existe
+            if 'images_supplementaires' in request.FILES:
+                img = request.FILES['images_supplementaires']
                 ImagePresentation.objects.create(
                     presentation=presentation,
                     image=img
@@ -275,7 +280,6 @@ def edit_presentation(request, presentation_id):
         'images': images,
     }
     return render(request, 'presentations/formulaire.html', context)
-
 # Fonction pour supprimer une image de présentation
 @login_required
 def delete_image(request, image_id):

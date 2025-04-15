@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Laboratoire Informatique{% endblock %}</title>
-    <link rel="stylesheet" href="{{ STATIC_URL }}css/styles.css">
+    <link rel="stylesheet" href="{{ STATIC_URL }}/static/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     {% block extra_css %}{% endblock %}
 </head>
@@ -16,7 +16,7 @@
         </div>
         <div class="header-content">
             <div class="container">
-                <div class="nav-container">
+                <div class="nav-container">pages
                     <a href="{% url 'labo:home' %}" class="logo">
                         <img src="{{ STATIC_URL }}images/logo.png" alt="Logo">
                         <span>Labo Info</span>
@@ -32,8 +32,12 @@
                             <li><a href="{% url 'labo:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Accueil</a></li>
                             <li><a href="{% url 'labo:about' %}" {% if 'about' in request.path %}class="active"{% endif %}>À propos</a></li>
                             <li><a href="{% url 'labo:team' %}" {% if 'membres' in request.path %}class="active"{% endif %}>Équipe</a></li>
-                            <li><a href="{% url 'labo:liste' %}" {% if 'blogs' in request.path %}class="active"{% endif %}>Blog</a></li>
-                            <li><a href="{% url 'labo:liste' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Présentations</a></li>
+                                <!-- Ligne 35 - pour le blog -->
+                            <li><a href="{% url 'labo:liste_articles' %}" {% if 'blogs' in request.path %}class="active"{% endif %}>Blog</a></li>
+
+                            <!-- Ligne 36 - pour les présentations -->
+                            <li><a href="{% url 'labo:liste_presentations' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Présentations</a></li>
+                                   
                             <li><a href="{% url 'labo:contact' %}" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>
                        </ul>
                    </nav>
@@ -81,8 +85,8 @@
                            <li><a href="{% url 'labo:home' %}">Accueil</a></li>
                            <li><a href="{% url 'labo:about' %}">À propos</a></li>
                            <li><a href="{% url 'labo:team' %}">Équipe</a></li>
-                           <li><a href="{% url 'labo:liste' %}">Blog</a></li>
-                           <li><a href="{% url 'labo:liste' %}">Présentations</a></li>
+                           <li><a href="{% url 'labo:liste_articles' %}">Blog</a></li>
+<li><a href="{% url 'labo:liste_presentations' %}">Présentations</a></li>
                            <li><a href="{% url 'labo:contact' %}">Contact</a></li>
                        </ul>
                    </div>
@@ -104,8 +108,8 @@
        </div>
    </footer>
 
-   <script src="{{ STATIC_URL }}js/main.js"></script>
-   <script src="{{ STATIC_URL }}js/animations.js"></script>
+   <script src="{{ STATIC_URL }}/static/js/main.js"></script>
+   <script src="{{ STATIC_URL }}/static/js/animations.js"></script>
    {% block extra_js %}{% endblock %}
 </body>
 </html>

@@ -8,8 +8,9 @@
         <h1 class="hero-title fade-in">Bienvenue au Laboratoire Informatique</h1>
         <p class="hero-subtitle fade-in delay-200">Un espace de recherche et d'innovation technologique</p>
         <div class="hero-buttons fade-in delay-400">
-            <a href="{% url 'presentations:liste' %}" class="btn btn-primary">Découvrir nos travaux</a>
-            <a href="{% url 'core:contact' %}" class="btn btn-outline">Nous contacter</a>
+            <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Découvrir nos travaux</a>
+            <a href="{% url 'labo:contact' %}" class="btn btn-outline">Nous contacter</a>
+       
         </div>
     </div>
     <img src="{{ STATIC_URL }}images/hero-image.png" alt="Illustration numérique" class="hero-image floating">
@@ -79,7 +80,7 @@
             {% endfor %}
         </div>
         <div class="text-center animate-on-scroll">
-            <a href="{% url 'blogs:liste' %}" class="btn btn-primary">Voir tous les articles</a>
+            <a href="{% url 'labo:liste_articles' %}" class="btn btn-primary">Voir tous les articles</a>
         </div>
     </div>
 </section>
@@ -146,7 +147,7 @@
             {% endfor %}
         </div>
         <div class="text-center animate-on-scroll">
-            <a href="{% url 'membres:team' %}" class="btn btn-primary">Voir toute l'équipe</a>
+            <a href="{% url 'labo:team' %}" class="btn btn-primary">Voir toute l'équipe</a>
         </div>
     </div>
 </section>
@@ -186,7 +187,7 @@
         <div class="contact-card animate-on-scroll">
             <h2>Une question ou un projet ?</h2>
             <p>N'hésitez pas à nous contacter pour discuter de vos besoins ou pour en savoir plus sur nos activités de recherche.</p>
-            <a href="{% url 'core:contact' %}" class="btn btn-primary">Contactez-nous</a>
+            <a href="{% url 'labo:contact' %}" class="btn btn-primary">Contactez-nous</a>
         </div>
     </div>
 </section>

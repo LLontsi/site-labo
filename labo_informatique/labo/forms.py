@@ -27,9 +27,10 @@ class ArticleForm(forms.ModelForm):
         }
 
 class PresentationForm(forms.ModelForm):
+     # Utilisation d'un champ ordinaire sans l'attribut multiple
     images_supplementaires = forms.FileField(
         required=False,
-        widget=forms.ClearableFileInput(attrs={'multiple': True})
+        help_text="Vous ne pouvez télécharger qu'une image à la fois. Pour ajouter plusieurs images, sauvegardez puis modifiez à nouveau."
     )
     
     class Meta:
