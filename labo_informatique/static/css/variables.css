@@ -11,7 +11,10 @@
     --color-secondary-dark: #0076a3;
     --color-accent-light: #ff8a8a;
     --color-accent-dark: #e04a4a;
-    
+    /* Ajouter ces définitions de variables RVB pour pouvoir les utiliser avec opacity */
+  --color-primary-rgb: 10, 36, 114;     /* Équivalent RVB de #0a2472 */
+  --color-secondary-rgb: 0, 168, 232;   /* Équivalent RVB de #00a8e8 */
+  --color-accent-rgb: 255, 107, 107; 
     /* Couleurs neutres */
     --color-dark: #051937;
     --color-light: #f8f9fa;

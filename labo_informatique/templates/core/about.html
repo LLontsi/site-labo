@@ -1,195 +1,457 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}À propos | Laboratoire Informatique{% endblock %}
 
 {% block header_content %}
-<div class="page-header">
+<div class="page-header animated-gradient">
     <h1 class="page-title fade-in">À propos de notre laboratoire</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Innovation et excellence technologique</p>
 </div>
 {% endblock %}
 
 {% block content %}
-<!-- Section présentation -->
-<section class="about-section section">
+<!-- Section présentation avec fond parallaxe -->
+<section class="about-section section parallax-section">
     <div class="container">
         <div class="about-grid">
             <div class="about-content animate-on-scroll">
-                <h2>Notre histoire</h2>
+                <h2 class="glowing-text">Notre histoire</h2>
+                <div class="content-line"></div>
                 <p>Fondé en 2010, notre laboratoire d'informatique est né de la vision commune de chercheurs passionnés souhaitant repousser les frontières de l'innovation technologique. Depuis plus d'une décennie, nous nous consacrons à la recherche et au développement de solutions numériques avant-gardistes.</p>
                 <p>Situé au cœur de la ville, notre laboratoire bénéficie d'un environnement propice à la créativité et à l'innovation. Nous collaborons étroitement avec des universités prestigieuses, des entreprises technologiques et des organismes de recherche du monde entier.</p>
+                <a href="{% url 'labo:team' %}" class="btn btn-primary btn-glow">Découvrir notre équipe</a>
             </div>
-            <div class="about-image animate-on-scroll delay-200">
-                <img src="{{ STATIC_URL }}images/about-lab.jpg" alt="Notre laboratoire">
+            <div class="about-image-container animate-on-scroll delay-200">
+                <div class="image-frame">
+                    <img src="{% static 'images/about-lab.jpg' %}" alt="Notre laboratoire" class="about-image hover-scale">
+                    <div class="image-overlay">
+                        <div class="overlay-content">
+                            <i class="fas fa-microscope fa-3x"></i>
+                            <span>Excellence & Innovation</span>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
+    <div class="tech-particles"></div>
 </section>
 
-<!-- Section mission et valeurs -->
-<section class="mission-section section bg-light">
+<!-- Section mission avec design moderne -->
+<section class="mission-section section bg-gradient">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Notre mission</h2>
+        <h2 class="section-title text-center light animate-on-scroll">Notre mission</h2>
+        <div class="section-line center light"></div>
         <div class="mission-content animate-on-scroll delay-200">
-            <p class="mission-text">Nous nous engageons à explorer et développer des technologies innovantes qui façonnent l'avenir numérique. Notre objectif est de créer des solutions informatiques qui répondent aux défis complexes de notre société tout en formant la prochaine génération de chercheurs et d'innovateurs.</p>
+            <div class="mission-card">
+                <p class="mission-text">"Nous nous engageons à explorer et développer des technologies innovantes qui façonnent l'avenir numérique. Notre objectif est de créer des solutions informatiques qui répondent aux défis complexes de notre société tout en formant la prochaine génération de chercheurs et d'innovateurs."</p>
+                <div class="mission-icon-container">
+                    <div class="mission-icon-circle">
+                        <i class="fas fa-rocket"></i>
+                    </div>
+                </div>
+            </div>
         </div>
+    </div>
+</section>
+
+<!-- Section valeurs avec cartes 3D -->
+<section class="values-section section">
+    <div class="container">
+        <h2 class="section-title text-center animate-on-scroll">Nos valeurs</h2>
+        <div class="section-line center"></div>
         
-        <h2 class="section-title animate-on-scroll">Nos valeurs</h2>
         <div class="values-grid">
-            <div class="value-card animate-on-scroll">
-                <div class="value-icon">
-                    <i class="fas fa-lightbulb"></i>
+            <div class="value-card-3d animate-on-scroll">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="value-icon">
+                            <i class="fas fa-lightbulb"></i>
+                        </div>
+                        <h3>Innovation</h3>
+                    </div>
+                    <div class="card-back">
+                        <p>Nous encourageons la pensée créative et l'exploration de nouvelles approches pour résoudre les défis technologiques.</p>
+                    </div>
                 </div>
-                <h3>Innovation</h3>
-                <p>Nous encourageons la pensée créative et l'exploration de nouvelles approches pour résoudre les défis technologiques.</p>
             </div>
-            <div class="value-card animate-on-scroll delay-200">
-                <div class="value-icon">
-                    <i class="fas fa-hands-helping"></i>
+            
+            <div class="value-card-3d animate-on-scroll delay-200">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="value-icon">
+                            <i class="fas fa-hands-helping"></i>
+                        </div>
+                        <h3>Collaboration</h3>
+                    </div>
+                    <div class="card-back">
+                        <p>Nous croyons en la puissance du travail d'équipe et des partenariats pour atteindre des résultats exceptionnels.</p>
+                    </div>
                 </div>
-                <h3>Collaboration</h3>
-                <p>Nous croyons en la puissance du travail d'équipe et des partenariats pour atteindre des résultats exceptionnels.</p>
             </div>
-            <div class="value-card animate-on-scroll delay-400">
-                <div class="value-icon">
-                    <i class="fas fa-shield-alt"></i>
+            
+            <div class="value-card-3d animate-on-scroll delay-400">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="value-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Intégrité</h3>
+                    </div>
+                    <div class="card-back">
+                        <p>Nous maintenons les plus hauts standards d'éthique et de transparence dans toutes nos activités de recherche.</p>
+                    </div>
                 </div>
-                <h3>Intégrité</h3>
-                <p>Nous maintenons les plus hauts standards d'éthique et de transparence dans toutes nos activités de recherche.</p>
             </div>
-            <div class="value-card animate-on-scroll delay-600">
-                <div class="value-icon">
-                    <i class="fas fa-globe"></i>
+            
+            <div class="value-card-3d animate-on-scroll delay-600">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <div class="value-icon">
+                            <i class="fas fa-globe"></i>
+                        </div>
+                        <h3>Impact</h3>
+                    </div>
+                    <div class="card-back">
+                        <p>Nous visons à créer des technologies qui ont un impact positif sur la société et l'environnement.</p>
+                    </div>
                 </div>
-                <h3>Impact</h3>
-                <p>Nous visons à créer des technologies qui ont un impact positif sur la société et l'environnement.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Section domaines de recherche -->
-<section class="research-section section">
+<!-- Section domaines de recherche avec design moderne -->
+<section class="research-section section bg-tech-pattern">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Nos domaines de recherche</h2>
+        <h2 class="section-title text-center animate-on-scroll">Nos domaines de recherche</h2>
+        <div class="section-line center"></div>
+        
         <div class="research-grid">
-            <div class="research-area animate-on-scroll">
+            <div class="research-area-card animate-on-scroll">
+                <div class="research-icon">
+                    <i class="fas fa-brain"></i>
+                </div>
                 <h3>Intelligence Artificielle</h3>
-                <p>Nous développons des algorithmes d'apprentissage automatique et d'intelligence artificielle pour résoudre des problèmes complexes dans divers domaines.</p>
-                <ul>
-                    <li>Apprentissage profond</li>
-                    <li>Traitement du langage naturel</li>
-                    <li>Vision par ordinateur</li>
-                    <li>Systèmes de recommandation</li>
+                <p>Nous développons des algorithmes d'apprentissage automatique et d'intelligence artificielle pour résoudre des problèmes complexes.</p>
+                <ul class="research-list">
+                    <li><i class="fas fa-angle-right"></i> Apprentissage profond</li>
+                    <li><i class="fas fa-angle-right"></i> Traitement du langage naturel</li>
+                    <li><i class="fas fa-angle-right"></i> Vision par ordinateur</li>
+                    <li><i class="fas fa-angle-right"></i> Systèmes de recommandation</li>
                 </ul>
+                <div class="card-highlight"></div>
             </div>
-            <div class="research-area animate-on-scroll delay-200">
+            
+            <div class="research-area-card animate-on-scroll delay-200">
+                <div class="research-icon">
+                    <i class="fas fa-lock"></i>
+                </div>
                 <h3>Cybersécurité</h3>
-                <p>Nous travaillons sur des solutions innovantes pour protéger les systèmes informatiques et les données contre les menaces numériques.</p>
-                <ul>
-                    <li>Cryptographie avancée</li>
-                    <li>Détection d'intrusion</li>
-                    <li>Sécurité des applications</li>
-                    <li>Protection de la vie privée</li>
+                <p>Nous travaillons sur des solutions innovantes pour protéger les systèmes informatiques et les données.</p>
+                <ul class="research-list">
+                    <li><i class="fas fa-angle-right"></i> Cryptographie avancée</li>
+                    <li><i class="fas fa-angle-right"></i> Détection d'intrusion</li>
+                    <li><i class="fas fa-angle-right"></i> Sécurité des applications</li>
+                    <li><i class="fas fa-angle-right"></i> Protection de la vie privée</li>
                 </ul>
+                <div class="card-highlight"></div>
             </div>
-            <div class="research-area animate-on-scroll delay-400">
+            
+            <div class="research-area-card animate-on-scroll delay-400">
+                <div class="research-icon">
+                    <i class="fas fa-network-wired"></i>
+                </div>
                 <h3>Systèmes Distribués</h3>
-                <p>Nous explorons les architectures distribuées pour améliorer la performance, la fiabilité et l'évolutivité des systèmes informatiques.</p>
-                <ul>
-                    <li>Cloud computing</li>
-                    <li>Edge computing</li>
-                    <li>Technologies blockchain</li>
-                    <li>Systèmes décentralisés</li>
+                <p>Nous explorons les architectures distribuées pour améliorer la performance et l'évolutivité des systèmes.</p>
+                <ul class="research-list">
+                    <li><i class="fas fa-angle-right"></i> Cloud computing</li>
+                    <li><i class="fas fa-angle-right"></i> Edge computing</li>
+                    <li><i class="fas fa-angle-right"></i> Technologies blockchain</li>
+                    <li><i class="fas fa-angle-right"></i> Systèmes décentralisés</li>
                 </ul>
+                <div class="card-highlight"></div>
             </div>
-            <div class="research-area animate-on-scroll delay-600">
+            
+            <div class="research-area-card animate-on-scroll delay-600">
+                <div class="research-icon">
+                    <i class="fas fa-code"></i>
+                </div>
                 <h3>Développement Logiciel</h3>
-                <p>Nous créons des méthodologies et des outils pour améliorer la qualité et l'efficacité du développement logiciel.</p>
-                <ul>
-                    <li>DevOps et CI/CD</li>
-                    <li>Architecture logicielle</li>
-                    <li>Tests automatisés</li>
-                    <li>Qualité du code</li>
+                <p>Nous créons des méthodologies et des outils pour améliorer la qualité du développement logiciel.</p>
+                <ul class="research-list">
+                    <li><i class="fas fa-angle-right"></i> DevOps et CI/CD</li>
+                    <li><i class="fas fa-angle-right"></i> Architecture logicielle</li>
+                    <li><i class="fas fa-angle-right"></i> Tests automatisés</li>
+                    <li><i class="fas fa-angle-right"></i> Qualité du code</li>
                 </ul>
+                <div class="card-highlight"></div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Section statistiques -->
-<section class="stats-section section bg-primary text-light">
+<!-- Section statistiques avec compteurs animés -->
+<section class="stats-section section bg-gradient-dark text-light">
     <div class="container">
-        <h2 class="section-title light animate-on-scroll">Notre impact en chiffres</h2>
+        <h2 class="section-title light text-center animate-on-scroll">Notre impact en chiffres</h2>
+        <div class="section-line center light"></div>
+        
         <div class="stats-grid">
-            <div class="stat-item animate-on-scroll">
-                <div class="stat-number counter" data-target="50">0</div>
+            <div class="stat-card animate-on-scroll">
+                <div class="stat-circle">
+                    <div class="stat-number counter" data-target="50">0</div>
+                </div>
                 <div class="stat-label">Chercheurs</div>
+                <div class="stat-icon"><i class="fas fa-users"></i></div>
             </div>
-            <div class="stat-item animate-on-scroll delay-200">
-                <div class="stat-number counter" data-target="120">0</div>
+            
+            <div class="stat-card animate-on-scroll delay-200">
+                <div class="stat-circle">
+                    <div class="stat-number counter" data-target="120">0</div>
+                </div>
                 <div class="stat-label">Publications</div>
+                <div class="stat-icon"><i class="fas fa-book"></i></div>
             </div>
-            <div class="stat-item animate-on-scroll delay-400">
-                <div class="stat-number counter" data-target="25">0</div>
+            
+            <div class="stat-card animate-on-scroll delay-400">
+                <div class="stat-circle">
+                    <div class="stat-number counter" data-target="25">0</div>
+                </div>
                 <div class="stat-label">Projets actifs</div>
+                <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
             </div>
-            <div class="stat-item animate-on-scroll delay-600">
-                <div class="stat-number counter" data-target="30">0</div>
+            
+            <div class="stat-card animate-on-scroll delay-600">
+                <div class="stat-circle">
+                    <div class="stat-number counter" data-target="30">0</div>
+                </div>
                 <div class="stat-label">Partenaires</div>
+                <div class="stat-icon"><i class="fas fa-handshake"></i></div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Section équipements -->
+<!-- Section équipements avec effets au survol -->
 <section class="equipment-section section">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Nos équipements</h2>
+        <h2 class="section-title text-center animate-on-scroll">Nos équipements</h2>
+        <div class="section-line center"></div>
+        
         <div class="equipment-grid">
-            <div class="equipment-item animate-on-scroll">
-                <img src="{{ STATIC_URL }}images/equipment-1.jpg" alt="Serveurs de calcul">
-                <h3>Serveurs de calcul haute performance</h3>
-                <p>Notre infrastructure de calcul permet d'exécuter des modèles complexes d'IA et de traiter de grands volumes de données.</p>
+            <div class="equipment-card animate-on-scroll">
+                <div class="equipment-image-container">
+                    <img src="{% static 'images/equipment-1.jpg' %}" alt="Serveurs de calcul" class="equipment-image">
+                    <div class="equipment-overlay">
+                        <div class="equipment-overlay-content">
+                            <i class="fas fa-server fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="equipment-content">
+                    <h3>Serveurs de calcul haute performance</h3>
+                    <p>Notre infrastructure de calcul permet d'exécuter des modèles complexes d'IA et de traiter de grands volumes de données.</p>
+                    <div class="equipment-specs">
+                        <span><i class="fas fa-microchip"></i> 128 cœurs</span>
+                        <span><i class="fas fa-memory"></i> 1 TB RAM</span>
+                        <span><i class="fas fa-hdd"></i> 100 TB stockage</span>
+                    </div>
+                </div>
             </div>
-            <div class="equipment-item animate-on-scroll delay-200">
-                <img src="{{ STATIC_URL }}images/equipment-2.jpg" alt="Laboratoire de tests">
-                <h3>Laboratoire de tests sécurisé</h3>
-                <p>Un environnement isolé pour tester la résistance des systèmes aux attaques informatiques.</p>
+            
+            <div class="equipment-card animate-on-scroll delay-200">
+                <div class="equipment-image-container">
+                    <img src="{% static 'images/equipment-2.jpg' %}" alt="Laboratoire de tests" class="equipment-image">
+                    <div class="equipment-overlay">
+                        <div class="equipment-overlay-content">
+                            <i class="fas fa-shield-alt fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="equipment-content">
+                    <h3>Laboratoire de tests sécurisé</h3>
+                    <p>Un environnement isolé pour tester la résistance des systèmes aux attaques informatiques.</p>
+                    <div class="equipment-specs">
+                        <span><i class="fas fa-network-wired"></i> Réseau isolé</span>
+                        <span><i class="fas fa-laptop-code"></i> Outils spécialisés</span>
+                        <span><i class="fas fa-user-shield"></i> Accès contrôlé</span>
+                    </div>
+                </div>
             </div>
-            <div class="equipment-item animate-on-scroll delay-400">
-                <img src="{{ STATIC_URL }}images/equipment-3.jpg" alt="Salle de réalité virtuelle">
-                <h3>Salle de réalité virtuelle et augmentée</h3>
-                <p>Équipements avancés pour le développement et le test d'applications immersives.</p>
+            
+            <div class="equipment-card animate-on-scroll delay-400">
+                <div class="equipment-image-container">
+                    <img src="{% static 'images/equipment-3.jpg' %}" alt="Salle de réalité virtuelle" class="equipment-image">
+                    <div class="equipment-overlay">
+                        <div class="equipment-overlay-content">
+                            <i class="fas fa-vr-cardboard fa-3x"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="equipment-content">
+                    <h3>Salle de réalité virtuelle et augmentée</h3>
+                    <p>Équipements avancés pour le développement et le test d'applications immersives.</p>
+                    <div class="equipment-specs">
+                        <span><i class="fas fa-glasses"></i> Casques VR haute résolution</span>
+                        <span><i class="fas fa-hand-pointer"></i> Capteurs de mouvement</span>
+                        <span><i class="fas fa-desktop"></i> Écrans 360°</span>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Section partenaires -->
+<!-- Section partenaires avec slider -->
 <section class="partners-section section bg-light">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Nos partenaires</h2>
-        <div class="partners-grid animate-on-scroll delay-200">
-            <!-- Logos des partenaires -->
-            <div class="partner-logo">
-                <img src="{{ STATIC_URL }}images/partner-1.png" alt="Université de Paris">
+        <h2 class="section-title text-center animate-on-scroll">Nos partenaires</h2>
+        <div class="section-line center"></div>
+        
+        <div class="partners-slider animate-on-scroll delay-200">
+            <div class="partners-track">
+                <!-- Logos des partenaires répétés pour l'effet de défilement infini -->
+                <div class="partner-logo"><img src="{% static 'images/partner-1.png' %}" alt="Université de Paris"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-2.png' %}" alt="Tech Solutions"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-3.png' %}" alt="Institut National de Recherche"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-4.png' %}" alt="Future Labs"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-5.png' %}" alt="Data Sciences Corp"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-6.png' %}" alt="Innovation Center"></div>
+                
+                <!-- Répétition pour le défilement continu -->
+                <div class="partner-logo"><img src="{% static 'images/partner-1.png' %}" alt="Université de Paris"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-2.png' %}" alt="Tech Solutions"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-3.png' %}" alt="Institut National de Recherche"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-4.png' %}" alt="Future Labs"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-5.png' %}" alt="Data Sciences Corp"></div>
+                <div class="partner-logo"><img src="{% static 'images/partner-6.png' %}" alt="Innovation Center"></div>
             </div>
-            <div class="partner-logo">
-                <img src="{{ STATIC_URL }}images/partner-2.png" alt="Tech Solutions">
-            </div>
-            <div class="partner-logo">
-                <img src="{{ STATIC_URL }}images/partner-3.png" alt="Institut National de Recherche">
-            </div>
-            <div class="partner-logo">
-                <img src="{{ STATIC_URL }}images/partner-4.png" alt="Future Labs">
-            </div>
-            <div class="partner-logo">
-                <img src="{{ STATIC_URL }}images/partner-5.png" alt="Data Sciences Corp">
-            </div>
-            <div class="partner-logo">
-                <img src="{{ STATIC_URL }}images/partner-6.png" alt="Innovation Center">
-            </div>
+        </div>
+        
+        <div class="partnership-cta text-center animate-on-scroll">
+            <h3>Intéressé par un partenariat ?</h3>
+            <a href="{% url 'labo:contact' %}" class="btn btn-primary btn-glow">Contactez-nous</a>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animation des compteurs
+        const counters = document.querySelectorAll('.counter');
+        const options = {
+            threshold: 0.5
+        };
+        
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const counter = entry.target;
+                    const target = parseInt(counter.getAttribute('data-target'));
+                    const duration = 2000; // 2 secondes
+                    const steps = 50;
+                    const stepValue = target / steps;
+                    let current = 0;
+                    
+                    const timer = setInterval(function() {
+                        current += stepValue;
+                        if (current > target) {
+                            counter.textContent = target;
+                            clearInterval(timer);
+                        } else {
+                            counter.textContent = Math.round(current);
+                        }
+                    }, duration / steps);
+                    
+                    observer.unobserve(counter);
+                }
+            });
+        }, options);
+        
+        counters.forEach(counter => {
+            observer.observe(counter);
+        });
+        
+        // Initialisation de tsParticles pour l'effet de particules tech
+        tsParticles.load("tech-particles", {
+            particles: {
+                number: {
+                    value: 80,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: "#ffffff"
+                },
+                shape: {
+                    type: "circle"
+                },
+                opacity: {
+                    value: 0.5,
+                    random: true
+                },
+                size: {
+                    value: 3,
+                    random: true
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: "#ffffff",
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 2,
+                    direction: "none",
+                    random: false,
+                    straight: false,
+                    out_mode: "out",
+                    bounce: false
+                }
+            },
+            interactivity: {
+                detect_on: "canvas",
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: "grab"
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: "push"
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 140,
+                        line_linked: {
+                            opacity: 1
+                        }
+                    },
+                    push: {
+                        particles_nb: 4
+                    }
+                }
+            },
+            retina_detect: true
+        });
+        
+        // Animation du slider des partenaires
+        const partnersTrack = document.querySelector('.partners-track');
+        if (partnersTrack) {
+            partnersTrack.style.animation = 'scroll 30s linear infinite';
+        }
+    });
+</script>
 {% endblock %}
