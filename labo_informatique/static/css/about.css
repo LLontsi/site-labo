@@ -1,79 +1,196 @@
-/* Style amélioré pour la section "Notre histoire" */
-
-/* Container de la section histoire */
-.histoire-section {
-    padding: 4rem 0;
-    background-color: #f5f7fa;
+/* Styles généraux améliorés */
+.section {
+    padding: 80px 0;
     position: relative;
     overflow: hidden;
 }
 
-/* Titre "Notre histoire" */
-.histoire-section h2 {
+.section-title {
     font-size: 2.5rem;
-    font-weight: 700;
-    color: #0a2472; /* Couleur bleu foncé */
     margin-bottom: 1.5rem;
     position: relative;
-    display: inline-block;
 }
 
-/* Ligne rouge sous le titre */
-.histoire-section h2::after {
+.section-line {
+    height: 4px;
+    width: 60px;
+    background: var(--color-accent);
+    margin-bottom: 2rem;
+    transition: width 0.5s ease;
+}
+
+.section-line.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-title:hover + .section-line, 
+.section-line:hover {
+    width: 120px;
+}
+
+
+
+/* Header de page */
+.page-header {
+    padding: 100px 0 50px;
+    text-align: center;
+    position: relative;
+}
+
+/*.animated-gradient {
+    background: linear-gradient(45deg, var(--color-primary), var(--color-secondary));
+    background-size: 200% 200%;
+    animation: gradient-shift 10s ease infinite;
+}*/
+
+@keyframes gradient-shift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+.page-title {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: white;
+}
+
+.page-subtitle {
+    font-size: 1.5rem;
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.header-line {
+    height: 4px;
+    width: 100px;
+    /*background: var(--color-accent);*/
+    margin: 1rem auto 1.5rem;
+}
+
+/* Section À propos avec fond parallaxe */
+.parallax-section {
+    background-image: url('../images/tech-background.jpg');
+    background-attachment: fixed;
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: white;
+    position: relative;
+}
+
+.parallax-section::before {
     content: '';
     position: absolute;
-    bottom: -10px;
+    top: 0;
     left: 0;
-    width: 80px;
-    height: 3px;
-    background-color: #ff6b6b; /* Rouge/corail */
-    transition: width 0.3s ease;
-}
-
-.histoire-section h2:hover::after {
     width: 100%;
+    height: 100%;
+    background: rgba(241, 245, 250, 0.85);
 }
 
-/* Container de contenu avec effet d'ombre */
-.histoire-content {
-    background-color: white;
+.about-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 50px;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.about-content {
+    padding-right: 2rem;
+}
+
+.content-line {
+    height: 3px;
+    width: 50px;
+    background: var(--color-accent);
+    margin: 1rem 0 1.5rem;
+}
+
+.image-frame {
+    position: relative;
+    overflow: hidden;
     border-radius: 10px;
-    padding: 2.5rem;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-    border-left: 4px solid #0a2472;
-    margin-bottom: 2rem;
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s ease;
 }
 
-/* Paragraphes en noir */
-.histoire-content p {
-    color: #000000;
+.image-frame:hover {
+    transform: translateY(-10px);
+}
+.about-content h2{
+    color: blue;
+}
+.about-content p {
     font-size: 1.125rem;
     line-height: 1.8;
     margin-bottom: 1.5rem;
+    color: #000000; /* Couleur noire pour le texte */
+    font-weight: 400; /* Poids normal pour une meilleure lisibilité */
 }
 
-/* Style amélioré pour le bouton "Découvrir notre équipe" */
-.btn-decouvrir {
-    display: inline-block;
-    background: linear-gradient(45deg, #0a2472, #1e3a8a);
+.about-image {
+    width: 100%;
+    height: auto;
+    display: block;
+    transition: transform 0.5s ease;
+}
+
+.hover-scale:hover {
+    transform: scale(1.05);
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(color-secondary), 0.7);
+    opacity: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.3s ease;
+}
+
+.image-frame:hover .image-overlay {
+    opacity: 1;
+}
+
+.overlay-content {
+    text-align: center;
     color: white;
-    padding: 12px 24px;
-    border-radius: 8px;
-    font-weight: 600;
-    text-decoration: none;
-    box-shadow: 0 4px 15px rgba(10, 36, 114, 0.3);
-    transition: all 0.3s ease;
+}
+/* Assurez-vous que le texte est lisible sur le fond */
+.about-content {
+    padding: 2.5rem;
+    background: rgba(255, 255, 255, 0.95); /* Fond légèrement plus opaque */
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    border-left: 5px solid var(--color-primary);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.overlay-content i {
+    margin-bottom: 10px;
+}
+
+/* Boutons améliorés */
+.btn-glow {
     position: relative;
     overflow: hidden;
+    box-shadow: 0 0 15px rgba(var(--color-secondary-rgb), 0.5);
+    transition: all 0.3s ease;
 }
 
-.btn-decouvrir:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 10px 20px rgba(10, 36, 114, 0.4);
+.btn-glow:hover {
+    box-shadow: 0 0 25px rgba(var(--color-secondary-rgb), 0.8);
+    transform: translateY(-3px);
 }
 
-/* Effet de brillance au survol */
-.btn-decouvrir::after {
+.btn-glow::after {
     content: '';
     position: absolute;
     top: 0;
@@ -84,70 +201,444 @@
     transition: 0.5s;
 }
 
-.btn-decouvrir:hover::after {
+.btn-glow:hover::after {
     left: 100%;
 }
 
-/* Mise en page pour desktop et mobile */
-.histoire-grid {
+/* Fond avec gradient */
+.bg-gradient {
+    background: linear-gradient(135deg, var(--color-primary-dark) );
+    color: white;
+}
+
+.bg-gradient-dark {
+    background: linear-gradient(135deg, var(--color-secondary-dark));
+    color: white;
+}
+
+/* Section mission */
+.mission-card {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 15px;
+    padding: 40px;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.mission-text {
+    font-size: 1.25rem;
+    line-height: 1.8;
+    font-style: italic;
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.mission-icon-container {
+    text-align: center;
+}
+
+.mission-icon-circle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid white;
+    font-size: 1.8rem;
+    box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+}
+
+/* Section valeurs avec cartes 3D */
+.values-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
     gap: 30px;
+    margin-top: 3rem;
+}
+
+.value-card-3d {
+    height: 200px;
+    perspective: 1000px;
+    cursor: pointer;
+}
+
+.card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+}
+
+.value-card-3d:hover .card-inner {
+    transform: rotateY(180deg);
+}
+
+.card-front, .card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    border-radius: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+}
+
+.card-front {
+    background: white;
+    color: var(--color-primary);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.card-back {
+    background: var(--color-primary);
+    color: white;
+    transform: rotateY(180deg);
+}
+
+.value-icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    color: var(--color-accent);
+}
+
+/* Background avec motif tech */
+.bg-tech-pattern {
+    background-color: #f9f9f9;
+    background-image: url('../images/tech-pattern.png');
+    position: relative;
+}
+
+/* Section domaines de recherche */
+.research-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-top: 3rem;
+}
+
+.research-area-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    position: relative;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    z-index: 1;
+    overflow: hidden;
+}
+
+.research-area-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.research-icon {
+    font-size: 2.5rem;
+    color: var(--color-accent);
+    margin-bottom: 20px;
+}
+
+.research-area-card h3 {
+    margin-bottom: 15px;
+    color: var(--color-primary);
+    position: relative;
+    display: inline-block;
+}
+
+.research-area-card h3::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 0;
+    width: 50px;
+    height: 3px;
+    background: var(--color-secondary);
+    transition: width 0.3s ease;
+}
+
+.research-area-card:hover h3::after {
+    width: 100%;
+}
+
+.research-list {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0 0;
+}
+
+.research-list li {
+    margin-bottom: 10px;
+    display: flex;
     align-items: center;
 }
 
-.histoire-image {
+.research-list li i {
+    color: var(--color-secondary);
+    margin-right: 10px;
+}
+
+.card-highlight {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 5px;
+    height: 0;
+    background: var(--color-accent);
+    transition: height 0.3s ease;
+}
+
+.research-area-card:hover .card-highlight {
+    height: 100%;
+}
+
+/* Stats avec design circulaire */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+    margin-top: 3rem;
+}
+
+.stat-card {
+    text-align: center;
+    padding: 20px;
+    position: relative;
+    background: rgba(255, 255, 255, 0.1);
     border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(5px);
     transition: transform 0.3s ease;
 }
 
-.histoire-image:hover {
-    transform: scale(1.03);
+.stat-card:hover {
+    transform: translateY(-10px);
 }
 
-.histoire-image img {
+.stat-circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    border: 3px solid var(--color-accent);
+    margin: 0 auto 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    box-shadow: 0 0 20px rgba(var(--color-accent-rgb), 0.5);
+}
+
+.stat-number {
+    font-size: 2.5rem;
+    font-weight: bold;
+}
+
+.stat-label {
+    font-size: 1.2rem;
+    margin-bottom: 10px;
+}
+
+.stat-icon {
+    font-size: 1.5rem;
+    color: var(--color-accent);
+}
+
+/* Section équipements */
+.equipment-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 40px;
+    margin-top: 3rem;
+}
+
+.equipment-card {
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease;
+}
+
+.equipment-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
+}
+
+.equipment-image-container {
+    position: relative;
+    overflow: hidden;
+    height: 200px;
+}
+
+.equipment-image {
     width: 100%;
-    height: auto;
-    display: block;
+    height: 100%;
+    object-fit: cover;
     transition: transform 0.5s ease;
 }
 
-.histoire-image:hover img {
+.equipment-card:hover .equipment-image {
     transform: scale(1.1);
 }
 
-/* Responsive */
+.equipment-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(var(--color-primary-rgb), 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.equipment-card:hover .equipment-overlay {
+    opacity: 1;
+}
+
+.equipment-overlay-content {
+    color: white;
+    text-align: center;
+}
+
+.equipment-content {
+    padding: 25px;
+}
+
+.equipment-content h3 {
+    color: var(--color-primary);
+    margin-bottom: 15px;
+}
+
+.equipment-specs {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.equipment-specs span {
+    background: var(--color-gray-100);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.equipment-specs i {
+    color: var(--color-secondary);
+}
+
+/* Section partenaires avec slider */
+.partners-slider {
+    width: 100%;
+    overflow: hidden;
+    margin: 3rem 0;
+    position: relative;
+    padding: 20px 0;
+}
+
+.partners-track {
+    display: flex;
+    gap: 50px;
+    width: fit-content;
+}
+
+@keyframes scroll {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(calc(-100% + 100vw)); }
+}
+
+.partner-logo {
+    flex-shrink: 0;
+    width: 150px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.partner-logo:hover {
+    transform: scale(1.1);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.partner-logo img {
+    max-width: 90%;
+    max-height: 90%;
+    object-fit: contain;
+}
+
+.partnership-cta {
+    margin-top: 3rem;
+}
+
+.partnership-cta h3 {
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: var(--color-primary);
+}
+
+/* Conteneur pour tsParticles */
+.tech-particles {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+}
+
+/* Media queries pour responsivité */
 @media (max-width: 992px) {
-    .histoire-grid {
+    .about-grid {
         grid-template-columns: 1fr;
     }
     
-    .histoire-content {
-        padding: 2rem;
+    .about-content {
+        padding-right: 0;
     }
     
-    .histoire-section h2 {
-        font-size: 2rem;
+    .values-grid, .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 }
 
-@media (max-width: 576px) {
-    .histoire-content {
-        padding: 1.5rem;
+@media (max-width: 768px) {
+    .page-title {
+        font-size: 2.5rem;
     }
     
-    .histoire-section h2 {
-        font-size: 1.75rem;
+    .values-grid, .stats-grid, .equipment-grid {
+        grid-template-columns: 1fr;
     }
     
-    .histoire-content p {
-        font-size: 1rem;
+    .section {
+        padding: 50px 0;
     }
     
-    .btn-decouvrir {
-        display: block;
-        text-align: center;
+    .research-grid {
+        grid-template-columns: 1fr;
     }
 }
