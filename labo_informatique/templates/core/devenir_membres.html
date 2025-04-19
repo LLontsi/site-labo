@@ -1,0 +1,153 @@
+{% extends 'base.html' %}
+
+{% block title %}Devenir des membres - Laboratoire Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/devenir.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>Devenir des membres</h1>
+    <p>Découvrez le parcours des anciens membres après leur départ du laboratoire</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="devenir-filters">
+    <div class="container">
+        <div class="filter-grid">
+            <div class="filter-group">
+                <h3>Filtrer par domaine</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="domaine" data-value="all">Tous</button>
+                    {% for domaine in domaines %}
+                    <button class="filter-btn" data-filter="domaine" data-value="{{ domaine }}">{{ domaine }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Filtrer par année de départ</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="annee" data-value="all">Toutes</button>
+                    {% for annee in annees %}
+                    <button class="filter-btn" data-filter="annee" data-value="{{ annee }}">{{ annee }}</button>
+                    {% endfor %}
+                </div>
+            </div>
+            
+            <div class="filter-group">
+                <h3>Type de structure</h3>
+                <div class="filter-buttons">
+                    <button class="filter-btn active" data-filter="structure" data-value="all">Toutes</button>
+                    <button class="filter-btn" data-filter="structure" data-value="academique">Académique</button>
+                    <button class="filter-btn" data-filter="structure" data-value="industrie">Industrie</button>
+                    <button class="filter-btn" data-filter="structure" data-value="startup">Startup</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="devenir-statistics">
+    <div class="container">
+        <h2>Statistiques et répartition</h2>
+        <div class="stats-grid">
+            <div class="stats-card">
+                <div class="stats-number">{{ nb_membres }}</div>
+                <div class="stats-label">Anciens membres suivis</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-number">{{ nb_domaines }}</div>
+                <div class="stats-label">Domaines d'activité</div>
+            </div>
+            
+            <div class="stats-card">
+                <div class="stats-number">{{ nb_lieux }}</div>
+                <div class="stats-label">Lieux différents</div>
+            </div>
+        </div>
+        
+        <div class="stats-chart">
+            <h3>Répartition par secteur d'activité</h3>
+            <div class="chart-wrapper">
+                <!-- Ici, on pourrait intégrer un graphique avec Chart.js -->
+                <div class="placeholder-chart">
+                    <div class="chart-segment academique" style="width: {{ pct_academique }}%;">
+                        <span>Académique</span>
+                    </div>
+                    <div class="chart-segment industrie" style="width: {{ pct_industrie }}%;">
+                        <span>Industrie</span>
+                    </div>
+                    <div class="chart-segment startup" style="width: {{ pct_startup }}%;">
+                        <span>Startup</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="devenir-members">
+    <div class="container">
+        <h2>Parcours des anciens membres</h2>
+        
+        {% if devenirs %}
+        <div class="members-grid">
+            {% for devenir in devenirs %}
+            <div class="member-card" 
+                 data-domaine="{{ devenir.domaine }}" 
+                 data-annee="{{ devenir.membre.date_depart|date:'Y' }}" 
+                 data-structure="{{ devenir.type_structure }}">
+                <div class="member-header">
+                    <div class="member-photo">
+                        {% if devenir.membre.photo %}
+                            <img src="{{ devenir.membre.photo.url }}" alt="{{ devenir.membre.user.first_name }} {{ devenir.membre.user.last_name }}">
+                        {% else %}
+                            <div class="default-avatar">{{ devenir.membre.user.first_name|first }}{{ devenir.membre.user.last_name|first }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="member-identity">
+                        <h3>{{ devenir.membre.user.first_name }} {{ devenir.membre.user.last_name }}</h3>
+                        <p class="member-dates">
+                            <span>Au laboratoire: {{ devenir.membre.date_arrivee|date:"F Y" }} - {{ devenir.membre.date_depart|date:"F Y" }}</span>
+                        </p>
+                    </div>
+                </div>
+                <div class="member-current">
+                    <div class="current-position">
+                        <div class="position-company">{{ devenir.entreprise }}</div>
+                        <div class="position-title">{{ devenir.poste }}</div>
+                        <div class="position-meta">
+                            <span><i class="fas fa-map-marker-alt"></i> {{ devenir.lieu }}</span>
+                            <span><i class="fas fa-briefcase"></i> {{ devenir.domaine }}</span>
+                            <span><i class="far fa-calendar-alt"></i> Depuis {{ devenir.date_debut|date:"F Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="member-description">
+                    <p>{{ devenir.description|truncatechars:200 }}</p>
+                </div>
+                <div class="member-footer">
+                    <a href="{% url 'labo:membre_detail' devenir.membre.id %}" class="btn-profile">Voir le profil complet</a>
+                    {% if devenir.lien %}
+                    <a href="{{ devenir.lien }}" target="_blank" class="btn-website"><i class="fas fa-external-link-alt"></i></a>
+                    {% endif %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="empty-message">
+            <p>Aucune information sur le devenir des anciens membres n'est disponible pour le moment.</p>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/devenir.js"></script>
+{% endblock %}

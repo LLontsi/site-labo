@@ -1,26 +1,45 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Animation au défilement pour les différentes sections
-    const sections = document.querySelectorAll('.profile-content > div');
+    // Gestion du menu hamburger pour mobile
+    const hamburger = document.querySelector('.hamburger-menu');
+    const navMenu = document.querySelector('.nav-menu');
     
-    const animateOnScroll = function() {
-        sections.forEach(section => {
-            const sectionPosition = section.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.2;
-            
-            if (sectionPosition < screenPosition) {
-                section.classList.add('animate-in');
-            }
+    if (hamburger) {
+        hamburger.addEventListener('click', function() {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
         });
-    };
+    }
     
-    // Ajout des classes pour les animations
-    sections.forEach(section => {
-        section.classList.add('animate-section');
+    // Fermer le menu en cliquant sur un lien
+    const navLinks = document.querySelectorAll('.nav-menu a');
+    navLinks.forEach(link => {
+        link.addEventListener('click', () => {
+            hamburger.classList.remove('active');
+            navMenu.classList.remove('active');
+        });
     });
     
-    // Animation initiale
-    window.addEventListener('load', animateOnScroll);
+    // Gestion du scroll pour le header
+    const header = document.querySelector('.header');
+    let lastScrollTop = 0;
     
-    // Animation au défilement
-    window.addEventListener('scroll', animateOnScroll);
+    window.addEventListener('scroll', function() {
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+        
+        if (scrollTop > 100) {
+            header.classList.add('scrolled');
+            
+            if (scrollTop > lastScrollTop) {
+                header.classList.add('scroll-down');
+                header.classList.remove('scroll-up');
+            } else {
+                header.classList.add('scroll-up');
+                header.classList.remove('scroll-down');
+            }
+        } else {
+            header.classList.remove('scrolled');
+        }
+        
+        lastScrollTop = scrollTop;
+    });
 });

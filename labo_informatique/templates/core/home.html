@@ -1,194 +1,259 @@
 {% extends 'base.html' %}
 
-{% block title %}Accueil | Laboratoire Informatique{% endblock %}
+{% block title %}Accueil - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/home.css">
+{% endblock %}
 
 {% block header_content %}
 <div class="hero">
     <div class="hero-content">
-        <h1 class="hero-title fade-in">Bienvenue au Laboratoire Informatique</h1>
-        <p class="hero-subtitle fade-in delay-200">Un espace de recherche et d'innovation technologique</p>
-        <div class="hero-buttons fade-in delay-400">
+        <h1 class="hero-title">Bienvenue au Beta Lab</h1>
+        <p class="hero-subtitle">Un laboratoire de recherche en informatique innovant</p>
+        <div class="hero-buttons">
             <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Découvrir nos travaux</a>
-            <a href="{% url 'labo:contact' %}" class="btn btn-outline">Nous contacter</a>
-       
+            <a href="{% url 'labo:contact' %}" class="btn btn-secondary">Nous contacter</a>
         </div>
     </div>
-    <img src="{{ STATIC_URL }}images/hero-image.png" alt="Illustration numérique" class="hero-image floating">
+    <div class="hero-image-container">
+        <img src="{{ STATIC_URL }}/static/images/hero.svg" alt="Illustration du laboratoire" class="hero-image">
+    </div>
 </div>
 {% endblock %}
 
 {% block content %}
-<!-- Section caractéristiques -->
-<section class="features section">
+<!-- Section domaines d'expertise -->
+<section class="domains-section">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Nos domaines d'expertise</h2>
-        <div class="features-grid">
-            <div class="feature-card animate-on-scroll">
-                <div class="feature-icon">
+        <h2 class="section-title">Nos domaines d'expertise</h2>
+        <div class="domains-grid">
+            <div class="domain-card">
+                <div class="domain-icon">
                     <i class="fas fa-brain"></i>
                 </div>
-                <h3 class="feature-title">Intelligence Artificielle</h3>
-                <p class="feature-text">Développement d'algorithmes d'IA et de solutions de machine learning adaptées aux besoins modernes.</p>
+                <h3>Intelligence Artificielle</h3>
+                <p>Développement d'algorithmes et modèles avancés pour résoudre des problèmes complexes.</p>
             </div>
-            <div class="feature-card animate-on-scroll delay-200">
-                <div class="feature-icon">
-                    <i class="fas fa-lock"></i>
+            <div class="domain-card">
+                <div class="domain-icon">
+                    <i class="fas fa-shield-alt"></i>
                 </div>
-                <h3 class="feature-title">Cybersécurité</h3>
-                <p class="feature-text">Protection des systèmes et des données contre les menaces informatiques actuelles et émergentes.</p>
+                <h3>Cybersécurité</h3>
+                <p>Protection des systèmes d'information et développement de méthodes de sécurisation innovantes.</p>
             </div>
-            <div class="feature-card animate-on-scroll delay-400">
-                <div class="feature-icon">
-                    <i class="fas fa-cloud"></i>
+            <div class="domain-card">
+                <div class="domain-icon">
+                    <i class="fas fa-database"></i>
                 </div>
-                <h3 class="feature-title">Cloud Computing</h3>
-                <p class="feature-text">Optimisation des infrastructures cloud et développement de solutions évolutives.</p>
+                <h3>Big Data</h3>
+                <p>Analyse et traitement de grandes quantités de données pour en extraire des informations pertinentes.</p>
+            </div>
+            <div class="domain-card">
+                <div class="domain-icon">
+                    <i class="fas fa-network-wired"></i>
+                </div>
+                <h3>Réseaux Informatiques</h3>
+                <p>Optimisation des infrastructures réseau et développement de protocoles de communication.</p>
             </div>
         </div>
     </div>
 </section>
 
-<!-- Section derniers articles -->
-<section class="blog-preview section">
+<!-- Section actualités récentes -->
+<section class="news-section">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Actualités récentes</h2>
-        <div class="blog-grid">
+        <h2 class="section-title">Actualités récentes</h2>
+        <div class="news-grid">
             {% for article in derniers_articles %}
-            <div class="blog-card animate-on-scroll delay-{{ forloop.counter }}00">
-                {% if article.image_principale %}
-                <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}" class="blog-image">
-                {% else %}
-                <img src="{{ STATIC_URL }}images/blog-placeholder.jpg" alt="{{ article.titre }}" class="blog-image">
-                {% endif %}
-                <div class="blog-content">
-                    <div class="blog-date">{{ article.date_creation|date:"d F Y" }}</div>
-                    <h3 class="blog-title">{{ article.titre }}</h3>
-                    <p class="blog-excerpt">{{ article.contenu|truncatewords:30 }}</p>
-                    <a href="{% url 'blogs:detail' article.id %}" class="btn btn-outline">Lire plus</a>
-                </div>
-                <div class="blog-author">
-                    {% if article.auteur.photo %}
-                    <img src="{{ article.auteur.photo.url }}" alt="{{ article.auteur }}" class="blog-author-image">
+            <article class="news-card">
+                <div class="news-image">
+                    {% if article.image_principale %}
+                    <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}">
                     {% else %}
-                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ article.auteur }}" class="blog-author-image">
+                    <div class="placeholder-image">
+                        <i class="far fa-newspaper"></i>
+                    </div>
                     {% endif %}
-                    <span class="blog-author-name">{{ article.auteur }}</span>
                 </div>
-            </div>
+                <div class="news-content">
+                    <div class="news-meta">
+                        <span class="news-date">{{ article.date_creation|date:"d F Y" }}</span>
+                        {% for categorie in article.categories.all|slice:":1" %}
+                        <span class="news-category">{{ categorie.nom }}</span>
+                        {% endfor %}
+                    </div>
+                    <h3 class="news-title">{{ article.titre }}</h3>
+                    <div class="news-excerpt">
+                        {{ article.contenu|striptags|truncatewords:20 }}
+                    </div>
+                </div>
+                <div class="news-footer">
+                    <div class="news-author">
+                        {% if article.auteur.photo %}
+                        <img src="{{ article.auteur.photo.url }}" alt="{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}">
+                        {% else %}
+                        <div class="default-avatar">{{ article.auteur.user.first_name|first }}{{ article.auteur.user.last_name|first }}</div>
+                        {% endif %}
+                        <span>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
+                    </div>
+                    <a href="{% url 'labo:article_detail' article.id %}" class="btn-read">Lire plus</a>
+                </div>
+            </article>
             {% empty %}
-            <p>Aucun article disponible pour le moment.</p>
+            <div class="empty-message">
+                <p>Aucun article n'est disponible pour le moment.</p>
+            </div>
             {% endfor %}
         </div>
-        <div class="text-center animate-on-scroll">
+        <div class="section-action">
             <a href="{% url 'labo:liste_articles' %}" class="btn btn-primary">Voir tous les articles</a>
         </div>
     </div>
 </section>
 
 <!-- Section témoignages -->
-<section class="testimonials section">
+<section class="testimonials-section">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Témoignages</h2>
-        <div class="testimonials-slider">
+        <h2 class="section-title">Témoignages</h2>
+        <div class="testimonials-carousel">
             {% for temoignage in temoignages %}
-            <div class="testimonial-card animate-on-scroll delay-{{ forloop.counter }}00">
+            <div class="testimonial-card">
                 <div class="testimonial-content">
-                    {{ temoignage.contenu }}
+                    <i class="fas fa-quote-left quote-icon"></i>
+                    <p>{{ temoignage.contenu }}</p>
                 </div>
                 <div class="testimonial-author">
                     {% if temoignage.photo %}
-                    <img src="{{ temoignage.photo.url }}" alt="{{ temoignage.nom }}" class="testimonial-author-image">
+                    <img src="{{ temoignage.photo.url }}" alt="{{ temoignage.nom }}">
                     {% else %}
-                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ temoignage.nom }}" class="testimonial-author-image">
+                    <div class="default-avatar">{{ temoignage.nom|first }}</div>
                     {% endif %}
-                    <div class="testimonial-author-info">
+                    <div class="author-info">
                         <h4>{{ temoignage.nom }}</h4>
-                        <div class="testimonial-author-role">{{ temoignage.role }}</div>
+                        <p>{{ temoignage.role }}</p>
                     </div>
                 </div>
             </div>
             {% empty %}
-            <p>Aucun témoignage disponible pour le moment.</p>
+            <div class="empty-message">
+                <p>Aucun témoignage n'est disponible pour le moment.</p>
+            </div>
             {% endfor %}
         </div>
     </div>
 </section>
 
 <!-- Section équipe -->
-<section class="team-preview section">
+<section class="team-section">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Notre équipe</h2>
+        <h2 class="section-title">Notre équipe</h2>
         <div class="team-grid">
             {% for membre in membres|slice:":3" %}
-            <div class="team-card animate-on-scroll delay-{{ forloop.counter }}00">
-                <div class="team-image-container">
+            <div class="team-card">
+                <div class="team-photo">
                     {% if membre.photo %}
-                    <img src="{{ membre.photo.url }}" alt="{{ membre }}" class="team-image">
+                    <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
                     {% else %}
-                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ membre }}" class="team-image">
+                    <div class="default-avatar">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
                     {% endif %}
                 </div>
                 <div class="team-info">
-                    <h3 class="team-name">{{ membre }}</h3>
-                    <div class="team-role">{{ membre.titre }}</div>
-                    <p class="team-bio">{{ membre.bio|truncatewords:20 }}</p>
+                    <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
+                    <p class="team-title">{{ membre.titre }}</p>
+                    <p class="team-theme">{{ membre.theme.nom }}</p>
                     <div class="team-social">
                         {% if membre.linkedin %}
-                        <a href="{{ membre.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                         {% endif %}
                         {% if membre.github %}
-                        <a href="{{ membre.github }}" target="_blank"><i class="fab fa-github"></i></a>
+                        <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                        {% endif %}
+                        {% if membre.portfolio %}
+                        <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i></a>
                         {% endif %}
                     </div>
                 </div>
+                <a href="{% url 'labo:membre_detail' membre.id %}" class="team-link"></a>
             </div>
             {% empty %}
-            <p>Aucun membre disponible pour le moment.</p>
+            <div class="empty-message">
+                <p>Aucun membre n'est disponible pour le moment.</p>
+            </div>
             {% endfor %}
         </div>
-        <div class="text-center animate-on-scroll">
+        <div class="section-action">
             <a href="{% url 'labo:team' %}" class="btn btn-primary">Voir toute l'équipe</a>
         </div>
     </div>
 </section>
 
 <!-- Section événements -->
-<section class="events-preview section">
+<section class="events-section">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Événements à venir</h2>
+        <h2 class="section-title">Événements à venir</h2>
         <div class="events-grid">
             {% for evenement in evenements %}
-            <div class="event-card animate-on-scroll delay-{{ forloop.counter }}00">
-                {% if evenement.image %}
-                <img src="{{ evenement.image.url }}" alt="{{ evenement.titre }}" class="event-image">
-                {% else %}
-                <img src="{{ STATIC_URL }}images/event-placeholder.jpg" alt="{{ evenement.titre }}" class="event-image">
-                {% endif %}
-                <div class="event-content">
-                    <div class="event-date">{{ evenement.date_debut|date:"d F Y" }} - {{ evenement.date_fin|date:"d F Y" }}</div>
-                    <h3 class="event-title">{{ evenement.titre }}</h3>
-                    <div class="event-type">{{ evenement.get_type_evenement_display }}</div>
-                    <p class="event-excerpt">{{ evenement.description|truncatewords:20 }}</p>
-                    <div class="event-location">
-                        <i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}
+            <div class="event-card">
+                <div class="event-date">
+                    <span class="day">{{ evenement.date_debut|date:"d" }}</span>
+                    <span class="month">{{ evenement.date_debut|date:"M" }}</span>
+                </div>
+                <div class="event-details">
+                    <h3>{{ evenement.titre }}</h3>
+                    <div class="event-info">
+                        <span class="event-time"><i class="far fa-clock"></i> {{ evenement.date_debut|date:"H:i" }} - {{ evenement.date_fin|date:"H:i" }}</span>
+                        <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}</span>
                     </div>
+                    <p class="event-description">{{ evenement.description|truncatechars:120 }}</p>
+                    <span class="event-type">{{ evenement.type_evenement }}</span>
                 </div>
             </div>
             {% empty %}
-            <p>Aucun événement à venir pour le moment.</p>
+            <div class="empty-message">
+                <p>Aucun événement à venir n'est prévu pour le moment.</p>
+            </div>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<!-- Section contact rapide -->
-<section class="quick-contact section">
+<!-- Section statistiques -->
+<section class="stats-section">
     <div class="container">
-        <div class="contact-card animate-on-scroll">
-            <h2>Une question ou un projet ?</h2>
-            <p>N'hésitez pas à nous contacter pour discuter de vos besoins ou pour en savoir plus sur nos activités de recherche.</p>
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" data-count="{{ nb_membres }}">0</div>
+                <div class="stat-label">Chercheurs</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="{{ nb_publications }}">0</div>
+                <div class="stat-label">Publications</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="{{ nb_projets }}">0</div>
+                <div class="stat-label">Projets</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" data-count="{{ nb_partenaires }}">0</div>
+                <div class="stat-label">Partenaires</div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section contact rapide -->
+<section class="contact-cta-section">
+    <div class="container">
+        <div class="contact-cta-content">
+            <h2>Intéressé par nos recherches ?</h2>
+            <p>N'hésitez pas à nous contacter pour en savoir plus sur nos activités ou pour discuter d'une potentielle collaboration.</p>
             <a href="{% url 'labo:contact' %}" class="btn btn-primary">Contactez-nous</a>
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/home.js"></script>
 {% endblock %}

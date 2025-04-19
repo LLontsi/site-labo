@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block title %}Blog - Laboratoire Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/blog.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>Notre Blog</h1>
+    <p>Actualités, recherches et innovations du laboratoire</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="blog-section">
+    <div class="container">
+        <div class="blog-grid">
+            <div class="blog-main">
+                <div class="blog-categories">
+                    <h2>Catégories</h2>
+                    <div class="category-buttons">
+                        <a href="{% url 'labo:liste_articles' %}" class="category-btn {% if not category %}active{% endif %}">Tous les articles</a>
+                        {% for cat in categories %}
+                        <a href="{% url 'labo:liste_articles_par_categorie' cat.id %}" class="category-btn {% if category.id == cat.id %}active{% endif %}">{{ cat.nom }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                {% if articles %}
+                <div class="articles-list">
+                    {% for article in articles %}
+                    <article class="article-card">
+                        <div class="article-image">
+                            {% if article.image_principale %}
+                                <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}">
+                            {% else %}
+                                <div class="default-image">
+                                    <i class="fas fa-newspaper"></i>
+                                </div>
+                            {% endif %}
+                        </div>
+                        <div class="article-content">
+                            <div class="article-meta">
+                                <span class="article-date">{{ article.date_creation|date:"d F Y" }}</span>
+                                <span class="article-author">Par {{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
+                            </div>
+                            <h2 class="article-title">{{ article.titre }}</h2>
+                            <div class="article-categories">
+                                {% for cat in article.categories.all %}
+                                <span class="category-badge">{{ cat.nom }}</span>
+                                {% endfor %}
+                            </div>
+                            <div class="article-excerpt">
+                                {{ article.contenu|truncatewords:30|striptags }}
+                            </div>
+                            <a href="{% url 'labo:article_detail' article.id %}" class="btn-read-more">Lire l'article</a>
+                        </div>
+                    </article>
+                    {% endfor %}
+                </div>
+                
+                {% if articles.has_other_pages %}
+                <div class="pagination">
+                    {% if articles.has_previous %}
+                        <a href="?page={{ articles.previous_page_number }}" class="pagination-arrow">&laquo; Précédent</a>
+                    {% endif %}
+                    
+                    {% for num in articles.paginator.page_range %}
+                        {% if articles.number == num %}
+                            <span class="pagination-number active">{{ num }}</span>
+                        {% else %}
+                            <a href="?page={{ num }}" class="pagination-number">{{ num }}</a>
+                        {% endif %}
+                    {% endfor %}
+                    
+                    {% if articles.has_next %}
+                        <a href="?page={{ articles.next_page_number }}" class="pagination-arrow">Suivant &raquo;</a>
+                    {% endif %}
+                </div>
+                {% endif %}
+                
+                {% else %}
+                <div class="empty-message">
+                    <p>Aucun article n'est disponible pour le moment.</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="blog-sidebar">
+                <div class="sidebar-section recent-posts">
+                    <h3>Articles récents</h3>
+                    <ul class="recent-list">
+                        {% for recent in articles_recents %}
+                        <li>
+                            <a href="{% url 'labo:article_detail' recent.id %}">
+                                <span class="recent-title">{{ recent.titre }}</span>
+                                <span class="recent-date">{{ recent.date_creation|date:"d F Y" }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section popular-themes">
+                    <h3>Thèmes populaires</h3>
+                    <div class="themes-cloud">
+                        {% for theme in themes %}
+                        <a href="{% url 'labo:liste_articles_par_theme' theme.id %}" class="theme-tag">{{ theme.nom }}</a>
+                        {% endfor %}
+                    </div>
+                </div>
+                
+                <div class="sidebar-section authors">
+                    <h3>Nos auteurs</h3>
+                    <div class="authors-list">
+                        {% for auteur in auteurs %}
+                        <a href="{% url 'labo:membre_detail' auteur.id %}" class="author-item">
+                            {% if auteur.photo %}
+                                <img src="{{ auteur.photo.url }}" alt="{{ auteur.user.first_name }} {{ auteur.user.last_name }}">
+                            {% else %}
+                                <div class="default-avatar">{{ auteur.user.first_name|first }}{{ auteur.user.last_name|first }}</div>
+                            {% endif %}
+                            <span>{{ auteur.user.first_name }} {{ auteur.user.last_name }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/blog.js"></script>
+{% endblock %}

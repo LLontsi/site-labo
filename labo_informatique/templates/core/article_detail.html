@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ article.titre }} - Laboratoire Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/article_detail.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{{ article.titre }}</h1>
+    <div class="article-meta">
+        <span class="meta-item"><i class="far fa-calendar-alt"></i> {{ article.date_creation|date:"d F Y" }}</span>
+        <span class="meta-item"><i class="far fa-user"></i> Par {{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<article class="article-detail">
+    <div class="container">
+        <div class="article-grid">
+            <div class="article-main">
+                {% if article.image_principale %}
+                <div class="article-image">
+                    <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}">
+                </div>
+                {% endif %}
+                
+                <div class="article-categories">
+                    {% for categorie in article.categories.all %}
+                    <a href="{% url 'labo:liste_articles_par_categorie' categorie.id %}" class="category-badge">{{ categorie.nom }}</a>
+                    {% endfor %}
+                </div>
+                
+                <div class="article-content">
+                    {{ article.contenu|safe }}
+                </div>
+                
+                <div class="article-footer">
+                    <div class="article-share">
+                        <h3>Partager cet article</h3>
+                        <div class="share-buttons">
+                            <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.titre }}" target="_blank" class="share-btn twitter">
+                                <i class="fab fa-twitter"></i>
+                            </a>
+                            <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}" target="_blank" class="share-btn facebook">
+                                <i class="fab fa-facebook-f"></i>
+                            </a>
+                            <a href="https://www.linkedin.com/shareArticle?url={{ request.build_absolute_uri }}&title={{ article.titre }}" target="_blank" class="share-btn linkedin">
+                                <i class="fab fa-linkedin-in"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="article-author">
+                    <h3>À propos de l'auteur</h3>
+                    <div class="author-card">
+                        <div class="author-image">
+                            {% if article.auteur.photo %}
+                                <img src="{{ article.auteur.photo.url }}" alt="{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}">
+                            {% else %}
+                                <div class="default-avatar">{{ article.auteur.user.first_name|first }}{{ article.auteur.user.last_name|first }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="author-content">
+                            <h4>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</h4>
+                            <p class="author-title">{{ article.auteur.titre }}</p>
+                            <p class="author-bio">{{ article.auteur.bio|truncatechars:200 }}</p>
+                            <a href="{% url 'labo:membre_detail' article.auteur.id %}" class="btn-view-profile">Voir le profil</a>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if related_articles %}
+                <div class="related-articles">
+                    <h3>Articles similaires</h3>
+                    <div class="related-grid">
+                        {% for related in related_articles %}
+                        <div class="related-card">
+                            {% if related.image_principale %}
+                            <div class="related-image">
+                                <img src="{{ related.image_principale.url }}" alt="{{ related.titre }}">
+                            </div>
+                            {% else %}
+                            <div class="related-image default-image">
+                                <i class="fas fa-newspaper"></i>
+                            </div>
+                            {% endif %}
+                            <div class="related-content">
+                                <span class="related-date">{{ related.date_creation|date:"d F Y" }}</span>
+                                <h4>{{ related.titre }}</h4>
+                                <a href="{% url 'labo:article_detail' related.id %}" class="btn-read">Lire l'article</a>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div class="article-sidebar">
+                <div class="sidebar-section categories">
+                    <h3>Catégories</h3>
+                    <ul class="category-list">
+                        {% for categorie in categories %}
+                        <li>
+                            <a href="{% url 'labo:liste_articles_par_categorie' categorie.id %}">
+                                {{ categorie.nom }}
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section recent-posts">
+                    <h3>Articles récents</h3>
+                    <ul class="recent-list">
+                        {% for recent in articles_recents %}
+                        <li>
+                            <a href="{% url 'labo:article_detail' recent.id %}">
+                                <span class="recent-title">{{ recent.titre }}</span>
+                                <span class="recent-date">{{ recent.date_creation|date:"d F Y" }}</span>
+                            </a>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                
+                <div class="sidebar-section authors">
+                    <h3>Nos auteurs</h3>
+                    <div class="authors-list">
+                        {% for auteur in auteurs %}
+                        <a href="{% url 'labo:membre_detail' auteur.id %}" class="author-item">
+                            {% if auteur.photo %}
+                                <img src="{{ auteur.photo.url }}" alt="{{ auteur.user.first_name }} {{ auteur.user.last_name }}">
+                            {% else %}
+                                <div class="default-avatar">{{ auteur.user.first_name|first }}{{ auteur.user.last_name|first }}</div>
+                            {% endif %}
+                            <span>{{ auteur.user.first_name }} {{ auteur.user.last_name }}</span>
+                        </a>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</article>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/article_detail.js"></script>
+{% endblock %}
