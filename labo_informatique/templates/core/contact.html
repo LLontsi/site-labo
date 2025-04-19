@@ -1,7 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}Contact | Laboratoire Informatique{% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }} /static/css/contact.css">
+{% endblock %}
 {% block header_content %}
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">Contactez notre laboratoire</h1>

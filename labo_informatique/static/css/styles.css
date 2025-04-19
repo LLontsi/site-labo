@@ -1,85 +1,10 @@
 /* Styles de base pour tout le site */
 
-/* Variables CSS */
-:root {
-  /* Palette de couleurs principales */
-  --color-primary: #0a2472;    /* Bleu profond */
-  --color-secondary: #00a8e8;  /* Bleu clair */
-  --color-accent: #ff6b6b;     /* Corail/Rouge */
-  
-  /* Nuances pour gradients et états */
-  --color-primary-light: #1e3a8a;
-  --color-primary-dark: #061551;
-  --color-secondary-light: #3fbbeb;
-  --color-secondary-dark: #0076a3;
-  --color-accent-light: #ff8a8a;
-  --color-accent-dark: #e04a4a;
-  
-  /* Variables RVB pour utilisation avec opacity */
-  --color-primary-rgb: 10, 36, 114;
-  --color-secondary-rgb: 0, 168, 232;
-  --color-accent-rgb: 255, 107, 107;
-  
-  /* Couleurs neutres */
-  --color-dark: #051937;
-  --color-light: #f8f9fa;
-  --color-gray-100: #f8f9fa;
-  --color-gray-200: #e9ecef;
-  --color-gray-300: #dee2e6;
-  --color-gray-400: #ced4da;
-  --color-gray-500: #adb5bd;
-  --color-gray-600: #6c757d;
-  --color-gray-700: #495057;
-  --color-gray-800: #343a40;
-  --color-gray-900: #212529;
-  
-  /* Typographie */
-  --font-primary: 'Poppins', sans-serif;
-  --font-secondary: 'Roboto', sans-serif;
-  --font-monospace: 'Fira Code', monospace;
-  
-  /* Tailles de police */
-  --font-size-xs: 0.75rem;
-  --font-size-sm: 0.875rem;
-  --font-size-base: 1rem;
-  --font-size-md: 1.125rem;
-  --font-size-lg: 1.25rem;
-  --font-size-xl: 1.5rem;
-  --font-size-2xl: 1.875rem;
-  --font-size-3xl: 2.25rem;
-  --font-size-4xl: 3rem;
-  
-  /* Espacements */
-  --spacing-xs: 0.25rem;
-  --spacing-sm: 0.5rem;
-  --spacing-md: 1rem;
-  --spacing-lg: 1.5rem;
-  --spacing-xl: 2rem;
-  --spacing-2xl: 3rem;
-  --spacing-3xl: 4rem;
-  
-  /* Bordures et ombres */
-  --border-radius-sm: 0.25rem;
-  --border-radius-md: 0.5rem;
-  --border-radius-lg: 1rem;
-  --border-radius-full: 9999px;
-  
-  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
-  --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.1), 0 1px 3px rgba(0, 0, 0, 0.08);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  
-  /* Animations */
-  --transition-fast: 150ms;
-  --transition-normal: 300ms;
-  --transition-slow: 500ms;
-  --transition-very-slow: 1000ms;
-  
-  --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-in: cubic-bezier(0.4, 0, 1, 1);
-  --ease-out: cubic-bezier(0, 0, 0.2, 1);
-  --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
-}
+/* Importation des variables et animations */
+@import url('variables.css');
+@import url('animations.css');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Roboto:wght@300;400;500;700&family=Fira+Code:wght@400;500&display=swap');
+
 
 /* Reset et styles de base */
 * {

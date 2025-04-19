@@ -7,9 +7,16 @@
 {% endblock %}
 
 {% block header_content %}
-<div class="page-title">
-    <h1>{{ membre.user.first_name }} {{ membre.user.last_name }}</h1>
-    <p>{{ membre.titre }}</p>
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Membres</h1>
+    <div class="header-line"></div>
+   
+
+    <div class="page-title">
+        <h1>{{ membre.user.first_name }} {{ membre.user.last_name }}</h1>
+        <p>{{ membre.titre }}</p>
+    </div>
+    <p class="page-subtitle fade-in delay-200">Innovation et excellence technologique</p>
 </div>
 {% endblock %}
 

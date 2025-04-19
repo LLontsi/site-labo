@@ -2,7 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 from django.utils.text import slugify
-
+from datetime import date
 
 class Theme(models.Model):
     """Thèmes de recherche du laboratoire."""
@@ -28,7 +28,8 @@ class Membre(models.Model):
     github = models.URLField(blank=True, null=True)
     portfolio = models.URLField(blank=True, null=True)
     est_responsable = models.BooleanField(default=False)
-    date_arrivee = models.DateField()
+ 
+    date_arrivee = models.DateField(default=date(2023, 1, 1))
     date_depart = models.DateField(blank=True, null=True)
     est_ancien = models.BooleanField(default=False)
     

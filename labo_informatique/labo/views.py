@@ -52,13 +52,13 @@ def home(request):
         'nb_projets': nb_projets,
         'nb_partenaires': nb_partenaires,
     }
-    return render(request, 'pages/home.html', context)
+    return render(request, 'core/home.html', context)
 
 
 def about(request):
     """Page À propos du laboratoire."""
     context = {}
-    return render(request, 'pages/about.html', context)
+    return render(request, 'core/about.html', context)
 
 
 def contact(request):
@@ -88,7 +88,7 @@ def contact(request):
     context = {
         'form': form,
     }
-    return render(request, 'pages/contact.html', context)
+    return render(request, 'core/contact.html', context)
 
 
 def team(request):
@@ -100,7 +100,7 @@ def team(request):
         'membres': membres,
         'themes': themes,
     }
-    return render(request, 'pages/team.html', context)
+    return render(request, 'core/team.html', context)
 
 
 def membre_detail(request, membre_id):
@@ -124,7 +124,7 @@ def membre_detail(request, membre_id):
         'articles': articles,
         'devenir': devenir,
     }
-    return render(request, 'pages/membre_detail.html', context)
+    return render(request, 'core/membre_detail.html', context)
 
 
 def responsables(request):
@@ -136,7 +136,7 @@ def responsables(request):
         'responsables': responsables,
         'collaborateurs': collaborateurs,
     }
-    return render(request, 'pages/responsables.html', context)
+    return render(request, 'core/responsables.html', context)
 
 
 def liste_presentations(request):
@@ -159,7 +159,7 @@ def liste_presentations(request):
         'presentations': presentations,
         'themes': themes,
     }
-    return render(request, 'pages/liste_presentations.html', context)
+    return render(request, 'core/liste_presentations.html', context)
 
 
 def presentation_detail(request, presentation_id):
@@ -184,7 +184,7 @@ def presentation_detail(request, presentation_id):
         'images': images,
         'related_presentations': related_presentations,
     }
-    return render(request, 'pages/presentation_detail.html', context)
+    return render(request, 'core/presentation_detail.html', context)
 
 
 def liste_articles(request):
@@ -222,7 +222,7 @@ def liste_articles(request):
         'themes': themes,
         'category': None,
     }
-    return render(request, 'pages/liste_articles.html', context)
+    return render(request, 'core/liste_articles.html', context)
 
 
 def liste_articles_par_categorie(request, categorie_id):
@@ -265,7 +265,7 @@ def liste_articles_par_categorie(request, categorie_id):
         'themes': themes,
         'category': categorie,
     }
-    return render(request, 'pages/liste_articles.html', context)
+    return render(request, 'core/liste_articles.html', context)
 
 
 def liste_articles_par_theme(request, theme_id):
@@ -309,7 +309,7 @@ def liste_articles_par_theme(request, theme_id):
        'category': None,
        'theme': theme,
    }
-   return render(request, 'pages/liste_articles.html', context)
+   return render(request, 'core/liste_articles.html', context)
 
 
 def article_detail(request, article_id):
@@ -353,7 +353,7 @@ def article_detail(request, article_id):
        'auteurs': auteurs,
        'related_articles': related_articles,
    }
-   return render(request, 'pages/article_detail.html', context)
+   return render(request, 'core/article_detail.html', context)
 
 
 def devenir_membres(request):
@@ -393,7 +393,7 @@ def devenir_membres(request):
        'pct_industrie': pct_industrie,
        'pct_startup': pct_startup,
    }
-   return render(request, 'pages/devenir_membres.html', context)
+   return render(request, 'core/devenir_membres.html', context)
 
 
 # Vues pour les utilisateurs authentifiés
