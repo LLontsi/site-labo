@@ -1,0 +1,63 @@
+/* Styles pour l'éditeur de texte riche */
+
+.rich-text-toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px;
+    margin-bottom: var(--spacing-sm);
+    background-color: var(--color-gray-100);
+    padding: var(--spacing-xs);
+    border-radius: var(--border-radius-md) var(--border-radius-md) 0 0;
+    border: 1px solid var(--color-gray-300);
+}
+
+.rich-text-toolbar button {
+    background-color: white;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-sm);
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all var(--transition-normal) var(--ease-in-out);
+}
+
+.rich-text-toolbar button:hover {
+    background-color: var(--color-gray-200);
+}
+
+.rich-text-toolbar button.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+.separator {
+    width: 1px;
+    height: 36px;
+    background-color: var(--color-gray-300);
+    margin: 0 var(--spacing-xs);
+}
+
+.rich-text-editor {
+    min-height: 300px;
+    border: 1px solid var(--color-gray-300);
+    border-top: none;
+    border-radius: 0 0 var(--border-radius-md) var(--border-radius-md);
+    padding: var(--spacing-md);
+    overflow-y: auto;
+    background-color: white;
+}
+
+.rich-text-editor:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+/* Cacher le vrai champ textarea */
+#id_contenu {
+    display: none;
+}

@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if article %}Modifier l'article{% else %}Nouvel article{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/rich-editor.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{% if article %}Modifier l'article{% else %}Nouvel article{% endif %}</h1>
+    <p>Partagez vos connaissances et actualités avec la communauté</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="container">
+        <div class="form-card">
+            <form method="post" enctype="multipart/form-data" class="content-form">
+                {% csrf_token %}
+                
+                <div class="form-section-title">
+                    <h2>Informations générales</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.titre.id_for_label }}">Titre de l'article</label>
+                    {{ form.titre }}
+                    {% if form.titre.errors %}
+                        <div class="form-error">{{ form.titre.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.categories.id_for_label }}">Catégories</label>
+                    <div class="categories-select">
+                        {{ form.categories }}
+                    </div>
+                    {% if form.categories.errors %}
+                        <div class="form-error">{{ form.categories.errors.0 }}</div>
+                    {% endif %}
+                    <div class="form-help">Sélectionnez une ou plusieurs catégories pour votre article.</div>
+                </div>
+                
+                <div class="form-section-title">
+                    <h2>Image principale</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.image_principale.id_for_label }}">Image de couverture</label>
+                    <div class="file-input-group">
+                        {% if article and article.image_principale %}
+                            <div class="current-image">
+                                <img src="{{ article.image_principale.url }}" alt="Image actuelle">
+                                <p>Image actuelle</p>
+                            </div>
+                        {% endif %}
+                        {{ form.image_principale }}
+                        <div class="form-help">Format recommandé : 1200x600 pixels minimum.</div>
+                        {% if form.image_principale.errors %}
+                            <div class="form-error">{{ form.image_principale.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-section-title">
+                    <h2>Contenu de l'article</h2>
+                </div>
+                
+                <div class="form-group">
+                    <div class="rich-text-toolbar">
+                        <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                        <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                        <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                        <span class="separator"></span>
+                        <button type="button" data-command="h1">H1</button>
+                        <button type="button" data-command="h2">H2</button>
+                        <button type="button" data-command="h3">H3</button>
+                        <span class="separator"></span>
+                        <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                        <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                        <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                        <span class="separator"></span>
+                        <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                        <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                        <span class="separator"></span>
+                        <button type="button" data-command="createLink"><i class="fas fa-link"></i></button>
+                        <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                    </div>
+                    <div class="rich-text-editor" contenteditable="true">
+                        {% if article %}{{ article.contenu|safe }}{% endif %}
+                    </div>
+                    {{ form.contenu }}
+                    {% if form.contenu.errors %}
+                        <div class="form-error">{{ form.contenu.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-section-title">
+                    <h2>Options de publication</h2>
+                </div>
+                
+                <div class="form-group form-checkbox-group">
+                    <label class="checkbox-label">
+                        {{ form.est_publie }}
+                        <span>Publier immédiatement</span>
+                    </label>
+                    <div class="form-help">Si cette option n'est pas cochée, l'article sera enregistré comme brouillon et ne sera pas visible publiquement.</div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/rich-editor.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editor = document.querySelector('.rich-text-editor');
+        const hiddenInput = document.getElementById('{{ form.contenu.id_for_label }}');
+        const toolbar = document.querySelector('.rich-text-toolbar');
+        
+        // Initialiser l'éditeur
+        initRichTextEditor(editor, hiddenInput, toolbar);
+        
+        // Soumettre le formulaire
+        document.querySelector('.content-form').addEventListener('submit', function() {
+            hiddenInput.value = editor.innerHTML;
+        });
+    });
+</script>
+{% endblock %}

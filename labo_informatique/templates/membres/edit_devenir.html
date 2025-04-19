@@ -1,0 +1,118 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if devenir %}Modifier mon parcours{% else %}Ajouter mon parcours{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{% if devenir %}Modifier mon parcours{% else %}Ajouter mon parcours{% endif %}</h1>
+    <p>Partagez votre expérience professionnelle après le laboratoire</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="container">
+        <div class="form-card">
+            <form method="post" class="content-form">
+                {% csrf_token %}
+                
+                <div class="form-section-title">
+                    <h2>Poste actuel</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.entreprise.id_for_label }}">Entreprise / Institution</label>
+                    {{ form.entreprise }}
+                    {% if form.entreprise.errors %}
+                        <div class="form-error">{{ form.entreprise.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.poste.id_for_label }}">Poste / Fonction</label>
+                    {{ form.poste }}
+                    {% if form.poste.errors %}
+                        <div class="form-error">{{ form.poste.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group form-col">
+                        <label for="{{ form.date_debut.id_for_label }}">Date de début</label>
+                        {{ form.date_debut }}
+                        {% if form.date_debut.errors %}
+                            <div class="form-error">{{ form.date_debut.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group form-col">
+                        <label for="{{ form.lieu.id_for_label }}">Lieu</label>
+                        {{ form.lieu }}
+                        {% if form.lieu.errors %}
+                            <div class="form-error">{{ form.lieu.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group form-col">
+                        <label for="{{ form.domaine.id_for_label }}">Domaine d'activité</label>
+                        {{ form.domaine }}
+                        {% if form.domaine.errors %}
+                            <div class="form-error">{{ form.domaine.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-group form-col">
+                        <label for="{{ form.type_structure.id_for_label }}">Type de structure</label>
+                        {{ form.type_structure }}
+                        {% if form.type_structure.errors %}
+                            <div class="form-error">{{ form.type_structure.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.lien.id_for_label }}">Site web professionnel</label>
+                    {{ form.lien }}
+                    {% if form.lien.errors %}
+                        <div class="form-error">{{ form.lien.errors.0 }}</div>
+                    {% endif %}
+                    <div class="form-help">URL de l'entreprise ou de votre page professionnelle.</div>
+                </div>
+                
+                <div class="form-section-title">
+                    <h2>Description détaillée</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description du parcours</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="form-error">{{ form.description.errors.0 }}</div>
+                    {% endif %}
+                    <div class="form-help">Décrivez votre parcours depuis votre départ du laboratoire.</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.realisations.id_for_label }}">Réalisations notables</label>
+                    {{ form.realisations }}
+                    {% if form.realisations.errors %}
+                        <div class="form-error">{{ form.realisations.errors.0 }}</div>
+                    {% endif %}
+                    <div class="form-help">Mentionnez vos réalisations, projets ou publications significatifs (optionnel).</div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

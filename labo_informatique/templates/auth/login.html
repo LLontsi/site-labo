@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Connexion - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/auth.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>Connexion</h1>
+    <p>Accédez à votre espace membre</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h2>Connexion à votre compte</h2>
+            
+            {% if form.errors %}
+            <div class="alert alert-error">
+                <p>Nom d'utilisateur ou mot de passe incorrect. Veuillez réessayer.</p>
+            </div>
+            {% endif %}
+            
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_username">Nom d'utilisateur</label>
+                    {{ form.username }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password">Mot de passe</label>
+                    {{ form.password }}
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Se connecter</button>
+                </div>
+                <input type="hidden" name="next" value="{{ next }}">
+            </form>
+            
+            <div class="auth-links">
+                <a href="{% url 'password_reset' %}">Mot de passe oublié ?</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

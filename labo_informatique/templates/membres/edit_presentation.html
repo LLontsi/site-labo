@@ -1,0 +1,149 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if presentation %}Modifier la présentation{% else %}Nouvelle présentation{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{% if presentation %}Modifier la présentation{% else %}Nouvelle présentation{% endif %}</h1>
+    <p>Partagez vos travaux et documents avec la communauté</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="form-section">
+    <div class="container">
+        <div class="form-card">
+            <form method="post" enctype="multipart/form-data" class="content-form">
+                {% csrf_token %}
+                
+                <div class="form-section-title">
+                    <h2>Informations générales</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.titre.id_for_label }}">Titre de la présentation</label>
+                    {{ form.titre }}
+                    {% if form.titre.errors %}
+                        <div class="form-error">{{ form.titre.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.description.id_for_label }}">Description</label>
+                    {{ form.description }}
+                    {% if form.description.errors %}
+                        <div class="form-error">{{ form.description.errors.0 }}</div>
+                    {% endif %}
+                    <div class="form-help">Décrivez brièvement le contenu et l'objectif de cette présentation.</div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.theme.id_for_label }}">Thème associé</label>
+                    {{ form.theme }}
+                    {% if form.theme.errors %}
+                        <div class="form-error">{{ form.theme.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-section-title">
+                    <h2>Fichier principal</h2>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.fichier.id_for_label }}">Fichier</label>
+                    <div class="file-input-group">
+                        {% if presentation and presentation.fichier %}
+                            <div class="current-file">
+                                <p>Fichier actuel : <a href="{{ presentation.fichier.url }}" target="_blank">{{ presentation.fichier.name|split:"/"|last }}</a></p>
+                            </div>
+                        {% endif %}
+                        {{ form.fichier }}
+                        <div class="form-help">Formats acceptés : PDF, PPTX, DOCX, etc.</div>
+                        {% if form.fichier.errors %}
+                            <div class="form-error">{{ form.fichier.errors.0 }}</div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="{{ form.type_fichier.id_for_label }}">Type de fichier</label>
+                    {{ form.type_fichier }}
+                    {% if form.type_fichier.errors %}
+                        <div class="form-error">{{ form.type_fichier.errors.0 }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="form-section-title">
+                    <h2>Images supplémentaires</h2>
+                    <p class="form-subtitle">Ajoutez des captures d'écran ou des illustrations de votre présentation</p>
+                </div>
+                
+                {{ formset.management_form }}
+                <div class="images-formset">
+                    {% for image_form in formset %}
+                        <div class="formset-item{% if image_form.instance.pk %} has-image{% endif %}">
+                            <div class="formset-header">
+                                <h3>Image {{ forloop.counter }}</h3>
+                                {{ image_form.DELETE.label_tag }}
+                                {{ image_form.DELETE }}
+                                {{ image_form.id }}
+                            </div>
+                            
+                            <div class="formset-content">
+                                {% if image_form.instance.pk and image_form.instance.image %}
+                                    <div class="current-image">
+                                        <img src="{{ image_form.instance.image.url }}" alt="Image {{ forloop.counter }}">
+                                    </div>
+                                {% endif %}
+                                
+                                <div class="form-group">
+                                    <label for="{{ image_form.image.id_for_label }}">Image</label>
+                                    {{ image_form.image }}
+                                    {% if image_form.image.errors %}
+                                        <div class="form-error">{{ image_form.image.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ image_form.legende.id_for_label }}">Légende</label>
+                                    {{ image_form.legende }}
+                                    {% if image_form.legende.errors %}
+                                        <div class="form-error">{{ image_form.legende.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Annuler</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Afficher/masquer les éléments du formset quand la case "Supprimer" est cochée
+        document.querySelectorAll('.formset-item input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const formsetItem = this.closest('.formset-item');
+                if (this.checked) {
+                    formsetItem.classList.add('to-delete');
+                } else {
+                    formsetItem.classList.remove('to-delete');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,282 @@
+{% extends 'base.html' %}
+
+{% block title %}Tableau de bord - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/dashboard.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>Tableau de bord</h1>
+    <p>Bonjour, {{ membre.user.first_name }} {{ membre.user.last_name }}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="dashboard-section">
+    <div class="container">
+        <div class="dashboard-grid">
+            <div class="dashboard-sidebar">
+                <div class="profile-card">
+                    <div class="profile-image">
+                        {% if membre.photo %}
+                            <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
+                        {% else %}
+                            <div class="default-avatar">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="profile-info">
+                        <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
+                        <p class="profile-title">{{ membre.titre }}</p>
+                        {% if membre.theme %}
+                            <p class="profile-theme">{{ membre.theme.nom }}</p>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'labo:edit_profile' %}" class="btn-edit-profile">Modifier le profil</a>
+                </div>
+                
+                <div class="dashboard-nav">
+                    <ul>
+                        <li><a href="#profile" class="active">Mon profil</a></li>
+                        <li><a href="#presentations">Mes présentations</a></li>
+                        <li><a href="#articles">Mes articles</a></li>
+                        {% if membre.est_ancien %}
+                            <li><a href="#devenir">Mon parcours</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="dashboard-content">
+                <div id="profile" class="dashboard-section-content active">
+                    <div class="section-header">
+                        <h2>Mon profil</h2>
+                    </div>
+                    
+                    <div class="profile-details">
+                        <div class="detail-group">
+                            <h3>Informations personnelles</h3>
+                            <div class="detail-row">
+                                <div class="detail-label">Nom</div>
+                                <div class="detail-value">{{ membre.user.first_name }} {{ membre.user.last_name }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Email</div>
+                                <div class="detail-value">{{ membre.user.email }}</div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Fonction</div>
+                                <div class="detail-value">{{ membre.titre }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <h3>Thème de recherche</h3>
+                            <div class="detail-row">
+                                <div class="detail-value">
+                                    {% if membre.theme %}
+                                        {{ membre.theme.nom }}
+                                    {% else %}
+                                        <em>Non spécifié</em>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <h3>Biographie</h3>
+                            <div class="detail-row">
+                                <div class="detail-value bio">{{ membre.bio|linebreaks }}</div>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <h3>Liens professionnels</h3>
+                            <div class="detail-row">
+                                <div class="detail-label">LinkedIn</div>
+                                <div class="detail-value">
+                                    {% if membre.linkedin %}
+                                        <a href="{{ membre.linkedin }}" target="_blank">{{ membre.linkedin }}</a>
+                                    {% else %}
+                                        <em>Non spécifié</em>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">GitHub</div>
+                                <div class="detail-value">
+                                    {% if membre.github %}
+                                        <a href="{{ membre.github }}" target="_blank">{{ membre.github }}</a>
+                                    {% else %}
+                                        <em>Non spécifié</em>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="detail-row">
+                                <div class="detail-label">Portfolio</div>
+                                <div class="detail-value">
+                                    {% if membre.portfolio %}
+                                        <a href="{{ membre.portfolio }}" target="_blank">{{ membre.portfolio }}</a>
+                                    {% else %}
+                                        <em>Non spécifié</em>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="presentations" class="dashboard-section-content">
+                    <div class="section-header">
+                        <h2>Mes présentations</h2>
+                        <a href="{% url 'labo:create_presentation' %}" class="btn-action">Ajouter une présentation</a>
+                    </div>
+                    
+                    {% if presentations %}
+                        <div class="presentations-list">
+                            {% for presentation in presentations %}
+                                <div class="content-card">
+                                    <div class="card-icon">
+                                        {% if presentation.type_fichier == 'pdf' %}
+                                            <i class="far fa-file-pdf"></i>
+                                        {% elif presentation.type_fichier == 'pptx' %}
+                                            <i class="far fa-file-powerpoint"></i>
+                                        {% else %}
+                                            <i class="far fa-file"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-content">
+                                        <h3>{{ presentation.titre }}</h3>
+                                        <p class="card-meta">
+                                            <span class="card-date">{{ presentation.date_creation|date:"d F Y" }}</span>
+                                            {% if presentation.theme %}
+                                                <span class="card-theme">{{ presentation.theme.nom }}</span>
+                                            {% endif %}
+                                        </p>
+                                        <p class="card-excerpt">{{ presentation.description|truncatechars:150 }}</p>
+                                    </div>
+                                    <div class="card-actions">
+                                        <a href="{% url 'labo:presentation_detail' presentation.id %}" class="btn-view">Voir</a>
+                                        <a href="{% url 'labo:edit_presentation' presentation.id %}" class="btn-edit">Modifier</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-content">
+                            <div class="empty-icon"><i class="far fa-file-alt"></i></div>
+                            <h3>Aucune présentation</h3>
+                            <p>Vous n'avez pas encore ajouté de présentation.</p>
+                            <a href="{% url 'labo:create_presentation' %}" class="btn-primary">Ajouter ma première présentation</a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div id="articles" class="dashboard-section-content">
+                    <div class="section-header">
+                        <h2>Mes articles</h2>
+                        <a href="{% url 'labo:create_article' %}" class="btn-action">Écrire un article</a>
+                    </div>
+                    
+                    {% if articles %}
+                        <div class="articles-list">
+                            {% for article in articles %}
+                                <div class="content-card">
+                                    <div class="card-image">
+                                        {% if article.image_principale %}
+                                            <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}">
+                                        {% else %}
+                                            <div class="default-image">
+                                                <i class="far fa-newspaper"></i>
+                                            </div>
+                                        {% endif %}
+                                        {% if not article.est_publie %}
+                                            <div class="draft-badge">Brouillon</div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="card-content">
+                                        <h3>{{ article.titre }}</h3>
+                                        <p class="card-meta">
+                                            <span class="card-date">{{ article.date_creation|date:"d F Y" }}</span>
+                                            <span class="card-categories">
+                                                {% for categorie in article.categories.all %}
+                                                    <span class="category-badge">{{ categorie.nom }}</span>
+                                                {% endfor %}
+                                            </span>
+                                        </p>
+                                        <p class="card-excerpt">{{ article.contenu|striptags|truncatechars:150 }}</p>
+                                    </div>
+                                    <div class="card-actions">
+                                        {% if article.est_publie %}
+                                            <a href="{% url 'labo:article_detail' article.id %}" class="btn-view">Voir</a>
+                                        {% endif %}
+                                        <a href="{% url 'labo:edit_article' article.id %}" class="btn-edit">Modifier</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-content">
+                            <div class="empty-icon"><i class="far fa-newspaper"></i></div>
+                            <h3>Aucun article</h3>
+                            <p>Vous n'avez pas encore écrit d'article.</p>
+                            <a href="{% url 'labo:create_article' %}" class="btn-primary">Écrire mon premier article</a>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if membre.est_ancien %}
+                <div id="devenir" class="dashboard-section-content">
+                    <div class="section-header">
+                        <h2>Mon parcours après le laboratoire</h2>
+                        <a href="{% url 'labo:edit_devenir' %}" class="btn-action">
+                            {% if devenir %}Modifier{% else %}Ajouter{% endif %}
+                        </a>
+                    </div>
+                    
+                    {% if devenir %}
+                        <div class="devenir-content">
+                            <div class="devenir-header">
+                                <h3>{{ devenir.poste }}</h3>
+                                <div class="devenir-company">{{ devenir.entreprise }}</div>
+                                <div class="devenir-meta">
+                                    <span><i class="fas fa-map-marker-alt"></i> {{ devenir.lieu }}</span>
+                                    <span><i class="fas fa-calendar-alt"></i> Depuis {{ devenir.date_debut|date:"F Y" }}</span>
+                                    <span><i class="fas fa-tag"></i> {{ devenir.domaine }}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="devenir-detail">
+                                <h4>Description</h4>
+                                <div class="devenir-description">
+                                    {{ devenir.description|linebreaks }}
+                                </div>
+                                
+                                {% if devenir.realisations %}
+                                    <h4>Réalisations</h4>
+                                    <div class="devenir-achievements">
+                                        {{ devenir.realisations|linebreaks }}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="empty-content">
+                            <div class="empty-icon"><i class="fas fa-briefcase"></i></div>
+                            <h3>Aucune information</h3>
+                            <p>Vous n'avez pas encore ajouté d'informations sur votre parcours actuel.</p>
+                            <a href="{% url 'labo:edit_devenir' %}" class="btn-primary">Ajouter mon parcours</a>
+                        </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/dashboard.js"></script>
+{% endblock %}

@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block title %}Inscription - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/auth.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>Inscription</h1>
+    <p>Créez votre compte Beta Lab</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+    <div class="container">
+        <div class="auth-card">
+            <h2>Créer votre compte</h2>
+            
+            <div class="invitation-info">
+                <p>Vous avez été invité avec l'adresse email <strong>{{ invitation.email }}</strong> à rejoindre la plateforme.</p>
+            </div>
+            
+            {% if form.errors %}
+            <div class="alert alert-error">
+                {% for field in form %}
+                    {% for error in field.errors %}
+                        <p>{{ field.label }}: {{ error }}</p>
+                    {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                    <p>{{ error }}</p>
+                {% endfor %}
+            </div>
+            {% endif %}
+            
+            <form method="post" class="auth-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="id_first_name">Prénom</label>
+                    {{ form.first_name }}
+                </div>
+                <div class="form-group">
+                    <label for="id_last_name">Nom</label>
+                    {{ form.last_name }}
+                </div>
+                <div class="form-group">
+                    <label for="id_username">Nom d'utilisateur</label>
+                    {{ form.username }}
+                    <div class="form-help">Ce nom sera utilisé pour vous connecter.</div>
+                </div>
+                {{ form.email }} <!-- Champ caché -->
+                <div class="form-group">
+                    <label for="id_password1">Mot de passe</label>
+                    {{ form.password1 }}
+                </div>
+                <div class="form-group">
+                    <label for="id_password2">Confirmer le mot de passe</label>
+                    {{ form.password2 }}
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Créer mon compte</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
