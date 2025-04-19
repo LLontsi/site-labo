@@ -1,78 +1,246 @@
 {% extends 'base.html' %}
 
-{% block title %}{{ membre }} | Laboratoire Informatique{% endblock %}
+{% block title %}Modifier mon profil | Laboratoire Informatique{% endblock %}
 
 {% block content %}
-<section class="profile-section section">
+<section class="profile-edit-section section">
     <div class="container">
-        <div class="profile-header">
-            <div class="profile-header-grid">
-                <div class="profile-image-container animate-on-scroll">
-                    {% if membre.photo %}
-                    <img src="{{ membre.photo.url }}" alt="{{ membre }}" class="profile-image">
+        <h1 class="section-title text-center animate-on-scroll">Modifier mon profil</h1>
+        <div class="section-line center"></div>
+        
+        <div class="profile-edit-container">
+            <div class="profile-edit-sidebar animate-on-scroll">
+                <div class="profile-image-preview">
+                    {% if user.profil.photo %}
+                        <img src="{{ user.profil.photo.url }}" alt="{{ user.profil }}" class="current-profile-image">
                     {% else %}
-                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ membre }}" class="profile-image">
-                    {% endif %}
-                </div>
-                <div class="profile-info animate-on-scroll delay-200">
-                    <h1 class="profile-name">{{ membre }}</h1>
-                    <div class="profile-role">{{ membre.titre }}</div>
-                    <div class="profile-theme">Thème de recherche : {{ membre.theme.nom }}</div>
-                    <div class="profile-social">
-                        {% if membre.linkedin %}
-                        <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i> LinkedIn</a>
-                        {% endif %}
-                        {% if membre.github %}
-                        <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i> GitHub</a>
-                        {% endif %}
-                    </div>
-                    {% if request.user.profil == membre %}
-                    <a href="{% url 'membres:edit_profil' %}" class="btn btn-primary btn-sm mt-3">Modifier mon profil</a>
-                    {% endif %}
-                </div>
-            </div>
-        </div>
-        
-        <div class="profile-bio-section animate-on-scroll">
-            <h2 class="section-title">Biographie</h2>
-            <div class="profile-bio">
-                {{ membre.bio|linebreaks }}
-            </div>
-        </div>
-        
-        <div class="profile-presentations-section animate-on-scroll">
-            <h2 class="section-title">Présentations</h2>
-            {% if presentations %}
-            <div class="presentations-list">
-                {% for presentation in presentations %}
-                <div class="presentation-card">
-                    <div class="presentation-content">
-                        <h3 class="presentation-title">{{ presentation.titre }}</h3>
-                        <div class="presentation-meta">
-                            <span><i class="far fa-calendar-alt"></i> {{ presentation.date_creation|date:"d F Y" }}</span>
-                            <span><i class="far fa-file-alt"></i> {{ presentation.get_type_fichier_display }}</span>
+                        <div class="profile-image-placeholder">
+                            <i class="fas fa-user"></i>
                         </div>
-                        <p class="presentation-description">{{ presentation.description|truncatewords:50 }}</p>
-                        <div class="presentation-actions">
-                            <a href="{% url 'presentations:detail' presentation.id %}" class="btn btn-outline btn-sm">Voir les détails</a>
-                            {% if request.user.profil == membre %}
-                            <a href="{% url 'presentations:edit' presentation.id %}" class="btn btn-secondary btn-sm">Modifier</a>
+                    {% endif %}
+                </div>
+                <div class="profile-edit-info">
+                    <h3>{{ user.get_full_name|default:user.username }}</h3>
+                    <p class="profile-edit-hint">Complétez votre profil pour vous présenter aux autres membres du laboratoire.</p>
+                    <div class="profile-completion">
+                        <div class="completion-bar">
+                            <div class="completion-progress"></div>
+                        </div>
+                        <span class="completion-text">Complétez votre profil</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-edit-form animate-on-scroll delay-200">
+                <div class="form-card">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <div class="form-tabs">
+                            <div class="form-tab active" data-tab="info">Informations principales</div>
+                            <div class="form-tab" data-tab="bio">Biographie</div>
+                            <div class="form-tab" data-tab="social">Réseaux sociaux</div>
+                        </div>
+                        
+                        <!-- Informations principales -->
+                        <div class="tab-content active" id="tab-info">
+                            <div class="form-group">
+                                <label for="{{ form.photo.id_for_label }}" class="form-label">
+                                    <i class="fas fa-camera"></i> Photo de profil
+                                </label>
+                                <div class="photo-upload-control">
+                                    {{ form.photo }}
+                                    <div class="upload-button">
+                                        <i class="fas fa-upload"></i> Choisir une photo
+                                    </div>
+                                    <div class="file-info">Aucun fichier sélectionné</div>
+                                </div>
+                                {% if form.photo.errors %}
+                                <div class="form-error">{{ form.photo.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.titre.id_for_label }}" class="form-label">
+                                    <i class="fas fa-briefcase"></i> Titre / Fonction
+                                </label>
+                                {{ form.titre }}
+                                {% if form.titre.errors %}
+                                <div class="form-error">{{ form.titre.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.theme.id_for_label }}" class="form-label">
+                                    <i class="fas fa-microscope"></i> Thème de recherche
+                                </label>
+                                {{ form.theme }}
+                                {% if form.theme.errors %}
+                                <div class="form-error">{{ form.theme.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Biographie -->
+                        <div class="tab-content" id="tab-bio">
+                            <div class="form-group">
+                                <label for="{{ form.bio.id_for_label }}" class="form-label">
+                                    <i class="fas fa-book"></i> Biographie
+                                </label>
+                                <div class="bio-help">
+                                    <p>Présentez votre parcours, vos compétences et vos intérêts de recherche.</p>
+                                </div>
+                                {{ form.bio }}
+                                {% if form.bio.errors %}
+                                <div class="form-error">{{ form.bio.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <!-- Réseaux sociaux -->
+                        <div class="tab-content" id="tab-social">
+                            <div class="form-group">
+                                <label for="{{ form.linkedin.id_for_label }}" class="form-label">
+                                    <i class="fab fa-linkedin"></i> LinkedIn
+                                </label>
+                                {{ form.linkedin }}
+                                {% if form.linkedin.errors %}
+                                <div class="form-error">{{ form.linkedin.errors }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.github.id_for_label }}" class="form-label">
+                                    <i class="fab fa-github"></i> GitHub
+                                </label>
+                                {{ form.github }}
+                                {% if form.github.errors %}
+                                <div class="form-error">{{ form.github.errors }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary btn-glow">
+                                <i class="fas fa-save"></i> Enregistrer les modifications
+                            </button>
+                            {% if user.profil %}
+                                <a href="{% url 'labo:profil' user.profil.id %}" class="btn btn-outline">Annuler</a>
+                            {% else %}
+                                <a href="{% url 'labo:team' %}" class="btn btn-outline">Annuler</a>
                             {% endif %}
                         </div>
-                    </div>
+                    </form>
                 </div>
-                {% endfor %}
             </div>
-            {% else %}
-            <p>Aucune présentation disponible pour le moment.</p>
-            {% endif %}
-            
-            {% if request.user.profil == membre %}
-            <div class="add-presentation">
-                <a href="{% url 'presentations:nouvelle' %}" class="btn btn-primary">Ajouter une présentation</a>
-            </div>
-            {% endif %}
         </div>
     </div>
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Système d'onglets
+    const tabs = document.querySelectorAll('.form-tab');
+    const contents = document.querySelectorAll('.tab-content');
+    
+    tabs.forEach(tab => {
+        tab.addEventListener('click', function() {
+            // Désactiver tous les onglets
+            tabs.forEach(t => t.classList.remove('active'));
+            contents.forEach(c => c.classList.remove('active'));
+            
+            // Activer l'onglet cliqué
+            this.classList.add('active');
+            document.getElementById('tab-' + this.dataset.tab).classList.add('active');
+        });
+    });
+    
+    // Amélioration de l'upload de photo
+    const photoInput = document.getElementById('{{ form.photo.id_for_label }}');
+    const uploadButton = document.querySelector('.upload-button');
+    const fileInfo = document.querySelector('.file-info');
+    
+    if(photoInput && uploadButton) {
+        photoInput.style.display = 'none';
+        
+        uploadButton.addEventListener('click', function() {
+            photoInput.click();
+        });
+        
+        photoInput.addEventListener('change', function() {
+            if(this.files.length > 0) {
+                fileInfo.textContent = this.files[0].name;
+                
+                // Prévisualisation
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const previewImage = document.querySelector('.current-profile-image');
+                    if(previewImage) {
+                        previewImage.src = e.target.result;
+                    } else {
+                        const placeholder = document.querySelector('.profile-image-placeholder');
+                        if(placeholder) {
+                            placeholder.innerHTML = '';
+                            const newImage = document.createElement('img');
+                            newImage.src = e.target.result;
+                            newImage.className = 'current-profile-image';
+                            placeholder.appendChild(newImage);
+                        }
+                    }
+                }
+                reader.readAsDataURL(this.files[0]);
+            } else {
+                fileInfo.textContent = 'Aucun fichier sélectionné';
+            }
+        });
+    }
+    
+    // Calcul de la complétion du profil
+    const updateCompletion = () => {
+        const fields = [
+            document.getElementById('{{ form.photo.id_for_label }}'),
+            document.getElementById('{{ form.titre.id_for_label }}'),
+            document.getElementById('{{ form.theme.id_for_label }}'),
+            document.getElementById('{{ form.bio.id_for_label }}'),
+            document.getElementById('{{ form.linkedin.id_for_label }}'),
+            document.getElementById('{{ form.github.id_for_label }}')
+        ];
+        
+        let completedFields = 0;
+        fields.forEach(field => {
+            if(field && (field.type === 'file' ? field.files.length > 0 : field.value.trim() !== '')) {
+                completedFields++;
+            }
+        });
+        
+        const progressBar = document.querySelector('.completion-progress');
+        const completionText = document.querySelector('.completion-text');
+        
+        if(progressBar && completionText) {
+            const percentage = Math.round((completedFields / fields.length) * 100);
+            progressBar.style.width = percentage + '%';
+            completionText.textContent = `Profil complété à ${percentage}%`;
+            
+            // Changer la couleur en fonction du pourcentage
+            if(percentage > 70) {
+                progressBar.style.backgroundColor = 'var(--color-accent)';
+            } else if(percentage > 30) {
+                progressBar.style.backgroundColor = 'var(--color-secondary)';
+            } else {
+                progressBar.style.backgroundColor = 'var(--color-primary)';
+            }
+        }
+    };
+    
+    // Mettre à jour la completion initiale
+    updateCompletion();
+    
+    // Mettre à jour à chaque changement
+    const allInputs = document.querySelectorAll('input, select, textarea');
+    allInputs.forEach(input => {
+        input.addEventListener('change', updateCompletion);
+        input.addEventListener('input', updateCompletion);
+    });
+});
+</script>
 {% endblock %}

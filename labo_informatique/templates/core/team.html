@@ -1,73 +1,76 @@
 {% extends 'base.html' %}
 
 {% block title %}Notre équipe | Laboratoire Informatique{% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/team.css">
+{% endblock %}
 {% block header_content %}
-<div class="page-header">
-    <h1 class="page-title fade-in">Notre équipe</h1>
+
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">L'équipe de notre laboratoire</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Innovation et excellence technologique</p>
 </div>
 {% endblock %}
-
 {% block content %}
-<section class="team-section section">
+<section class="team-filters">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Rencontrez nos chercheurs</h2>
-        
-        <!-- Filtres par thème -->
-        <div class="team-filters animate-on-scroll">
-            <button class="team-filter-btn {% if not theme_selectionne %}active{% endif %}" data-filter="all">Tous</button>
+        <h2>Filtrer par thème de recherche</h2>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Tous</button>
             {% for theme in themes %}
-            <button class="team-filter-btn {% if theme_selectionne == theme.id|stringformat:'i' %}active{% endif %}" data-filter="{{ theme.id }}">{{ theme.nom }}</button>
+                <button class="filter-btn" data-filter="{{ theme.id }}">{{ theme.nom }}</button>
             {% endfor %}
         </div>
-        
-        <!-- Grille des membres -->
-        <div class="team-grid">
+    </div>
+</section>
+
+<section class="team-grid">
+    <div class="container">
+        <div class="members-grid">
             {% for membre in membres %}
-            <div class="team-card animate-on-scroll" data-theme="{{ membre.theme.id }}">
-                <div class="team-image-container">
+            <div class="member-card" data-themes="{% for theme in membre.themes.all %}{{ theme.id }} {% endfor %}">
+                <div class="member-photo">
                     {% if membre.photo %}
-                    <img src="{{ membre.photo.url }}" alt="{{ membre }}" class="team-image">
+                        <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
                     {% else %}
-                    <img src="{{ STATIC_URL }}images/user-placeholder.jpg" alt="{{ membre }}" class="team-image">
+                        <div class="default-avatar">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
+                    {% endif %}
+                    {% if membre.est_responsable %}
+                        <div class="badge-responsable">Responsable</div>
                     {% endif %}
                 </div>
-                <div class="team-info">
-                    <h3 class="team-name">{{ membre }}</h3>
-                    <div class="team-role">{{ membre.titre }}</div>
-                    <p class="team-theme">{{ membre.theme.nom }}</p>
-                    <p class="team-bio">{{ membre.bio|truncatewords:25 }}</p>
-                    <div class="team-actions">
-                        <a href="{% url 'membres:profil' membre.id %}" class="btn btn-outline btn-sm">Voir le profil</a>
-                        <div class="team-social">
-                            {% if membre.linkedin %}
-                            <a href="{{ membre.linkedin }}" target="_blank"><i class="fab fa-linkedin-in"></i></a>
-                            {% endif %}
-                            {% if membre.github %}
-                            <a href="{{ membre.github }}" target="_blank"><i class="fab fa-github"></i></a>
-                            {% endif %}
-                        </div>
+                <div class="member-info">
+                    <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
+                    <p class="member-title">{{ membre.titre }}</p>
+                    <p class="member-theme">{% if membre.theme %}{{ membre.theme.nom }}{% endif %}</p>
+                    <div class="member-bio">
+                        <p>{{ membre.bio|truncatechars:150 }}</p>
                     </div>
+                    <div class="member-links">
+                        {% if membre.linkedin %}
+                            <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        {% endif %}
+                        {% if membre.github %}
+                            <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                        {% endif %}
+                        {% if membre.portfolio %}
+                            <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i></a>
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'labo:membre_detail' membre.id %}" class="btn-details">Voir le profil</a>
                 </div>
             </div>
             {% empty %}
-            <p>Aucun membre disponible pour le moment.</p>
+            <div class="empty-message">
+                <p>Aucun membre trouvé.</p>
+            </div>
             {% endfor %}
         </div>
     </div>
 </section>
+{% endblock %}
 
-<!-- Section rejoindre l'équipe -->
-<section class="join-section section bg-light">
-    <div class="container">
-        <div class="join-card animate-on-scroll">
-            <h2>Rejoignez notre équipe</h2>
-            <p>Nous sommes toujours à la recherche de talents passionnés par l'innovation et la recherche en informatique. Consultez nos offres d'emploi et de stages ou contactez-nous directement.</p>
-            <div class="join-buttons">
-                <a href="#" class="btn btn-primary">Offres d'emploi</a>
-                <a href="{% url 'labo:contact' %}" class="btn btn-outline">Nous contacter</a>
-            </div>
-        </div>
-    </div>
-</section>
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/team.js"></script>
 {% endblock %}

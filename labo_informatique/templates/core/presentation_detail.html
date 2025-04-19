@@ -1,0 +1,143 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ presentation.titre }} - Laboratoire Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/presentation_detail.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{{ presentation.titre }}</h1>
+    <p>{{ presentation.theme.nom }}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="presentation-detail">
+    <div class="container">
+        <div class="presentation-meta">
+            <div class="meta-item">
+                <i class="far fa-calendar-alt"></i>
+                <span>Publié le {{ presentation.date_creation|date:"d F Y" }}</span>
+            </div>
+            <div class="meta-item">
+                <i class="far fa-user"></i>
+                <span>Par <a href="{% url 'labo:membre_detail' presentation.membre.id %}">{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}</a></span>
+            </div>
+            <div class="meta-item">
+                <i class="fas fa-tag"></i>
+                <span>{{ presentation.theme.nom }}</span>
+            </div>
+            <div class="meta-item">
+                {% if presentation.type_fichier == 'pdf' %}
+                    <i class="far fa-file-pdf"></i>
+                {% elif presentation.type_fichier == 'pptx' %}
+                    <i class="far fa-file-powerpoint"></i>
+                {% else %}
+                    <i class="far fa-file"></i>
+                {% endif %}
+                <span>{{ presentation.type_fichier|upper }}</span>
+            </div>
+        </div>
+        
+        <div class="presentation-content-wrapper">
+            <div class="presentation-desc">
+                <h2>Description</h2>
+                <div class="description-content">
+                    {{ presentation.description|linebreaks }}
+                </div>
+            </div>
+            
+            {% if presentation.type_fichier == 'pdf' %}
+            <div class="presentation-viewer">
+                <h2>Aperçu du document</h2>
+                <div class="pdf-embed">
+                    <object data="{{ presentation.fichier.url }}" type="application/pdf" width="100%" height="600">
+                        <p>Votre navigateur ne prend pas en charge l'affichage intégré des PDF. <a href="{{ presentation.fichier.url }}" target="_blank">Cliquez ici pour télécharger le fichier</a>.</p>
+                    </object>
+                </div>
+            </div>
+            {% else %}
+            <div class="presentation-download">
+                <h2>Télécharger le document</h2>
+                <a href="{{ presentation.fichier.url }}" class="btn-download" target="_blank">
+                    <i class="fas fa-download"></i> Télécharger le fichier {{ presentation.type_fichier|upper }}
+                </a>
+                <p class="download-note">Pour visualiser ce document, vous aurez besoin d'un logiciel compatible avec le format {{ presentation.type_fichier|upper }}.</p>
+            </div>
+            {% endif %}
+            
+            {% if images %}
+            <div class="presentation-images">
+                <h2>Images de la présentation</h2>
+                <div class="images-gallery">
+                    {% for image in images %}
+                    <div class="gallery-item">
+                        <img src="{{ image.image.url }}" alt="{{ image.legende }}" class="gallery-image">
+                        {% if image.legende %}
+                        <div class="image-caption">
+                            <p>{{ image.legende }}</p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="presentation-author-info">
+            <h2>À propos de l'auteur</h2>
+            <div class="author-card">
+                <div class="author-image">
+                    {% if presentation.membre.photo %}
+                        <img src="{{ presentation.membre.photo.url }}" alt="{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}">
+                    {% else %}
+                        <div class="default-avatar">{{ presentation.membre.user.first_name|first }}{{ presentation.membre.user.last_name|first }}</div>
+                    {% endif %}
+                </div>
+                <div class="author-content">
+                    <h3>{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}</h3>
+                    <p class="author-title">{{ presentation.membre.titre }}</p>
+                    <p class="author-bio">{{ presentation.membre.bio|truncatechars:200 }}</p>
+                    <a href="{% url 'labo:membre_detail' presentation.membre.id %}" class="btn-view-profile">Voir le profil</a>
+                </div>
+            </div>
+        </div>
+        
+        {% if related_presentations %}
+        <div class="related-presentations">
+            <h2>Présentations similaires</h2>
+            <div class="related-grid">
+                {% for related in related_presentations %}
+                <div class="related-card">
+                    <div class="related-type">
+                        {% if related.type_fichier == 'pdf' %}
+                            <i class="far fa-file-pdf"></i>
+                        {% elif related.type_fichier == 'pptx' %}
+                            <i class="far fa-file-powerpoint"></i>
+                        {% else %}
+                            <i class="far fa-file"></i>
+                        {% endif %}
+                    </div>
+                    <div class="related-info">
+                        <h3>{{ related.titre }}</h3>
+                        <p class="related-author">
+                            <span>Par {{ related.membre.user.first_name }} {{ related.membre.user.last_name }}</span>
+                            <span class="related-date">{{ related.date_creation|date:"d F Y" }}</span>
+                        </p>
+                    </div>
+                    <a href="{% url 'labo:presentation_detail' related.id %}" class="related-link"></a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/presentation_detail.js"></script>
+{% endblock %}

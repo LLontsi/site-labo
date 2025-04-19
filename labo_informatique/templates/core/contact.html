@@ -3,9 +3,10 @@
 {% block title %}Contact | Laboratoire Informatique{% endblock %}
 
 {% block header_content %}
-<div class="page-header">
-    <h1 class="page-title fade-in">Contactez-nous</h1>
-    <p class="page-subtitle fade-in delay-200">Nous sommes à votre écoute</p>
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Contactez notre laboratoire</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Innovation et excellence technologique</p>
 </div>
 {% endblock %}
 
@@ -105,34 +106,141 @@
         <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2624.9916256937585!2d2.292292615261631!3d48.85837007928757!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x47e6701f7e8337b5%3A0xa2cb58dd28914524!2sChamp%20de%20Mars%2C%2075007%20Paris!5e0!3m2!1sfr!2sfr!4v1617704888061!5m2!1sfr!2sfr" width="100%" height="450" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
     </div>
 </section>
-
-<!-- Section FAQ -->
+<!-- Section FAQ moderne avec accordéon -->
 <section class="faq-section section bg-light">
     <div class="container">
-        <h2 class="section-title animate-on-scroll">Questions fréquentes</h2>
-        <div class="faq-grid">
-            <div class="faq-item animate-on-scroll">
-                <h3 class="faq-question">Comment puis-je collaborer avec votre laboratoire ?</h3>
-                <div class="faq-answer">
-                    <p>Nous sommes ouverts à différents types de collaborations avec des entreprises, des institutions académiques et des chercheurs indépendants. Contactez-nous directement pour discuter de votre projet ou de votre proposition.</p>
+        <h2 class="section-title text-center animate-on-scroll">Questions fréquentes</h2>
+        <div class="section-line center"></div>
+        
+        <div class="faq-container">
+            <div class="faq-item-accordion animate-on-scroll">
+                <div class="faq-question-header">
+                    <h3 class="faq-question">Comment puis-je collaborer avec votre laboratoire ?</h3>
+                    <div class="faq-toggle">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                <div class="faq-answer-panel">
+                    <div class="faq-answer-content">
+                        <p>Nous sommes ouverts à différents types de collaborations avec des entreprises, des institutions académiques et des chercheurs indépendants. Nos modes de collaboration incluent :</p>
+                        <ul class="faq-list">
+                            <li><i class="fas fa-check-circle"></i> Projets de recherche conjoints</li>
+                            <li><i class="fas fa-check-circle"></i> Transfert de technologies</li>
+                            <li><i class="fas fa-check-circle"></i> Prestations de service et conseils</li>
+                            <li><i class="fas fa-check-circle"></i> Partenariats industriels</li>
+                        </ul>
+                        <p>N'hésitez pas à nous contacter pour discuter de votre projet ou de votre proposition.</p>
+                    </div>
                 </div>
             </div>
-            <div class="faq-item animate-on-scroll delay-200">
-                <h3 class="faq-question">Proposez-vous des stages pour les étudiants ?</h3>
-                <div class="faq-answer">
-                    <p>Oui, nous accueillons régulièrement des stagiaires de tous niveaux (licence, master, doctorat). Consultez notre page "Rejoindre l'équipe" pour les offres actuelles ou contactez-nous pour des opportunités spécifiques.</p>
+            
+            <div class="faq-item-accordion animate-on-scroll delay-100">
+                <div class="faq-question-header">
+                    <h3 class="faq-question">Proposez-vous des stages pour les étudiants ?</h3>
+                    <div class="faq-toggle">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                <div class="faq-answer-panel">
+                    <div class="faq-answer-content">
+                        <p>Oui, nous accueillons régulièrement des stagiaires de tous niveaux (licence, master, doctorat). Nos stages permettent aux étudiants de :</p>
+                        <ul class="faq-list">
+                            <li><i class="fas fa-check-circle"></i> Travailler sur des projets concrets et innovants</li>
+                            <li><i class="fas fa-check-circle"></i> Être encadrés par des chercheurs expérimentés</li>
+                            <li><i class="fas fa-check-circle"></i> Développer des compétences techniques avancées</li>
+                            <li><i class="fas fa-check-circle"></i> Potentiellement déboucher sur une thèse ou un emploi</li>
+                        </ul>
+                        <p>Consultez notre page "Rejoindre l'équipe" pour les offres actuelles ou contactez-nous pour des opportunités spécifiques.</p>
+                    </div>
                 </div>
             </div>
-            <div class="faq-item animate-on-scroll delay-400">
-                <h3 class="faq-question">Quels sont vos domaines de recherche principaux ?</h3>
-                <div class="faq-answer">
-                    <p>Nos principaux domaines de recherche incluent l'intelligence artificielle, la cybersécurité, les systèmes distribués et le développement logiciel. Consultez notre page "À propos" pour plus de détails sur nos axes de recherche spécifiques.</p>
+            
+            <div class="faq-item-accordion animate-on-scroll delay-200">
+                <div class="faq-question-header">
+                    <h3 class="faq-question">Quels sont vos domaines de recherche principaux ?</h3>
+                    <div class="faq-toggle">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                <div class="faq-answer-panel">
+                    <div class="faq-answer-content">
+                        <p>Nos principaux domaines de recherche incluent :</p>
+                        <div class="faq-grid-icons">
+                            <div class="faq-domain">
+                                <div class="domain-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <h4>Intelligence Artificielle</h4>
+                                <p>Apprentissage profond, traitement du langage naturel, vision par ordinateur</p>
+                            </div>
+                            <div class="faq-domain">
+                                <div class="domain-icon">
+                                    <i class="fas fa-shield-alt"></i>
+                                </div>
+                                <h4>Cybersécurité</h4>
+                                <p>Cryptographie, détection d'intrusion, sécurité des applications</p>
+                            </div>
+                            <div class="faq-domain">
+                                <div class="domain-icon">
+                                    <i class="fas fa-network-wired"></i>
+                                </div>
+                                <h4>Systèmes Distribués</h4>
+                                <p>Cloud computing, edge computing, technologies blockchain</p>
+                            </div>
+                            <div class="faq-domain">
+                                <div class="domain-icon">
+                                    <i class="fas fa-code"></i>
+                                </div>
+                                <h4>Développement Logiciel</h4>
+                                <p>DevOps, architecture logicielle, qualité du code</p>
+                            </div>
+                        </div>
+                        <p>Pour plus de détails, consultez notre page <a href="{% url 'labo:about' %}" class="faq-link">À propos</a>.</p>
+                    </div>
                 </div>
             </div>
-            <div class="faq-item animate-on-scroll delay-600">
-                <h3 class="faq-question">Peut-on visiter votre laboratoire ?</h3>
-                <div class="faq-answer">
-                    <p>Nous organisons régulièrement des journées portes ouvertes et des visites guidées sur rendez-vous. Contactez-nous pour planifier une visite ou pour connaître les dates de nos prochains événements publics.</p>
+            
+            <div class="faq-item-accordion animate-on-scroll delay-300">
+                <div class="faq-question-header">
+                    <h3 class="faq-question">Peut-on visiter votre laboratoire ?</h3>
+                    <div class="faq-toggle">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                <div class="faq-answer-panel">
+                    <div class="faq-answer-content">
+                        <p>Nous organisons régulièrement des événements pour le public :</p>
+                        <ul class="faq-list">
+                            <li><i class="fas fa-calendar-alt"></i> <strong>Journées portes ouvertes</strong> : Deux fois par an (généralement en mars et octobre)</li>
+                            <li><i class="fas fa-users"></i> <strong>Visites guidées</strong> : Sur rendez-vous pour les groupes</li>
+                            <li><i class="fas fa-chalkboard-teacher"></i> <strong>Conférences publiques</strong> : Consultez notre calendrier d'événements</li>
+                        </ul>
+                        <p>Contactez-nous pour planifier une visite ou pour connaître les dates de nos prochains événements publics.</p>
+                        <div class="faq-cta">
+                            <a href="{% url 'labo:contact' %}" class="btn btn-outline btn-sm">Demander une visite</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="faq-item-accordion animate-on-scroll delay-400">
+                <div class="faq-question-header">
+                    <h3 class="faq-question">Comment financer mes études de recherche ?</h3>
+                    <div class="faq-toggle">
+                        <i class="fas fa-plus"></i>
+                    </div>
+                </div>
+                <div class="faq-answer-panel">
+                    <div class="faq-answer-content">
+                        <p>Plusieurs options de financement sont disponibles :</p>
+                        <ul class="faq-list">
+                            <li><i class="fas fa-university"></i> <strong>Allocations doctorales</strong> : Financées par les universités et organismes de recherche</li>
+                            <li><i class="fas fa-briefcase"></i> <strong>CIFRE</strong> : Conventions de recherche avec des entreprises</li>
+                            <li><i class="fas fa-euro-sign"></i> <strong>Bourses</strong> : Nationales, européennes ou internationales</li>
+                            <li><i class="fas fa-project-diagram"></i> <strong>Projets de recherche</strong> : Financements européens (Horizon Europe), ANR, etc.</li>
+                        </ul>
+                        <p>Notre équipe administrative peut vous aider à identifier les sources de financement les plus adaptées à votre profil.</p>
+                    </div>
                 </div>
             </div>
         </div>

@@ -87,7 +87,8 @@ def edit_profil(request):
         membre = request.user.profil
     except:
         # Si l'utilisateur n'a pas encore de profil
-        membre = None
+        membre = Membre(user=request.user)
+        membre.save()
     
     if request.method == 'POST':
         form = MembreForm(request.POST, request.FILES, instance=membre)

@@ -1,0 +1,103 @@
+{% extends 'base.html' %}
+
+{% block title %}Présentations - Laboratoire Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/presentations.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>Présentations</h1>
+    <p>Découvrez les travaux et documents partagés par notre équipe</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="presentations-filters">
+    <div class="container">
+        <h2>Filtrer par thème de recherche</h2>
+        <div class="filter-buttons">
+            <button class="filter-btn active" data-filter="all">Tous</button>
+            {% for theme in themes %}
+                <button class="filter-btn" data-filter="{{ theme.id }}">{{ theme.nom }}</button>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="presentations-list">
+    <div class="container">
+        {% if presentations %}
+            <div class="presentations-grid">
+                {% for presentation in presentations %}
+                <div class="presentation-card" data-theme="{{ presentation.theme.id }}">
+                    <div class="presentation-header">
+                        <div class="presentation-type">
+                            {% if presentation.type_fichier == 'pdf' %}
+                                <i class="far fa-file-pdf"></i>
+                            {% elif presentation.type_fichier == 'pptx' %}
+                                <i class="far fa-file-powerpoint"></i>
+                            {% else %}
+                                <i class="far fa-file"></i>
+                            {% endif %}
+                            <span>{{ presentation.type_fichier|upper }}</span>
+                        </div>
+                        <div class="presentation-date">
+                            <i class="far fa-calendar-alt"></i> {{ presentation.date_creation|date:"d F Y" }}
+                        </div>
+                    </div>
+                    
+                    <div class="presentation-content">
+                        <h3>{{ presentation.titre }}</h3>
+                        <p class="presentation-theme">{{ presentation.theme.nom }}</p>
+                        <p class="presentation-desc">{{ presentation.description|truncatechars:150 }}</p>
+                    </div>
+                    
+                    <div class="presentation-footer">
+                        <div class="presentation-author">
+                            {% if presentation.membre.photo %}
+                                <img src="{{ presentation.membre.photo.url }}" alt="{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}">
+                            {% else %}
+                                <div class="default-avatar">{{ presentation.membre.user.first_name|first }}{{ presentation.membre.user.last_name|first }}</div>
+                            {% endif %}
+                            <span>{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}</span>
+                        </div>
+                        <a href="{% url 'labo:presentation_detail' presentation.id %}" class="btn-view">Consulter</a>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            
+            {% if presentations.has_other_pages %}
+            <div class="pagination">
+                {% if presentations.has_previous %}
+                    <a href="?page={{ presentations.previous_page_number }}" class="pagination-arrow">&laquo; Précédent</a>
+                {% endif %}
+                
+                {% for num in presentations.paginator.page_range %}
+                    {% if presentations.number == num %}
+                        <span class="pagination-number active">{{ num }}</span>
+                    {% else %}
+                        <a href="?page={{ num }}" class="pagination-number">{{ num }}</a>
+                    {% endif %}
+                {% endfor %}
+                
+                {% if presentations.has_next %}
+                    <a href="?page={{ presentations.next_page_number }}" class="pagination-arrow">Suivant &raquo;</a>
+                {% endif %}
+            </div>
+            {% endif %}
+            
+        {% else %}
+            <div class="empty-message">
+                <p>Aucune présentation n'est disponible pour le moment.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/presentations.js"></script>
+{% endblock %}

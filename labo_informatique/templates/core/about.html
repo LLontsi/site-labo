@@ -2,7 +2,9 @@
 {% load static %}
 
 {% block title %}À propos | Laboratoire Informatique{% endblock %}
-
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }} /static/css/about.css">
+{% endblock %}
 {% block header_content %}
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">À propos de notre laboratoire</h1>
@@ -36,7 +38,7 @@
             </div>
         </div>
     </div>
-    <div class="tech-particles"></div>
+   
 </section>
 
 <!-- Section mission avec design moderne -->
@@ -340,7 +342,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="https://cdn.jsdelivr.net/npm/tsparticles@2.12.0/tsparticles.bundle.min.js"></script>
+
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Animation des compteurs
@@ -378,74 +380,6 @@
             observer.observe(counter);
         });
         
-        // Initialisation de tsParticles pour l'effet de particules tech
-        tsParticles.load("tech-particles", {
-            particles: {
-                number: {
-                    value: 80,
-                    density: {
-                        enable: true,
-                        value_area: 800
-                    }
-                },
-                color: {
-                    value: "#ffffff"
-                },
-                shape: {
-                    type: "circle"
-                },
-                opacity: {
-                    value: 0.5,
-                    random: true
-                },
-                size: {
-                    value: 3,
-                    random: true
-                },
-                line_linked: {
-                    enable: true,
-                    distance: 150,
-                    color: "#ffffff",
-                    opacity: 0.4,
-                    width: 1
-                },
-                move: {
-                    enable: true,
-                    speed: 2,
-                    direction: "none",
-                    random: false,
-                    straight: false,
-                    out_mode: "out",
-                    bounce: false
-                }
-            },
-            interactivity: {
-                detect_on: "canvas",
-                events: {
-                    onhover: {
-                        enable: true,
-                        mode: "grab"
-                    },
-                    onclick: {
-                        enable: true,
-                        mode: "push"
-                    },
-                    resize: true
-                },
-                modes: {
-                    grab: {
-                        distance: 140,
-                        line_linked: {
-                            opacity: 1
-                        }
-                    },
-                    push: {
-                        particles_nb: 4
-                    }
-                }
-            },
-            retina_detect: true
-        });
         
         // Animation du slider des partenaires
         const partnersTrack = document.querySelector('.partners-track');

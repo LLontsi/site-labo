@@ -137,4 +137,5 @@ function generateParticles() {
             footerParticles.appendChild(particle);
         }
     }
+    
 }

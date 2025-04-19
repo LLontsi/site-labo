@@ -1,0 +1,171 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ membre.user.first_name }} {{ membre.user.last_name }} - Laboratoire Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/membre_detail.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{{ membre.user.first_name }} {{ membre.user.last_name }}</h1>
+    <p>{{ membre.titre }}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="membre-profile">
+    <div class="container">
+        <div class="profile-grid">
+            <div class="profile-sidebar">
+                <div class="profile-image">
+                    {% if membre.photo %}
+                        <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
+                    {% else %}
+                        <div class="default-avatar">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
+                    {% endif %}
+                </div>
+                <div class="profile-info">
+                    <div class="info-block">
+                        <h3>Thème de recherche</h3>
+                        <p>{% if membre.theme %}{{ membre.theme.nom }}{% else %}Non spécifié{% endif %}</p>
+                    </div>
+                    
+                    <div class="info-block">
+                        <h3>Au laboratoire depuis</h3>
+                        <p>{{ membre.date_arrivee|date:"F Y" }}</p>
+                    </div>
+                    
+                    {% if membre.est_ancien %}
+                    <div class="info-block">
+                        <h3>Départ du laboratoire</h3>
+                        <p>{{ membre.date_depart|date:"F Y" }}</p>
+                    </div>
+                    {% endif %}
+                    
+                    <div class="info-block">
+                        <h3>Liens</h3>
+                        <div class="profile-links">
+                            {% if membre.linkedin %}
+                                <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin"></i> LinkedIn</a>
+                            {% endif %}
+                            {% if membre.github %}
+                                <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i> GitHub</a>
+                            {% endif %}
+                            {% if membre.portfolio %}
+                                <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i> Portfolio</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="profile-content">
+                <div class="bio-section">
+                    <h2>Biographie</h2>
+                    <div class="bio-content">
+                        {{ membre.bio|linebreaks }}
+                    </div>
+                </div>
+                
+                <div class="presentations-section">
+                    <h2>Présentations</h2>
+                    {% if presentations %}
+                        <div class="presentations-list">
+                            {% for presentation in presentations %}
+                                <div class="presentation-card">
+                                    <div class="presentation-icon">
+                                        {% if presentation.type_fichier == 'pdf' %}
+                                            <i class="far fa-file-pdf"></i>
+                                        {% elif presentation.type_fichier == 'pptx' %}
+                                            <i class="far fa-file-powerpoint"></i>
+                                        {% else %}
+                                            <i class="far fa-file"></i>
+                                        {% endif %}
+                                    </div>
+                                    <div class="presentation-info">
+                                        <h3>{{ presentation.titre }}</h3>
+                                        <p class="presentation-date">{{ presentation.date_creation|date:"d F Y" }}</p>
+                                        <p class="presentation-desc">{{ presentation.description|truncatechars:150 }}</p>
+                                    </div>
+                                    <a href="{% url 'labo:presentation_detail' presentation.id %}" class="btn-view">Consulter</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-section">
+                            <p>Aucune présentation disponible.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="articles-section">
+                    <h2>Articles</h2>
+                    {% if articles %}
+                        <div class="articles-list">
+                            {% for article in articles %}
+                                <div class="article-card">
+                                    {% if article.image_principale %}
+                                        <div class="article-image">
+                                            <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}">
+                                        </div>
+                                    {% endif %}
+                                    <div class="article-info">
+                                        <h3>{{ article.titre }}</h3>
+                                        <p class="article-date">{{ article.date_creation|date:"d F Y" }}</p>
+                                        <div class="article-categories">
+                                            {% for categorie in article.categories.all %}
+                                                <span class="category-badge">{{ categorie.nom }}</span>
+                                            {% endfor %}
+                                        </div>
+                                        <p class="article-excerpt">{{ article.contenu|truncatechars:150|striptags }}</p>
+                                        <a href="{% url 'labo:article_detail' article.id %}" class="btn-read">Lire l'article</a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-section">
+                            <p>Aucun article disponible.</p>
+                        </div>
+                    {% endif %}
+                </div>
+                
+                {% if membre.est_ancien and devenir %}
+                <div class="parcours-section">
+                    <h2>Parcours après le laboratoire</h2>
+                    <div class="parcours-content">
+                        <div class="parcours-header">
+                            <div class="parcours-company">
+                                <h3>{{ devenir.entreprise }}</h3>
+                                <p class="parcours-poste">{{ devenir.poste }}</p>
+                                <p class="parcours-date">Depuis {{ devenir.date_debut|date:"F Y" }}</p>
+                                <p class="parcours-location"><i class="fas fa-map-marker-alt"></i> {{ devenir.lieu }}</p>
+                            </div>
+                            {% if devenir.lien %}
+                                <a href="{{ devenir.lien }}" target="_blank" class="btn-website">
+                                    <i class="fas fa-external-link-alt"></i> Site web
+                                </a>
+                            {% endif %}
+                        </div>
+                        <div class="parcours-details">
+                            <p class="parcours-description">{{ devenir.description|linebreaks }}</p>
+                            {% if devenir.realisations %}
+                                <div class="parcours-achievements">
+                                    <h4>Réalisations notables</h4>
+                                    <p>{{ devenir.realisations|linebreaks }}</p>
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/membre_detail.js"></script>
+{% endblock %}

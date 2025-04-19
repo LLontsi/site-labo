@@ -15,7 +15,11 @@ class MembreForm(forms.ModelForm):
         model = Membre
         fields = ['photo', 'titre', 'bio', 'theme', 'linkedin', 'github']
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 5}),
+            'titre': forms.TextInput(attrs={'class': 'form-control icon-input'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 5}),
+            'theme': forms.Select(attrs={'class': 'form-control icon-input'}),
+            'linkedin': forms.URLInput(attrs={'class': 'form-control icon-input'}),
+            'github': forms.URLInput(attrs={'class': 'form-control icon-input'})
         }
 
 class ArticleForm(forms.ModelForm):
