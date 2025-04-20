@@ -91,6 +91,10 @@ def contact(request):
     return render(request, 'core/contact.html', context)
 
 
+def faq_view(request):
+    return render(request, 'core/faq.html')
+
+
 def team(request):
     """Vue pour afficher tous les membres de l'équipe."""
     membres = Membre.objects.filter(est_ancien=False).select_related('user', 'theme')

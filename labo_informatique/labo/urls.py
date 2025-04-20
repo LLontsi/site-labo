@@ -8,6 +8,10 @@ urlpatterns = [
     path('', views.home, name='home'),
     path('about/', views.about, name='about'),
     path('contact/', views.contact, name='contact'),
+
+
+    # URL pour la page FAQ
+    path('faq/', views.faq_view, name='faq'),  
     
     # Pages Équipe
     path('team/', views.team, name='team'),
