@@ -138,10 +138,18 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuration email
+# settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com' # Serveur SMTP
-EMAIL_PORT = 587  # Port SMTP (souvent 587 pour TLS ou 465 pour SSL)
-EMAIL_USE_TLS = True  # ou EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'lontsilambou@gmail.com' 
-EMAIL_HOST_PASSWORD = 'pthm ymtq cvfq eski'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'lontsilambou@gmail.com'
+
+# Importation des paramètres sensibles
+try:
+    from .settings_local import *
+except ImportError:
+    # Valeurs par défaut ou variables d'environnement
+    import os
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 DEFAULT_FROM_EMAIL = 'lontsilambou@gmail.com'
