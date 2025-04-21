@@ -8,9 +8,10 @@
 {% endblock %}
 
 {% block header_content %}
-<div class="page-title">
-    <h1>{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %}</h1>
-    <p>{% if evenement %}{{ evenement.titre }}{% else %}Nouvel événement{% endif %}</p>
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %}</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">{% if evenement %}{{ evenement.titre }}{% else %}Nouvel événement{% endif %}</p>
 </div>
 {% endblock %}
 

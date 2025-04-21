@@ -8,10 +8,12 @@
 {% endblock %}
 
 {% block header_content %}
-<div class="page-title">
-    <h1>{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %}</h1>
-    <p>{% if collaborateur %}{{ collaborateur.prenom }} {{ collaborateur.nom }}{% else %}Nouveau collaborateur externe{% endif %}</p>
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %}</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">{% if collaborateur %}{{ collaborateur.prenom }} {{ collaborateur.nom }}{% else %}Nouveau collaborateur externe{% endif %}</p>
 </div>
+
 {% endblock %}
 
 {% block content %}

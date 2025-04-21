@@ -5,11 +5,10 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
 {% endblock %}
-
-{% block header_content %}
-<div class="page-title">
-    <h1>{{ title }}</h1>
-    <p>Administration du contenu du site</p>
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">{{ title }}</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Administration du contenu du site</p>
 </div>
 {% endblock %}
 

@@ -8,9 +8,10 @@
 {% endblock %}
 
 {% block header_content %}
-<div class="page-title">
-    <h1>{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %}</h1>
-    <p>{% if temoignage %}{{ temoignage.nom }}{% else %}Nouveau témoignage{% endif %}</p>
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %}</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">{% if temoignage %}{{ temoignage.nom }}{% else %}Nouveau témoignage{% endif %}</p>
 </div>
 {% endblock %}
 
