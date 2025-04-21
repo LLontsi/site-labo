@@ -58,7 +58,7 @@
                     <div class="file-input-group">
                         {% if presentation and presentation.fichier %}
                             <div class="current-file">
-                                <p>Fichier actuel : <a href="{{ presentation.fichier.url }}" target="_blank">{{ presentation.fichier.name|split:"/"|last }}</a></p>
+                                <p>Fichier actuel : <a href="{{ presentation.fichier.url }}" target="_blank">{{ presentation.fichier.name|default:""|cut:"/media/presentations/"|default:"Fichier" }}</a></p>
                             </div>
                         {% endif %}
                         {{ form.fichier }}

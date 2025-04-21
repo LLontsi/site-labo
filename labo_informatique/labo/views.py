@@ -454,7 +454,7 @@ def edit_profile(request):
        'form': form,
        'is_new': membre is None,
    }
-   return render(request, 'membres/edit_profile.html', context)
+   return render(request, 'membres/edit_profil.html', context)
 
 
 @login_required
