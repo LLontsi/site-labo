@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %}</h1>
+    <p>{% if evenement %}{{ evenement.titre }}{% else %}Nouvel événement{% endif %}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="active">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                </div>
+                
+                <div class="form-card">
+                    <form method="post" enctype="multipart/form-data" class="content-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-section-title">
+                            <h3>Informations générales</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.titre.id_for_label }}">Titre de l'événement</label>
+                            {{ form.titre }}
+                            {% if form.titre.errors %}
+                                <div class="form-error">{{ form.titre.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="form-error">{{ form.description.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.type_evenement.id_for_label }}">Type d'événement</label>
+                            {{ form.type_evenement }}
+                            {% if form.type_evenement.errors %}
+                                <div class="form-error">{{ form.type_evenement.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h3>Date et lieu</h3>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group form-col">
+                                <label for="{{ form.date_debut.id_for_label }}">Date et heure de début</label>
+                                {{ form.date_debut }}
+                                {% if form.date_debut.errors %}
+                                    <div class="form-error">{{ form.date_debut.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group form-col">
+                                <label for="{{ form.date_fin.id_for_label }}">Date et heure de fin</label>
+                                {{ form.date_fin }}
+                                {% if form.date_fin.errors %}
+                                    <div class="form-error">{{ form.date_fin.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.lieu.id_for_label }}">Lieu</label>
+                            {{ form.lieu }}
+                            {% if form.lieu.errors %}
+                                <div class="form-error">{{ form.lieu.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h3>Image</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="photo-upload">
+                                {% if evenement.image %}
+                                    <div class="current-photo">
+                                        <img src="{{ evenement.image.url }}" alt="Image actuelle">
+                                        <p>Image actuelle</p>
+                                    </div>
+                                {% endif %}
+                                <div class="file-input-group">
+                                    {{ form.image }}
+                                    <div class="form-help">Image promotionnelle pour l'événement.</div>
+                                    {% if form.image.errors %}
+                                        <div class="form-error">{{ form.image.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            <a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

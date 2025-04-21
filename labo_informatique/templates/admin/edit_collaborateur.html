@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %}</h1>
+    <p>{% if collaborateur %}{{ collaborateur.prenom }} {{ collaborateur.nom }}{% else %}Nouveau collaborateur externe{% endif %}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}" class="active">Collaborateurs</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_collaborateurs' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                </div>
+                
+                <div class="form-card">
+                    <form method="post" enctype="multipart/form-data" class="content-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-section-title">
+                            <h3>Informations personnelles</h3>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group form-col">
+                                <label for="prenom">Prénom</label>
+                                <input type="text" id="prenom" name="prenom" value="{{ collaborateur.prenom|default:'' }}" required>
+                            </div>
+                            
+                            <div class="form-group form-col">
+                                <label for="nom">Nom</label>
+                                <input type="text" id="nom" name="nom" value="{{ collaborateur.nom|default:'' }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group form-col">
+                                <label for="titre">Titre / Fonction</label>
+                                <input type="text" id="titre" name="titre" value="{{ collaborateur.titre|default:'' }}" required>
+                            </div>
+                            
+                            <div class="form-group form-col">
+                                <label for="institution">Institution</label>
+                                <input type="text" id="institution" name="institution" value="{{ collaborateur.institution|default:'' }}" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="description">Description de la collaboration</label>
+                            <textarea id="description" name="description" rows="5" required>{{ collaborateur.description|default:'' }}</textarea>
+                            <div class="form-help">Décrivez la nature de la collaboration avec le laboratoire.</div>
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h3>Photo</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="photo-upload">
+                                {% if collaborateur.photo %}
+                                    <div class="current-photo">
+                                        <img src="{{ collaborateur.photo.url }}" alt="Photo actuelle">
+                                        <p>Photo actuelle</p>
+                                    </div>
+                                {% endif %}
+                                <div class="file-input-group">
+                                    <input type="file" id="photo" name="photo" accept="image/*">
+                                    <div class="form-help">Format recommandé : image carrée de 300x300 pixels minimum.</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h3>Coordonnées</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input type="email" id="email" name="email" value="{{ collaborateur.email|default:'' }}">
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lien">Site web / Profil</label>
+                            <input type="url" id="lien" name="lien" value="{{ collaborateur.lien|default:'' }}">
+                            <div class="form-help">URL du site web personnel ou professionnel.</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            <a href="{% url 'labo:gestion_collaborateurs' %}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

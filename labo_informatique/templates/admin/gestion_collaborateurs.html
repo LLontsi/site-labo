@@ -1,0 +1,97 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des collaborateurs - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>Gestion des collaborateurs</h1>
+    <p>Gérer les collaborateurs externes du laboratoire</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}" class="active">Collaborateurs</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>Gestion des collaborateurs</h2>
+                    <a href="{% url 'labo:create_collaborateur' %}" class="btn-action"><i class="fas fa-plus"></i> Ajouter un collaborateur</a>
+                </div>
+                
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Titre</th>
+                                <th>Institution</th>
+                                <th>Contact</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for collaborateur in collaborateurs %}
+                                <tr>
+                                    <td class="cell-collaborateur">
+                                        <div class="collaborateur-info">
+                                            {% if collaborateur.photo %}
+                                                <img src="{{ collaborateur.photo.url }}" alt="{{ collaborateur.prenom }} {{ collaborateur.nom }}" class="collaborateur-avatar">
+                                            {% else %}
+                                                <div class="avatar-placeholder">{{ collaborateur.prenom|first }}{{ collaborateur.nom|first }}</div>
+                                            {% endif %}
+                                            <div>
+                                                <div class="collaborateur-name">{{ collaborateur.prenom }} {{ collaborateur.nom }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ collaborateur.titre }}</td>
+                                    <td>{{ collaborateur.institution }}</td>
+                                    <td>
+                                        {% if collaborateur.email %}
+                                            <a href="mailto:{{ collaborateur.email }}" class="collaborateur-contact">{{ collaborateur.email }}</a>
+                                        {% else %}
+                                            <span class="empty-value">Non spécifié</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="cell-actions">
+                                        <a href="{% url 'labo:edit_collaborateur' collaborateur.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
+                                        <a href="{% url 'labo:delete_collaborateur' collaborateur.id %}" class="table-action" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce collaborateur ?');"><i class="fas fa-trash"></i></a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="5" class="empty-table">Aucun collaborateur n'a été ajouté.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

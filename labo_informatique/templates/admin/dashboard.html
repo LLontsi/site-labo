@@ -7,10 +7,14 @@
 {% endblock %}
 
 {% block header_content %}
-<div class="page-title">
-    <h1>Panneau d'administration</h1>
-    <p>Gérer le contenu et les utilisateurs du laboratoire</p>
-</div>
+
+    <div class="page-header animated-gradient">
+        <h1 class="page-title fade-in">Panneau d'administration</h1>
+        <div class="header-line"></div>
+        <p class="page-subtitle fade-in delay-200">Gérer le contenu et les utilisateurs du laboratoire</p>
+    </div>
+   
+
 {% endblock %}
 
 {% block content %}
@@ -159,4 +163,7 @@
         </div>
     </div>
 </section>
+{% block extra_js %}
+<script src="{{ STATIC_URL }}/static/js/admin-dashboard.js"></script>
+{% endblock %}
 {% endblock %}

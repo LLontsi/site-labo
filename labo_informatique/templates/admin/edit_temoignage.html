@@ -1,0 +1,123 @@
+{% extends 'base.html' %}
+
+{% block title %}{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %}</h1>
+    <p>{% if temoignage %}{{ temoignage.nom }}{% else %}Nouveau témoignage{% endif %}</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="active">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                </div>
+                
+                <div class="form-card">
+                    <form method="post" enctype="multipart/form-data" class="content-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-section-title">
+                            <h3>Informations sur le témoin</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.nom.id_for_label }}">Nom complet</label>
+                            {{ form.nom }}
+                            {% if form.nom.errors %}
+                                <div class="form-error">{{ form.nom.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.role.id_for_label }}">Rôle / Fonction</label>
+                            {{ form.role }}
+                            {% if form.role.errors %}
+                                <div class="form-error">{{ form.role.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-help">Ex: "Ancien étudiant", "Partenaire industriel", etc.</div>
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h3>Photo</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="photo-upload">
+                                {% if temoignage.photo %}
+                                    <div class="current-photo">
+                                        <img src="{{ temoignage.photo.url }}" alt="Photo actuelle">
+                                        <p>Photo actuelle</p>
+                                    </div>
+                                {% endif %}
+                                <div class="file-input-group">
+                                    {{ form.photo }}
+                                    <div class="form-help">Format recommandé : image carrée de 300x300 pixels minimum.</div>
+                                    {% if form.photo.errors %}
+                                        <div class="form-error">{{ form.photo.errors.0 }}</div>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h3>Contenu du témoignage</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.contenu.id_for_label }}">Témoignage</label>
+                            {{ form.contenu }}
+                            {% if form.contenu.errors %}
+                                <div class="form-error">{{ form.contenu.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.date.id_for_label }}">Date</label>
+                            {{ form.date }}
+                            {% if form.date.errors %}
+                                <div class="form-error">{{ form.date.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            <a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="btn btn-secondary">Annuler</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

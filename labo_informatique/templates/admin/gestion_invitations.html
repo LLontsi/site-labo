@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des invitations - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Gestion des invitations</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Inviter de nouveaux membres à rejoindre la plateforme</p>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}" class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>Gestion des invitations</h2>
+                </div>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3>Envoyer une invitation</h3>
+                    </div>
+                    <div class="card-content">
+                        <form method="post" class="invitation-form">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="{{ form.email.id_for_label }}">Adresse email</label>
+                                {{ form.email }}
+                                {% if form.email.errors %}
+                                    <div class="form-error">{{ form.email.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.message.id_for_label }}">Message personnalisé (optionnel)</label>
+                                {{ form.message }}
+                                {% if form.message.errors %}
+                                    <div class="form-error">{{ form.message.errors.0 }}</div>
+                                {% endif %}
+                                <div class="form-help">Ce message sera inclus dans l'email d'invitation.</div>
+                            </div>
+                            
+                            <div class="form-actions">
+                                <button type="submit" class="btn btn-primary">Envoyer l'invitation</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="admin-card">
+                    <div class="card-header">
+                        <h3>Invitations envoyées</h3>
+                    </div>
+                    <div class="card-content">
+                        <div class="admin-table-container">
+                            <table class="admin-table">
+                                <thead>
+                                    <tr>
+                                        <th>Email</th>
+                                        <th>Date d'envoi</th>
+                                        <th>Expiration</th>
+                                        <th>Invité par</th>
+                                        <th>Statut</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for invitation in invitations %}
+                                        <tr>
+                                            <td>{{ invitation.email }}</td>
+                                            <td>{{ invitation.created_at|date:"d/m/Y H:i" }}</td>
+                                            <td>{{ invitation.expires_at|date:"d/m/Y" }}</td>
+                                            <td>{{ invitation.inviter.first_name }} {{ invitation.inviter.last_name }}</td>
+                                            <td>
+                                                {% if invitation.is_used %}
+                                                    <span class="status-badge used">Utilisée</span>
+                                                {% elif invitation.expires_at < current_time %}
+                                                    <span class="status-badge expired">Expirée</span>
+                                                {% else %}
+                                                    <span class="status-badge active">Active</span>
+                                                {% endif %}
+                                            </td>
+                                            <td class="cell-actions">
+                                                {% if not invitation.is_used and invitation.expires_at > current_time %}
+                                                    <a href="{% url 'labo:resend_invitation' invitation.id %}" class="table-action" title="Renvoyer"><i class="fas fa-paper-plane"></i></a>
+                                                    <a href="{% url 'labo:cancel_invitation' invitation.id %}" class="table-action" title="Annuler" onclick="return confirm('Êtes-vous sûr de vouloir annuler cette invitation ?');"><i class="fas fa-trash"></i></a>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                    {% empty %}
+                                        <tr>
+                                            <td colspan="6" class="empty-table">Aucune invitation n'a été envoyée.</td>
+                                        </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

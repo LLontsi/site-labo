@@ -1,0 +1,133 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des membres - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Gestion des membres</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Administrer les profils des membres du laboratoire</p>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>Gestion des membres</h2>
+                </div>
+                
+                <div class="admin-filters">
+                    <form method="get" class="filter-form">
+                        <div class="filter-group">
+                            <label>Statut</label>
+                            <select name="ancien" onchange="this.form.submit()">
+                                <option value="">Tous les membres</option>
+                                <option value="false" {% if est_ancien == 'false' %}selected{% endif %}>Membres actifs</option>
+                                <option value="true" {% if est_ancien == 'true' %}selected{% endif %}>Anciens membres</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Responsable</label>
+                            <select name="responsable" onchange="this.form.submit()">
+                                <option value="">Tous</option>
+                                <option value="true" {% if est_responsable == 'true' %}selected{% endif %}>Uniquement responsables</option>
+                                <option value="false" {% if est_responsable == 'false' %}selected{% endif %}>Non responsables</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Thème</label>
+                            <select name="theme" onchange="this.form.submit()">
+                                <option value="">Tous les thèmes</option>
+                                {% for theme in themes %}
+                                    <option value="{{ theme.id }}" {% if theme_id == theme.id|stringformat:"i" %}selected{% endif %}>{{ theme.nom }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="btn-filter">Filtrer</button>
+                        <a href="{% url 'labo:gestion_membres' %}" class="btn-reset">Réinitialiser</a>
+                    </form>
+                </div>
+                
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Titre</th>
+                                <th>Thème</th>
+                                <th>Statut</th>
+                                <th>Date d'arrivée</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for membre in membres %}
+                                <tr>
+                                    <td class="cell-membre">
+                                        <div class="membre-info">
+                                            {% if membre.photo %}
+                                                <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}" class="membre-avatar">
+                                            {% else %}
+                                                <div class="avatar-placeholder">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
+                                            {% endif %}
+                                            <div>
+                                                <div class="membre-name">{{ membre.user.first_name }} {{ membre.user.last_name }}</div>
+                                                <div class="membre-email">{{ membre.user.email }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td>{{ membre.titre }}</td>
+                                    <td>{% if membre.theme %}{{ membre.theme.nom }}{% else %}<span class="empty-value">Non spécifié</span>{% endif %}</td>
+                                    <td>
+                                        {% if membre.est_responsable %}<span class="status-badge responsable">Responsable</span>{% endif %}
+                                        {% if membre.est_ancien %}<span class="status-badge ancien">Ancien</span>{% else %}<span class="status-badge actif">Actif</span>{% endif %}
+                                    </td>
+                                    <td>{{ membre.date_arrivee|date:"d/m/Y" }}</td>
+                                    <td class="cell-actions">
+                                        <a href="{% url 'labo:membre_detail' membre.id %}" class="table-action" title="Voir le profil"><i class="fas fa-eye"></i></a>
+                                        <a href="{% url 'labo:edit_membre' membre.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="6" class="empty-table">Aucun membre trouvé.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

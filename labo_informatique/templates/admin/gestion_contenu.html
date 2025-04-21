@@ -1,0 +1,200 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-title">
+    <h1>{{ title }}</h1>
+    <p>Administration du contenu du site</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" {% if type_contenu == 'articles' %}class="active"{% endif %}>Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}" {% if type_contenu == 'presentations' %}class="active"{% endif %}>Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" {% if type_contenu == 'temoignages' %}class="active"{% endif %}>Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" {% if type_contenu == 'evenements' %}class="active"{% endif %}>Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>{{ title }}</h2>
+                    {% if type_contenu == 'temoignages' %}
+                        <a href="{% url 'labo:create_temoignage' %}" class="btn-action"><i class="fas fa-plus"></i> Ajouter un témoignage</a>
+                    {% elif type_contenu == 'evenements' %}
+                        <a href="{% url 'labo:create_evenement' %}" class="btn-action"><i class="fas fa-plus"></i> Ajouter un événement</a>
+                    {% endif %}
+                </div>
+                
+                <div class="admin-table-container">
+                    {% if type_contenu == 'articles' %}
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Auteur</th>
+                                    <th>Date</th>
+                                    <th>Catégories</th>
+                                    <th>Statut</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for article in items %}
+                                    <tr>
+                                        <td>{{ article.titre }}</td>
+                                        <td>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</td>
+                                        <td>{{ article.date_creation|date:"d/m/Y" }}</td>
+                                        <td>
+                                            {% for categorie in article.categories.all %}
+                                                <span class="status-badge">{{ categorie.nom }}</span>
+                                            {% empty %}
+                                                <span class="empty-value">Aucune</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if article.est_publie %}
+                                                <span class="status-badge published">Publié</span>
+                                            {% else %}
+                                                <span class="status-badge draft">Brouillon</span>
+                                            {% endif %}
+                                        </td>
+                                        <td class="cell-actions">
+                                            <a href="{% url 'labo:article_detail' article.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="empty-table">Aucun article n'a été trouvé.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    
+                    {% elif type_contenu == 'presentations' %}
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Auteur</th>
+                                    <th>Thème</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for presentation in items %}
+                                    <tr>
+                                        <td>{{ presentation.titre }}</td>
+                                        <td>{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}</td>
+                                        <td>{% if presentation.theme %}{{ presentation.theme.nom }}{% else %}<span class="empty-value">Non spécifié</span>{% endif %}</td>
+                                        <td><span class="status-badge">{{ presentation.type_fichier|upper }}</span></td>
+                                        <td>{{ presentation.date_creation|date:"d/m/Y" }}</td>
+                                        <td class="cell-actions">
+                                            <a href="{% url 'labo:presentation_detail' presentation.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="6" class="empty-table">Aucune présentation n'a été trouvée.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    
+                    {% elif type_contenu == 'temoignages' %}
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Nom</th>
+                                    <th>Rôle</th>
+                                    <th>Date</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for temoignage in items %}
+                                    <tr>
+                                        <td class="cell-temoignage">
+                                            <div class="temoignage-info">
+                                                {% if temoignage.photo %}
+                                                    <img src="{{ temoignage.photo.url }}" alt="{{ temoignage.nom }}" class="temoignage-avatar">
+                                                {% else %}
+                                                    <div class="avatar-placeholder">{{ temoignage.nom|first }}</div>
+                                                {% endif %}
+                                                <span>{{ temoignage.nom }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ temoignage.role }}</td>
+                                        <td>{{ temoignage.date|date:"d/m/Y" }}</td>
+                                        <td class="cell-actions">
+                                            <a href="{% url 'labo:edit_temoignage' temoignage.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
+                                            <a href="{% url 'labo:delete_temoignage' temoignage.id %}" class="table-action" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce témoignage ?');"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="4" class="empty-table">Aucun témoignage n'a été trouvé.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    
+                    {% elif type_contenu == 'evenements' %}
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Type</th>
+                                    <th>Date</th>
+                                    <th>Lieu</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for evenement in items %}
+                                    <tr>
+                                        <td>{{ evenement.titre }}</td>
+                                        <td><span class="status-badge">{{ evenement.type_evenement }}</span></td>
+                                        <td>{{ evenement.date_debut|date:"d/m/Y" }}</td>
+                                        <td>{{ evenement.lieu }}</td>
+                                        <td class="cell-actions">
+                                            <a href="{% url 'labo:edit_evenement' evenement.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
+                                            <a href="{% url 'labo:delete_evenement' evenement.id %}" class="table-action" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');"><i class="fas fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                {% empty %}
+                                    <tr>
+                                        <td colspan="5" class="empty-table">Aucun événement n'a été trouvé.</td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
