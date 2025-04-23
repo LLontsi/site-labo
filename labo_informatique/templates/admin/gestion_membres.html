@@ -41,6 +41,12 @@
             <div class="admin-content">
                 <div class="admin-header">
                     <h2>Gestion des membres</h2>
+                    <!-- Ajout du bouton pour créer un nouveau membre -->
+                    <div class="admin-actions">
+                        <a href="{% url 'labo:create_membre' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ajouter un membre
+                        </a>
+                    </div>
                 </div>
                 
                 <div class="admin-filters">

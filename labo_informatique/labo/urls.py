@@ -11,6 +11,7 @@ urlpatterns = [
     
     # Pages Équipe
     path('team/', views.team, name='team'),
+    path('faq/', views.faq, name='faq'),
     path('membre/<int:membre_id>/', views.membre_detail, name='membre_detail'),
     path('responsables/', views.responsables, name='responsables'),
     
@@ -39,6 +40,7 @@ urlpatterns = [
     # Pages administration
     path('gestion/dashboard/', views.admin_dashboard, name='admin_dashboard'),
     path('gestion/membres/', views.gestion_membres, name='gestion_membres'),
+    path('gestion/membre/create/', views.create_membre, name='create_membre'),
     path('gestion/membre/edit/<int:membre_id>/', views.edit_membre, name='edit_membre'),
     path('gestion/invitations/', views.gestion_invitations, name='gestion_invitations'),
     path('gestion/invitation/resend/<int:invitation_id>/', views.resend_invitation, name='resend_invitation'),
@@ -54,7 +56,10 @@ urlpatterns = [
     path('gestion/evenement/create/', views.create_edit_evenement, name='create_evenement'),
     path('gestion/evenement/edit/<int:evenement_id>/', views.create_edit_evenement, name='edit_evenement'),
     path('gestion/evenement/delete/<int:evenement_id>/', views.delete_evenement, name='delete_evenement'),
-    
+    path('gestion/themes/', views.gestion_themes, name='gestion_themes'),
+    path('gestion/theme/create/', views.create_edit_theme, name='create_theme'),
+    path('gestion/theme/edit/<int:theme_id>/', views.create_edit_theme, name='edit_theme'),
+    path('gestion/theme/delete/', views.delete_theme, name='delete_theme'),
     # Authentification
     path('register/<str:token>/', views.register_with_invitation, name='register_with_invitation'),
 ]

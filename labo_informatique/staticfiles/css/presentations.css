@@ -1,0 +1,253 @@
+/* Styles pour la page de liste des présentations */
+
+.presentations-filters {
+    padding: var(--spacing-xl) 0;
+    background-color: var(--color-gray-100);
+}
+
+.presentations-filters h2 {
+    font-family: var(--font-primary);
+    color: var(--color-primary);
+    margin-bottom: var(--spacing-md);
+    font-size: var(--font-size-xl);
+    text-align: center;
+}
+
+.filter-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: var(--spacing-sm);
+    margin: var(--spacing-md) 0;
+}
+
+.filter-btn {
+    background-color: white;
+    color: var(--color-primary);
+    border: 2px solid var(--color-primary);
+    border-radius: var(--border-radius-full);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    font-family: var(--font-primary);
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-normal) var(--ease-in-out);
+}
+
+.filter-btn:hover {
+    background-color: var(--color-primary-light);
+    color: white;
+}
+
+.filter-btn.active {
+    background-color: var(--color-primary);
+    color: white;
+}
+
+/* Liste des présentations */
+.presentations-list {
+    padding: var(--spacing-2xl) 0;
+}
+
+.presentations-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--spacing-xl);
+}
+
+.presentation-card {
+    background-color: white;
+    border-radius: var(--border-radius-md);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    display: flex;
+    flex-direction: column;
+    transition: transform var(--transition-normal) var(--ease-out), 
+                box-shadow var(--transition-normal) var(--ease-out);
+}
+
+.presentation-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-lg);
+}
+
+.presentation-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: var(--color-gray-100);
+    padding: var(--spacing-md);
+}
+
+.presentation-type {
+    display: flex;
+    align-items: center;
+    color: var(--color-primary);
+    font-weight: 600;
+}
+
+.presentation-type i {
+    margin-right: var(--spacing-xs);
+    font-size: var(--font-size-lg);
+}
+
+.presentation-date {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+}
+
+.presentation-date i {
+    margin-right: var(--spacing-xs);
+}
+
+.presentation-content {
+    padding: var(--spacing-lg);
+    flex-grow: 1;
+}
+
+.presentation-content h3 {
+    color: var(--color-primary-dark);
+    font-size: var(--font-size-lg);
+    margin-bottom: var(--spacing-sm);
+    font-family: var(--font-primary);
+    line-height: 1.3;
+}
+
+.presentation-theme {
+    display: inline-block;
+    background-color: rgba(var(--color-secondary-rgb), 0.1);
+    color: var(--color-secondary-dark);
+    padding: var(--spacing-xs) var(--spacing-sm);
+    border-radius: var(--border-radius-sm);
+    font-size: var(--font-size-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.presentation-desc {
+    color: var(--color-gray-600);
+    line-height: 1.5;
+}
+
+.presentation-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: var(--spacing-md);
+    border-top: 1px solid var(--color-gray-200);
+    background-color: var(--color-gray-100);
+}
+
+.presentation-author {
+    display: flex;
+    align-items: center;
+}
+
+.presentation-author img {
+    width: 40px;
+    height: 40px;
+    border-radius: var(--border-radius-full);
+    object-fit: cover;
+    margin-right: var(--spacing-sm);
+}
+
+.default-avatar {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-primary);
+    color: white;
+    border-radius: var(--border-radius-full);
+    font-size: var(--font-size-sm);
+    font-weight: bold;
+    margin-right: var(--spacing-sm);
+}
+
+/* Suite du CSS pour la page de liste des présentations */
+   
+.btn-view {
+    background-color: var(--color-primary);
+    color: white;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    text-decoration: none;
+    font-weight: 500;
+    font-size: var(--font-size-sm);
+    transition: background-color var(--transition-normal) var(--ease-in-out);
+}
+
+.btn-view:hover {
+    background-color: var(--color-primary-dark);
+}
+
+.empty-message {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    background-color: var(--color-gray-100);
+    border-radius: var(--border-radius-md);
+    color: var(--color-gray-600);
+}
+
+/* Pagination */
+.pagination {
+    display: flex;
+    justify-content: center;
+    margin-top: var(--spacing-2xl);
+    gap: var(--spacing-xs);
+}
+
+.pagination-number,
+.pagination-arrow {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: white;
+    color: var(--color-primary);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-sm);
+    text-decoration: none;
+    transition: all var(--transition-normal) var(--ease-in-out);
+}
+
+.pagination-arrow {
+    width: auto;
+    padding: 0 var(--spacing-md);
+}
+
+.pagination-number:hover,
+.pagination-arrow:hover {
+    background-color: var(--color-primary-light);
+    color: white;
+    border-color: var(--color-primary-light);
+}
+
+.pagination-number.active {
+    background-color: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .presentations-grid {
+        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    }
+}
+
+@media (max-width: 576px) {
+    .presentations-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .filter-buttons {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .filter-btn {
+        width: 100%;
+        max-width: 300px;
+    }
+}

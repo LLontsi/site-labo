@@ -1,0 +1,288 @@
+/* Styles pour le formulaire d'édition de profil */
+.profile-edit-section {
+    padding: 80px 0;
+    background-color: var(--color-gray-100);
+}
+
+.profile-edit-container {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 30px;
+    margin-top: 40px;
+}
+
+/* Sidebar */
+.profile-edit-sidebar {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    padding: 30px;
+    box-shadow: var(--shadow-md);
+    text-align: center;
+    height: fit-content;
+}
+
+.profile-image-preview {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin: 0 auto 20px;
+    background: var(--color-gray-200);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 3px solid var(--color-primary);
+}
+
+.current-profile-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-image-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4rem;
+    color: var(--color-gray-400);
+}
+
+.profile-edit-info h3 {
+    margin-bottom: 15px;
+    color: var(--color-primary);
+}
+
+.profile-edit-hint {
+    color: var(--color-gray-600);
+    font-size: 0.9rem;
+    margin-bottom: 20px;
+}
+
+.profile-completion {
+    margin-top: 20px;
+}
+
+.completion-bar {
+    height: 10px;
+    background: var(--color-gray-200);
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 5px;
+}
+
+.completion-progress {
+    height: 100%;
+    background: var(--color-primary);
+    width: 0;
+    transition: width 0.5s ease, background-color 0.5s ease;
+}
+
+.completion-text {
+    font-size: 0.8rem;
+    color: var(--color-gray-600);
+}
+
+/* Formulaire */
+.profile-edit-form {
+    max-width: 100%;
+}
+
+.form-card {
+    background: white;
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-md);
+    overflow: hidden;
+}
+
+.form-tabs {
+    display: flex;
+    background: var(--color-gray-100);
+    border-bottom: 1px solid var(--color-gray-200);
+}
+
+.form-tab {
+    padding: 15px 20px;
+    cursor: pointer;
+    color: var(--color-gray-700);
+    font-weight: 500;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.form-tab:hover {
+    color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb), 0.05);
+}
+
+.form-tab.active {
+    color: var(--color-primary);
+    background: white;
+}
+
+.form-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--color-primary);
+}
+
+.tab-content {
+    display: none;
+    padding: 30px;
+}
+
+.tab-content.active {
+    display: block;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: var(--color-primary);
+}
+
+.form-label i {
+    margin-right: 8px;
+    color: var(--color-secondary);
+}
+
+.form-control, input:not([type="file"]), select, textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    font-family: var(--font-primary);
+    font-size: var(--font-size-base);
+    transition: all 0.3s ease;
+}
+
+.form-control:focus, input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--color-secondary);
+    box-shadow: 0 0 0 3px rgba(var(--color-secondary-rgb), 0.1);
+}
+
+textarea {
+    min-height: 200px;
+    resize: vertical;
+}
+
+.photo-upload-control {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upload-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: var(--color-primary);
+    color: white;
+    padding: 8px 15px;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: fit-content;
+}
+
+.upload-button:hover {
+    background: var(--color-primary-dark);
+}
+
+.file-info {
+    font-size: 0.9rem;
+    color: var(--color-gray-600);
+}
+
+.bio-help {
+    background: var(--color-gray-100);
+    padding: 10px 15px;
+    border-radius: var(--border-radius-md);
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+    color: var(--color-gray-700);
+    border-left: 3px solid var(--color-secondary);
+}
+
+.form-error {
+    color: #e74c3c;
+    font-size: 0.9rem;
+    margin-top: 5px;
+}
+
+.form-actions {
+    margin-top: 30px;
+    padding-top: 20px;
+    border-top: 1px solid var(--color-gray-200);
+    display: flex;
+    gap: 15px;
+}
+
+.btn-glow {
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.btn-glow:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(var(--color-primary-rgb), 0.3);
+}
+
+.btn-glow::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+    transition: 0.5s;
+}
+
+.btn-glow:hover::after {
+    left: 100%;
+}
+
+/* Responsive design */
+@media (max-width: 992px) {
+    .profile-edit-container {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-edit-sidebar {
+        max-width: 400px;
+        margin: 0 auto;
+    }
+}
+
+@media (max-width: 576px) {
+    .form-tabs {
+        flex-direction: column;
+    }
+    
+    .form-tab {
+        text-align: center;
+    }
+    
+    .tab-content {
+        padding: 20px 15px;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}

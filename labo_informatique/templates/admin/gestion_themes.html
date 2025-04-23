@@ -1,0 +1,166 @@
+{% extends 'base.html' %}
+
+{% block title %}Gestion des thèmes - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Gestion des thèmes</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Gérer les thèmes de recherche du laboratoire</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>Thèmes de recherche</h2>
+                    <div class="admin-actions">
+                        <a href="{% url 'labo:create_theme' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ajouter un thème
+                        </a>
+                    </div>
+                </div>
+                
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <!-- Liste des thèmes -->
+                <div class="admin-table-container">
+                    <table class="admin-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Description</th>
+                                <th>Membres associés</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for theme in themes %}
+                                <tr>
+                                    <td>{{ theme.nom }}</td>
+                                    <td>{{ theme.description|truncatechars:100 }}</td>
+                                    <td>{{ theme.membre_set.count }}</td>
+                                    <td class="cell-actions">
+                                        <a href="{% url 'labo:edit_theme' theme.id %}" class="table-action" title="Modifier">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        <button class="table-action btn-delete-theme" 
+                                                data-id="{{ theme.id }}" 
+                                                data-nom="{{ theme.nom }}" 
+                                                title="Supprimer" 
+                                                {% if theme.membre_set.count > 0 %}disabled{% endif %}>
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </td>
+                                </tr>
+                            {% empty %}
+                                <tr>
+                                    <td colspan="4" class="empty-table">Aucun thème trouvé.</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <!-- Modal de confirmation de suppression -->
+                <div id="delete-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h3>Confirmer la suppression</h3>
+                            <span class="modal-close">&times;</span>
+                        </div>
+                        <div class="modal-body">
+                            <p>Êtes-vous sûr de vouloir supprimer le thème "<span id="theme-name"></span>" ?</p>
+                            <p class="warning">Cette action est irréversible.</p>
+                        </div>
+                        <div class="modal-footer">
+                            <form method="post" action="{% url 'labo:delete_theme' %}" id="delete-form">
+                                {% csrf_token %}
+                                <input type="hidden" name="theme_id" id="delete_theme_id">
+                                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
+                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables pour la modal de suppression
+    const deleteModal = document.getElementById('delete-modal');
+    const themeNameSpan = document.getElementById('theme-name');
+    const deleteThemeIdInput = document.getElementById('delete_theme_id');
+    const deleteButtons = document.querySelectorAll('.btn-delete-theme');
+    const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
+    
+    // Ouvrir la modal de suppression
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.disabled) return;
+            
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            
+            themeNameSpan.textContent = nom;
+            deleteThemeIdInput.value = id;
+            deleteModal.style.display = 'block';
+        });
+    });
+    
+    // Fermer la modal
+    modalCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            deleteModal.style.display = 'none';
+        });
+    });
+    
+    // Fermer la modal en cliquant à l'extérieur
+    window.addEventListener('click', function(event) {
+        if (event.target == deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+});
+</script>
+{% endblock %}

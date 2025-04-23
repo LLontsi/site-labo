@@ -1,0 +1,128 @@
+/* Styles pour les pages d'authentification */
+
+.auth-section {
+    padding: var(--spacing-3xl) 0;
+}
+
+.auth-card {
+    max-width: 600px;
+    margin: 0 auto;
+    background-color: white;
+    border-radius: var(--border-radius-lg);
+    padding: var(--spacing-xl);
+    box-shadow: var(--shadow-lg);
+}
+
+.auth-card h2 {
+    color: var(--color-primary);
+    font-size: var(--font-size-xl);
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    font-family: var(--font-primary);
+}
+
+.auth-info, .invitation-info {
+    margin-bottom: var(--spacing-lg);
+    text-align: center;
+    color: var(--color-gray-700);
+}
+
+.invitation-info {
+    background-color: rgba(var(--color-primary-rgb), 0.05);
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    border-left: 4px solid var(--color-primary);
+}
+
+.auth-form {
+    margin-bottom: var(--spacing-lg);
+}
+
+.form-group {
+    margin-bottom: var(--spacing-md);
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: var(--spacing-xs);
+    color: var(--color-gray-800);
+    font-weight: 500;
+}
+
+.form-group input {
+    width: 100%;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border: 1px solid var(--color-gray-300);
+    border-radius: var(--border-radius-md);
+    font-size: var(--font-size-base);
+    transition: border-color var(--transition-normal) var(--ease-in-out);
+}
+
+.form-group input:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.1);
+}
+
+.form-help {
+    margin-top: var(--spacing-xs);
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+}
+
+.form-actions {
+    margin-top: var(--spacing-lg);
+    text-align: center;
+}
+
+.auth-links {
+    text-align: center;
+    margin-top: var(--spacing-lg);
+}
+
+.auth-links a {
+    color: var(--color-primary);
+    text-decoration: none;
+    transition: color var(--transition-normal) var(--ease-in-out);
+}
+
+.auth-links a:hover {
+    color: var(--color-primary-dark);
+    text-decoration: underline;
+}
+
+.alert {
+    padding: var(--spacing-md);
+    border-radius: var(--border-radius-md);
+    margin-bottom: var(--spacing-lg);
+}
+
+.alert-error {
+    background-color: rgba(220, 53, 69, 0.1);
+    border-left: 4px solid #dc3545;
+    color: #dc3545;
+}
+
+.success-message {
+    text-align: center;
+    margin: var(--spacing-xl) 0;
+    color: var(--color-gray-700);
+}
+
+.success-message i {
+    color: #28a745;
+    font-size: var(--font-size-3xl);
+    margin-bottom: var(--spacing-md);
+}
+
+.success-message p {
+    margin-bottom: var(--spacing-sm);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .auth-card {
+        width: 90%;
+        padding: var(--spacing-lg);
+    }
+}

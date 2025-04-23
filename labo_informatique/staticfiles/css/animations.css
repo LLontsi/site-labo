@@ -1,0 +1,233 @@
+/* Apparition par fondu */
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+  
+  /* Montée avec fondu */
+  @keyframes fadeInUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Arrivée par la gauche */
+  @keyframes slideInLeft {
+    from {
+      opacity: 0;
+      transform: translateX(-30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  /* Animation des particules */
+@keyframes particleFloat {
+    0%, 100% {
+        transform: translate(0, 0);
+    }
+    25% {
+        transform: translate(15px, -15px);
+    }
+    50% {
+        transform: translate(0, -25px);
+    }
+    75% {
+        transform: translate(-15px, -15px);
+    }
+}
+
+/* Styles des particules */
+.particles-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+}
+
+.particle {
+    position: absolute;
+    background-color: rgba(255, 255, 255, 0.6);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+/* Des particules plus grandes et plus visibles au survol */
+.particles-container:hover .particle {
+    animation-duration: 5s;
+}
+  /* Arrivée par la droite */
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Rebond léger */
+  @keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+      transform: translateY(0);
+    }
+    40% {
+      transform: translateY(-20px);
+    }
+    60% {
+      transform: translateY(-10px);
+    }
+  }
+  
+  /* Pulse - grossissement léger */
+  @keyframes pulse {
+    0% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.05);
+    }
+    100% {
+      transform: scale(1);
+    }
+  }
+  
+  /* Flottement */
+  @keyframes float {
+    0% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-10px);
+    }
+    100% {
+      transform: translateY(0px);
+    }
+  }
+  
+  /* Rotation de particules */
+  @keyframes rotate {
+    from {
+      transform: rotate(0deg);
+    }
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Animation des particules pour le fond du header/footer */
+  @keyframes particleMove1 {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(10px, -10px);
+    }
+    50% {
+      transform: translate(20px, 0);
+    }
+    75% {
+      transform: translate(10px, 10px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+  
+  @keyframes particleMove2 {
+    0% {
+      transform: translate(0, 0);
+    }
+    25% {
+      transform: translate(-15px, 10px);
+    }
+    50% {
+      transform: translate(-5px, 20px);
+    }
+    75% {
+      transform: translate(5px, 10px);
+    }
+    100% {
+      transform: translate(0, 0);
+    }
+  }
+  
+  /* Animation de vague pour header/footer */
+  @keyframes wave {
+    0% {
+      d: path("M0,96 C200,120 300,32 512,96 L512,0 L0,0 Z");
+    }
+    50% {
+      d: path("M0,96 C200,40 320,120 512,96 L512,0 L0,0 Z");
+    }
+    100% {
+      d: path("M0,96 C200,120 300,32 512,96 L512,0 L0,0 Z");
+    }
+  }
+  
+  /* Classes d'utilité pour les animations */
+  .fade-in {
+    animation: fadeIn var(--transition-normal) var(--ease-in-out) forwards;
+  }
+  
+  .fade-in-up {
+    animation: fadeInUp var(--transition-normal) var(--ease-out) forwards;
+  }
+  
+  .slide-in-left {
+    animation: slideInLeft var(--transition-normal) var(--ease-out) forwards;
+  }
+  
+  .slide-in-right {
+    animation: slideInRight var(--transition-normal) var(--ease-out) forwards;
+  }
+  
+  .floating {
+    animation: float 3s var(--ease-in-out) infinite;
+  }
+  
+  .rotating {
+    animation: rotate 10s linear infinite;
+  }
+  
+  .pulse {
+    animation: pulse 2s var(--ease-in-out) infinite;
+  }
+  
+  .bounce {
+    animation: bounce 2s var(--ease-bounce) infinite;
+  }
+  
+  /* Délais d'animation */
+  .delay-100 { animation-delay: 100ms; }
+  .delay-200 { animation-delay: 200ms; }
+  .delay-300 { animation-delay: 300ms; }
+  .delay-400 { animation-delay: 400ms; }
+  .delay-500 { animation-delay: 500ms; }
+  .delay-600 { animation-delay: 600ms; }
+  .delay-700 { animation-delay: 700ms; }
+  .delay-800 { animation-delay: 800ms; }
+  .delay-900 { animation-delay: 900ms; }
+  .delay-1000 { animation-delay: 1000ms; }
+  
+  /* Animation au défilement */
+  .animate-on-scroll {
+    opacity: 0;
+    transition: all var(--transition-normal) var(--ease-out);
+  }
+  .animate-on-scroll.visible {
+    opacity: 1;
+  }

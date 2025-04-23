@@ -39,6 +39,7 @@
                             <li><a href="{% url 'labo:liste_presentations' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Présentations</a></li>
                             <li><a href="{% url 'labo:devenir_membres' %}" {% if 'devenir' in request.path %}class="active"{% endif %}>Devenir</a></li>
                             <li><a href="{% url 'labo:contact' %}" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>
+                            <li><a href="{% url 'labo:faq' %}" {% if 'faq' in request.path %}class="active"{% endif %}>FAQ</a></li>
                         </ul>
                     </nav>
                 </div>

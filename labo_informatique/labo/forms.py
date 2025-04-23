@@ -56,7 +56,7 @@ class ArticleForm(forms.ModelForm):
         fields = ('titre', 'contenu', 'image_principale', 'categories', 'est_publie')
         widgets = {
             'contenu': forms.Textarea(attrs={'class': 'rich-text-editor'}),
-            'categories': forms.CheckboxSelectMultiple(),
+            'categories': forms.CheckboxSelectMultiple(attrs={'class': 'categories-checkbox-list'}),
         }
 
 
@@ -109,4 +109,64 @@ class EvenementForm(forms.ModelForm):
             'date_debut': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'date_fin': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
             'description': forms.Textarea(attrs={'rows': 5}),
+        }
+        
+
+class UserCreateForm(forms.ModelForm):
+    """Formulaire pour créer un nouvel utilisateur."""
+    class Meta:
+        model = User
+        fields = ['username', 'first_name', 'last_name', 'email']
+        widgets = {
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom d\'utilisateur'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Prénom'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nom'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Email'}),
+        }
+        labels = {
+            'username': 'Nom d\'utilisateur',
+            'first_name': 'Prénom',
+            'last_name': 'Nom',
+            'email': 'Adresse email',
+        }
+        help_texts = {
+            'username': 'Requis. 150 caractères maximum. Lettres, chiffres et @/./+/-/_ uniquement.',
+        }
+        error_messages = {
+            'username': {
+                'unique': 'Ce nom d\'utilisateur est déjà utilisé.',
+            },
+        }
+
+class MembreForm(forms.ModelForm):
+    """Formulaire pour créer ou modifier un profil de membre."""
+    class Meta:
+        model = Membre
+        fields = ['titre', 'theme', 'bio', 'est_responsable', 'est_ancien', 'photo', 
+                 'date_arrivee', 'date_depart', 'linkedin', 'github', 'portfolio']
+        widgets = {
+            'titre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titre/Poste'}),
+            'theme': forms.Select(attrs={'class': 'form-control'}),
+            'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Biographie du membre'}),
+            'est_responsable': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'est_ancien': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'photo': forms.FileInput(attrs={'class': 'form-control-file'}),
+            'date_arrivee': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'date_depart': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'linkedin': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://www.linkedin.com/in/...'}),
+            'github': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://github.com/...'}),
+            'portfolio': forms.URLInput(attrs={'class': 'form-control', 'placeholder': 'https://...'}),
+        }
+        labels = {
+            'titre': 'Titre/Position',
+            'theme': 'Thème de recherche',
+            'bio': 'Biographie',
+            'est_responsable': 'Est responsable',
+            'est_ancien': 'Est un ancien membre',
+            'photo': 'Photo de profil',
+            'date_arrivee': 'Date d\'arrivée',
+            'date_depart': 'Date de départ',
+            'linkedin': 'Profil LinkedIn',
+            'github': 'Profil GitHub',
+            'portfolio': 'Site web personnel/Portfolio',
         }

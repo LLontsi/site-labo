@@ -70,9 +70,11 @@
 }
 
 .member-photo {
-    height: 250px;
+    width: 120px;
+    height: 120px;
+    border-radius: var(--border-radius-full);
     overflow: hidden;
-    position: relative;
+    margin-bottom: var(--spacing-md);
 }
 
 .member-photo img {

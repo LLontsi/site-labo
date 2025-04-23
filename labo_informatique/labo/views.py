@@ -17,9 +17,9 @@ from .models import (
 from .forms import (
     InvitationRegistrationForm, MembreProfileForm, PresentationForm, 
     ImagePresentationFormSet, ArticleForm, DevenirForm, ContactForm,
-    InvitationForm, TemoignageForm, EvenementForm
+    InvitationForm, TemoignageForm, EvenementForm,MembreForm,UserCreateForm
 )
-
+import os
 
 # Pages publiques
 def home(request):
@@ -92,6 +92,7 @@ def contact(request):
 
 
 def team(request):
+   
     """Vue pour afficher tous les membres de l'équipe."""
     membres = Membre.objects.filter(est_ancien=False).select_related('user', 'theme')
     themes = Theme.objects.all()
@@ -101,6 +102,9 @@ def team(request):
         'themes': themes,
     }
     return render(request, 'core/team.html', context)
+def faq(request):
+   
+    return render(request, 'core/faq.html')
 
 
 def membre_detail(request, membre_id):
@@ -459,49 +463,52 @@ def edit_profile(request):
 
 @login_required
 def create_edit_presentation(request, presentation_id=None):
-   """Création/édition d'une présentation."""
-   try:
-       membre = Membre.objects.get(user=request.user)
-   except Membre.DoesNotExist:
-       messages.error(request, "Vous devez d'abord compléter votre profil.")
-       return redirect('labo:edit_profile')
-   
-   if presentation_id:
-       presentation = get_object_or_404(Presentation, id=presentation_id)
-       # Vérifier que le membre est bien l'auteur
-       if presentation.membre != membre:
-           return HttpResponseForbidden("Vous n'avez pas la permission de modifier cette présentation.")
-   else:
-       presentation = None
-   
-   if request.method == 'POST':
-       form = PresentationForm(request.POST, request.FILES, instance=presentation)
-       formset = ImagePresentationFormSet(request.POST, request.FILES, instance=presentation)
-       
-       if form.is_valid() and formset.is_valid():
-           presentation = form.save(commit=False)
-           presentation.membre = membre
-           presentation.save()
-           formset.save()
-           
-           if presentation_id:
-               messages.success(request, "La présentation a été mise à jour avec succès !")
-           else:
-               messages.success(request, "La présentation a été créée avec succès !")
-           
-           return redirect('labo:presentation_detail', presentation_id=presentation.id)
-   else:
-       form = PresentationForm(instance=presentation)
-       formset = ImagePresentationFormSet(instance=presentation)
-   
-   context = {
-       'form': form,
-       'formset': formset,
-       'presentation': presentation,
-   }
-   return render(request, 'membres/edit_presentation.html', context)
-
-
+    """Création/édition d'une présentation."""
+    try:
+        membre = Membre.objects.get(user=request.user)
+    except Membre.DoesNotExist:
+        messages.error(request, "Vous devez d'abord compléter votre profil.")
+        return redirect('labo:edit_profile')
+    
+    if presentation_id:
+        presentation = get_object_or_404(Presentation, id=presentation_id)
+        # Vérifier que le membre est bien l'auteur
+        if presentation.membre != membre:
+            return HttpResponseForbidden("Vous n'avez pas la permission de modifier cette présentation.")
+    else:
+        presentation = None
+    
+    if request.method == 'POST':
+        form = PresentationForm(request.POST, request.FILES, instance=presentation)
+        formset = ImagePresentationFormSet(request.POST, request.FILES, instance=presentation)
+        
+        if form.is_valid() and formset.is_valid():
+            # D'abord sauvegarder la présentation
+            presentation = form.save(commit=False)
+            presentation.membre = membre
+            presentation.save()
+            form.save_m2m()  # Nécessaire si vous avez des relations ManyToMany
+            
+            # Maintenant lier le formset à la présentation et le sauvegarder
+            formset.instance = presentation
+            formset.save()
+            
+            if presentation_id:
+                messages.success(request, "La présentation a été mise à jour avec succès !")
+            else:
+                messages.success(request, "La présentation a été créée avec succès !")
+            
+            return redirect('labo:presentation_detail', presentation_id=presentation.id)
+    else:
+        form = PresentationForm(instance=presentation)
+        formset = ImagePresentationFormSet(instance=presentation)
+    
+    context = {
+        'form': form,
+        'formset': formset,
+        'presentation': presentation,
+    }
+    return render(request, 'membres/edit_presentation.html', context)
 @login_required
 def create_edit_article(request, article_id=None):
    """Création/édition d'un article."""
@@ -845,7 +852,109 @@ def cancel_invitation(request, invitation_id):
    
    messages.success(request, f"L'invitation pour {email} a été annulée.")
    return redirect('labo:gestion_invitations')
+# views.py
 
+@login_required
+def create_membre(request):
+    """Vue pour créer un nouveau membre directement par l'administrateur."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    themes = Theme.objects.all()
+    
+    if request.method == 'POST':
+        # Création d'un nouvel utilisateur
+        username = request.POST.get('username', '')
+        password = User.objects.make_random_password()  # Génération d'un mot de passe aléatoire
+        first_name = request.POST.get('first_name', '')
+        last_name = request.POST.get('last_name', '')
+        email = request.POST.get('email', '')
+        
+        # Validation de base
+        if not username or not email or not first_name or not last_name:
+            messages.error(request, "Tous les champs obligatoires doivent être remplis.")
+            return render(request, 'admin/create_membre.html', {'themes': themes})
+        
+        # Vérifier si l'utilisateur existe déjà
+        if User.objects.filter(username=username).exists():
+            messages.error(request, f"Le nom d'utilisateur '{username}' est déjà utilisé.")
+            return render(request, 'admin/create_membre.html', {'themes': themes})
+        
+        if User.objects.filter(email=email).exists():
+            messages.error(request, f"L'adresse email '{email}' est déjà utilisée.")
+            return render(request, 'admin/create_membre.html', {'themes': themes})
+        
+        # Créer l'utilisateur
+        user = User.objects.create_user(
+            username=username,
+            email=email,
+            password=password,
+            first_name=first_name,
+            last_name=last_name
+        )
+        
+        # Créer le profil membre
+        membre = Membre()
+        membre.user = user
+        membre.titre = request.POST.get('titre', '')
+        
+        theme_id = request.POST.get('theme', '')
+        if theme_id:
+            membre.theme = get_object_or_404(Theme, pk=theme_id)
+        
+        membre.bio = request.POST.get('bio', '')
+        membre.linkedin = request.POST.get('linkedin', '')
+        membre.github = request.POST.get('github', '')
+        membre.portfolio = request.POST.get('portfolio', '')
+        membre.est_responsable = 'est_responsable' in request.POST
+        membre.est_ancien = 'est_ancien' in request.POST
+        
+        date_arrivee = request.POST.get('date_arrivee', '')
+        if date_arrivee:
+            membre.date_arrivee = date_arrivee
+        
+        date_depart = request.POST.get('date_depart', '')
+        if date_depart and membre.est_ancien:
+            membre.date_depart = date_depart
+        
+        # Gestion de la photo
+        if 'photo' in request.FILES:
+            membre.photo = request.FILES['photo']
+            
+        membre.save()
+        
+        # Envoi d'un email avec les informations de connexion
+        try:
+            subject = 'Bienvenue sur Beta Lab - Vos informations de connexion'
+            message = f"""Bonjour {first_name},
+
+Votre compte a été créé sur la plateforme Beta Lab.
+
+Voici vos informations de connexion :
+- Nom d'utilisateur : {username}
+- Mot de passe temporaire : {password}
+
+Nous vous recommandons de changer votre mot de passe après votre première connexion.
+
+Cordialement,
+L'équipe Beta Lab
+"""
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [email],
+                fail_silently=False,
+            )
+            messages.success(request, f"Le membre {first_name} {last_name} a été créé avec succès. Un email a été envoyé avec les informations de connexion.")
+        except Exception as e:
+            messages.warning(request, f"Le membre a été créé, mais l'email n'a pas pu être envoyé. Identifiants : {username} / {password}")
+        
+        return redirect('labo:gestion_membres')
+    
+    # Afficher le formulaire vide pour la création
+    return render(request, 'admin/create_membre.html', {'themes': themes})
 
 @login_required
 def gestion_collaborateurs(request):
@@ -1103,3 +1212,128 @@ def register_with_invitation(request, token):
        'invitation': invitation,
    }
    return render(request, 'auth/register.html', context)
+
+# Dans views.py
+
+@login_required
+def gestion_themes(request):
+    """Vue pour gérer les thèmes de recherche."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    # Récupérer tous les thèmes
+    themes = Theme.objects.all().order_by('nom')
+    
+    context = {
+        'themes': themes,
+    }
+    return render(request, 'admin/gestion_themes.html', context)
+
+@login_required
+def save_theme(request):
+    """Vue pour créer ou mettre à jour un thème."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    if request.method == 'POST':
+        theme_id = request.POST.get('theme_id', '')
+        nom = request.POST.get('nom', '').strip()
+        description = request.POST.get('description', '').strip()
+        
+        # Validation
+        if not nom:
+            messages.error(request, "Le nom du thème est obligatoire.")
+            return redirect('labo:gestion_themes')
+        
+        # Vérifier si on modifie ou crée un thème
+        if theme_id:
+            # Modification d'un thème existant
+            try:
+                theme = Theme.objects.get(pk=theme_id)
+                theme.nom = nom
+                theme.description = description
+                theme.save()
+                messages.success(request, f"Le thème '{nom}' a été modifié avec succès.")
+            except Theme.DoesNotExist:
+                messages.error(request, "Le thème que vous essayez de modifier n'existe pas.")
+        else:
+            # Création d'un nouveau thème
+            # Vérifier si un thème avec ce nom existe déjà
+            if Theme.objects.filter(nom=nom).exists():
+                messages.error(request, f"Un thème avec le nom '{nom}' existe déjà.")
+            else:
+                Theme.objects.create(nom=nom, description=description)
+                messages.success(request, f"Le thème '{nom}' a été créé avec succès.")
+    
+    return redirect('labo:gestion_themes')
+
+@login_required
+def delete_theme(request):
+    """Vue pour supprimer un thème."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    if request.method == 'POST':
+        theme_id = request.POST.get('theme_id', '')
+        
+        if theme_id:
+            try:
+                theme = Theme.objects.get(pk=theme_id)
+                
+                # Vérifier si des membres sont associés à ce thème
+                if theme.membre_set.count() > 0:
+                    messages.error(request, f"Impossible de supprimer le thème '{theme.nom}' car des membres y sont associés.")
+                else:
+                    nom = theme.nom
+                    theme.delete()
+                    messages.success(request, f"Le thème '{nom}' a été supprimé avec succès.")
+            except Theme.DoesNotExist:
+                messages.error(request, "Le thème que vous essayez de supprimer n'existe pas.")
+    
+    return redirect('labo:gestion_themes')
+# views.py
+@login_required
+def create_edit_theme(request, theme_id=None):
+    """Vue pour créer ou modifier un thème."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    # Si theme_id est fourni, on modifie un thème existant
+    theme = None
+    if theme_id:
+        theme = get_object_or_404(Theme, pk=theme_id)
+    
+    if request.method == 'POST':
+        nom = request.POST.get('nom', '').strip()
+        description = request.POST.get('description', '').strip()
+        
+        # Validation
+        if not nom:
+            messages.error(request, "Le nom du thème est obligatoire.")
+            return render(request, 'admin/edit_theme.html', {'theme': theme})
+        
+        # Vérifier si on modifie ou crée un thème
+        if theme:
+            # Modification d'un thème existant
+            theme.nom = nom
+            theme.description = description
+            theme.save()
+            messages.success(request, f"Le thème '{nom}' a été modifié avec succès.")
+        else:
+            # Création d'un nouveau thème
+            # Vérifier si un thème avec ce nom existe déjà
+            if Theme.objects.filter(nom=nom).exists():
+                messages.error(request, f"Un thème avec le nom '{nom}' existe déjà.")
+                return render(request, 'admin/edit_theme.html', {'theme': None})
+            
+            Theme.objects.create(nom=nom, description=description)
+            messages.success(request, f"Le thème '{nom}' a été créé avec succès.")
+        
+        return redirect('labo:gestion_themes')
+    
+    # Afficher le formulaire (GET)
+    return render(request, 'admin/edit_theme.html', {'theme': theme})
