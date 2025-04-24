@@ -2,7 +2,11 @@ from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from .models import Membre, Presentation, ImagePresentation, Article, Devenir, Temoignage, Evenement
-
+import re
+import socket
+import dns.resolver
+from django.core.exceptions import ValidationError
+from .utils import validate_email_domain
 
 class InvitationRegistrationForm(UserCreationForm):
     """Formulaire d'inscription par invitation."""
@@ -73,12 +77,28 @@ class DevenirForm(forms.ModelForm):
         }
 
 
+# 1. Validation complète dans le formulaire
 class ContactForm(forms.Form):
-    """Formulaire de contact."""
-    nom = forms.CharField(max_length=100, required=True)
-    email = forms.EmailField(required=True)
-    sujet = forms.CharField(max_length=200, required=True)
-    message = forms.CharField(widget=forms.Textarea, required=True)
+    nom = forms.CharField(max_length=100, label="Nom")
+    email = forms.EmailField(label="Email")
+    sujet = forms.CharField(max_length=200, label="Sujet")
+    message = forms.CharField(widget=forms.Textarea, label="Message")
+    
+    def clean_email(self):
+        """Valide que l'adresse email existe réellement."""
+        email = self.cleaned_data.get('email')
+        
+        # Déjà validé par EmailField (syntaxe)
+        if not email:
+            return email
+            
+        # Vérification DNS du domaine
+        try:
+            domain = email.split('@')[1]
+            validate_email_domain(email)
+            return email
+        except ValidationError as e:
+            raise forms.ValidationError(str(e))
 
 
 class InvitationForm(forms.Form):

@@ -157,3 +157,4 @@ DEFAULT_FROM_EMAIL = 'lontsilambou@gmail.com'
 CSRF_TRUSTED_ORIGINS = [
     'https://3cb5-129-0-205-169.ngrok-free.app'
 ]
+CONTACT_EMAIL = 'lontsilambou@gmail.com'

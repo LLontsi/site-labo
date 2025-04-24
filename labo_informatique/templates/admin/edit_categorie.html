@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{% if theme %}Modifier le thème{% else %}Ajouter un thème{% endif %} - Beta Lab
+{% if categorie %}Modifier la catégorie{% else %}Ajouter une catégorie{% endif %} - Beta Lab
 {% endblock %}
 
 {% block extra_css %}
@@ -11,9 +11,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if theme %}Modifier le thème{% else %}Ajouter un thème{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if categorie %}Modifier la catégorie{% else %}Ajouter une catégorie{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">{% if theme %}{{ theme.nom }}{% else %}Nouveau thème de recherche{% endif %}</p>
+    <p class="page-subtitle fade-in delay-200">{% if categorie %}{{ categorie.nom }}{% else %}Nouvelle catégorie d'article{% endif %}</p>
 </div>
 {% endblock %}
 
@@ -44,8 +44,8 @@
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>{% if theme %}Modifier le thème{% else %}Ajouter un thème{% endif %}</h2>
-                    <a href="{% url 'labo:gestion_themes' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>{% if categorie %}Modifier la catégorie{% else %}Ajouter une catégorie{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_categories' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
                 </div>
                 
                 {% if messages %}
@@ -63,21 +63,21 @@
                         {% csrf_token %}
                         
                         <div class="form-group">
-                            <label for="nom">Nom du thème</label>
-                            <input type="text" id="nom" name="nom" value="{% if theme %}{{ theme.nom }}{% endif %}" required>
+                            <label for="nom">Nom de la catégorie</label>
+                            <input type="text" id="nom" name="nom" value="{% if categorie %}{{ categorie.nom }}{% endif %}" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="description">Description</label>
-                            <textarea id="description" name="description" rows="6">{% if theme %}{{ theme.description }}{% endif %}</textarea>
-                            <div class="form-help">Décrivez le domaine de recherche couvert par ce thème.</div>
+                            <textarea id="description" name="description" rows="6">{% if categorie %}{{ categorie.description }}{% endif %}</textarea>
+                            <div class="form-help">Décrivez la catégorie et le type d'articles qu'elle contiendra.</div>
                         </div>
                         
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
-                                {% if theme %}Enregistrer les modifications{% else %}Créer le thème{% endif %}
+                                {% if categorie %}Enregistrer les modifications{% else %}Créer la catégorie{% endif %}
                             </button>
-                            <a href="{% url 'labo:gestion_themes' %}" class="btn btn-secondary">Annuler</a>
+                            <a href="{% url 'labo:gestion_categories' %}" class="btn btn-secondary">Annuler</a>
                         </div>
                     </form>
                 </div>

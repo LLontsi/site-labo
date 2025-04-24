@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Gestion des thèmes - Beta Lab{% endblock %}
+{% block title %}Gestion des catégories - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
@@ -8,9 +8,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Gestion des thèmes</h1>
+    <h1 class="page-title fade-in">Gestion des catégories</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Gérer les thèmes de recherche du laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">Gérer les catégories d'articles du laboratoire</p>
 </div>
 {% endblock %}
 
@@ -41,10 +41,10 @@
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Thèmes de recherche</h2>
+                    <h2>Catégories d'articles</h2>
                     <div class="admin-actions">
-                        <a href="{% url 'labo:create_theme' %}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Ajouter un thème
+                        <a href="{% url 'labo:create_categorie' %}" class="btn btn-primary">
+                            <i class="fas fa-plus"></i> Ajouter une catégorie
                         </a>
                     </div>
                 </div>
@@ -59,39 +59,39 @@
                 </div>
                 {% endif %}
                 
-                <!-- Liste des thèmes -->
+                <!-- Liste des catégories -->
                 <div class="admin-table-container">
                     <table class="admin-table">
                         <thead>
                             <tr>
                                 <th>Nom</th>
                                 <th>Description</th>
-                                <th>Membres associés</th>
+                                <th>Articles associés</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            {% for theme in themes %}
+                            {% for categorie in categories %}
                                 <tr>
-                                    <td>{{ theme.nom }}</td>
-                                    <td>{{ theme.description|truncatechars:100 }}</td>
-                                    <td>{{ theme.membre_set.count }}</td>
+                                    <td>{{ categorie.nom }}</td>
+                                    <td>{{ categorie.description|default:""|truncatechars:100 }}</td>
+                                    <td>{{ categorie.article_set.count }}</td>
                                     <td class="cell-actions">
-                                        <a href="{% url 'labo:edit_theme' theme.id %}" class="table-action" title="Modifier">
+                                        <a href="{% url 'labo:edit_categorie' categorie.id %}" class="table-action" title="Modifier">
                                             <i class="fas fa-edit"></i>
                                         </a>
-                                        <button class="table-action btn-delete-theme" 
-                                                data-id="{{ theme.id }}" 
-                                                data-nom="{{ theme.nom }}" 
+                                        <button class="table-action btn-delete-categorie" 
+                                                data-id="{{ categorie.id }}" 
+                                                data-nom="{{ categorie.nom }}" 
                                                 title="Supprimer" 
-                                                {% if theme.membre_set.count > 0 %}disabled{% endif %}>
+                                                {% if categorie.article_set.exists %}disabled{% endif %}>
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="4" class="empty-table">Aucun thème trouvé.</td>
+                                    <td colspan="4" class="empty-table">Aucune catégorie trouvée.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -106,13 +106,13 @@
                             <span class="modal-close">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <p>Êtes-vous sûr de vouloir supprimer le thème "<span id="theme-name"></span>" ?</p>
+                            <p>Êtes-vous sûr de vouloir supprimer la catégorie "<span id="categorie-name"></span>" ?</p>
                             <p class="warning">Cette action est irréversible.</p>
                         </div>
                         <div class="modal-footer">
-                            <form method="post" action="{% url 'labo:delete_theme' %}" id="delete-form">
+                            <form method="post" action="{% url 'labo:delete_categorie' %}" id="delete-form">
                                 {% csrf_token %}
-                                <input type="hidden" name="theme_id" id="delete_theme_id">
+                                <input type="hidden" name="categorie_id" id="delete_categorie_id">
                                 <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
                                 <button type="submit" class="btn btn-danger">Supprimer</button>
                             </form>
@@ -130,9 +130,9 @@
 document.addEventListener('DOMContentLoaded', function() {
     // Variables pour la modal de suppression
     const deleteModal = document.getElementById('delete-modal');
-    const themeNameSpan = document.getElementById('theme-name');
-    const deleteThemeIdInput = document.getElementById('delete_theme_id');
-    const deleteButtons = document.querySelectorAll('.btn-delete-theme');
+    const categorieNameSpan = document.getElementById('categorie-name');
+    const deleteCategorieIdInput = document.getElementById('delete_categorie_id');
+    const deleteButtons = document.querySelectorAll('.btn-delete-categorie');
     const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
     
     // Ouvrir la modal de suppression
@@ -143,8 +143,8 @@ document.addEventListener('DOMContentLoaded', function() {
             const id = this.getAttribute('data-id');
             const nom = this.getAttribute('data-nom');
             
-            themeNameSpan.textContent = nom;
-            deleteThemeIdInput.value = id;
+            categorieNameSpan.textContent = nom;
+            deleteCategorieIdInput.value = id;
             deleteModal.style.display = 'block';
         });
     });

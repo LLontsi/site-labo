@@ -4,22 +4,31 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
+import re
+import socket
+import dns.resolver
+from django.core.exceptions import ValidationError
+
 from django.core.mail import send_mail
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.utils import timezone
 from django.conf import settings
 from django.http import HttpResponseForbidden
+from django.contrib import messages
+from .forms import ContactForm  # Assurez-vous d'avoir défini ce formulaire
 from django.db.models import Count
 from .models import (
     Membre, Theme, Collaborateur, Devenir, Invitation, Presentation, 
     ImagePresentation, Categorie, Article, Temoignage, Evenement
 )
+from .utils import validate_email_domain,is_valid_email_domain
 from .forms import (
     InvitationRegistrationForm, MembreProfileForm, PresentationForm, 
     ImagePresentationFormSet, ArticleForm, DevenirForm, ContactForm,
     InvitationForm, TemoignageForm, EvenementForm,MembreForm,UserCreateForm
 )
 import os
+
 
 # Pages publiques
 def home(request):
@@ -59,10 +68,10 @@ def about(request):
     """Page À propos du laboratoire."""
     context = {}
     return render(request, 'core/about.html', context)
-
+# 2. Fonctions de validation à utiliser dans la vue
 
 def contact(request):
-    """Page de contact."""
+    """Page de contact avec vérification d'email."""
     if request.method == 'POST':
         form = ContactForm(request.POST)
         if form.is_valid():
@@ -71,17 +80,26 @@ def contact(request):
             sujet = form.cleaned_data['sujet']
             message = form.cleaned_data['message']
             
-            # Envoyer l'email
-            send_mail(
-                f'[Beta Lab] {sujet}',
-                f'Message de {nom} ({email}):\n\n{message}',
-                settings.DEFAULT_FROM_EMAIL,
-                [settings.CONTACT_EMAIL],
-                fail_silently=False,
-            )
+            # La validation est déjà faite dans form.is_valid()
+            # Si vous voulez une vérification supplémentaire:
+            if not is_valid_email_domain(email):
+                messages.error(request, "L'adresse email semble invalide. Veuillez vérifier.")
+                return render(request, 'core/contact.html', {'form': form})
             
-            messages.success(request, "Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.")
-            return redirect('labo:contact')
+            # Envoyer l'email
+            try:
+                send_mail(
+                    f'[Beta Lab] {sujet}',
+                    f'Message de {nom} ({email}):\n\n{message}',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [settings.CONTACT_EMAIL],
+                    fail_silently=False,
+                )
+                
+                messages.success(request, "Votre message a été envoyé avec succès ! Nous vous répondrons dans les plus brefs délais.")
+                return redirect('labo:contact')
+            except Exception as e:
+                messages.error(request, f"Erreur lors de l'envoi de l'email: {str(e)}")
     else:
         form = ContactForm()
     
@@ -1213,7 +1231,6 @@ def register_with_invitation(request, token):
    }
    return render(request, 'auth/register.html', context)
 
-# Dans views.py
 
 @login_required
 def gestion_themes(request):
@@ -1337,3 +1354,89 @@ def create_edit_theme(request, theme_id=None):
     
     # Afficher le formulaire (GET)
     return render(request, 'admin/edit_theme.html', {'theme': theme})
+
+# Vues pour la gestion des catégories d'articles
+
+@login_required
+def gestion_categories(request):
+    """Vue pour gérer les catégories d'articles."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    # Récupérer toutes les catégories
+    categories = Categorie.objects.all().order_by('nom')
+    
+    context = {
+        'categories': categories,
+    }
+    return render(request, 'admin/gestion_categories.html', context)
+
+@login_required
+def create_edit_categorie(request, categorie_id=None):
+    """Vue pour créer ou modifier une catégorie."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    # Si categorie_id est fourni, on modifie une catégorie existante
+    categorie = None
+    if categorie_id:
+        categorie = get_object_or_404(Categorie, pk=categorie_id)
+    
+    if request.method == 'POST':
+        nom = request.POST.get('nom', '').strip()
+        description = request.POST.get('description', '').strip()
+        
+        # Validation
+        if not nom:
+            messages.error(request, "Le nom de la catégorie est obligatoire.")
+            return render(request, 'admin/edit_categorie.html', {'categorie': categorie})
+        
+        # Vérifier si on modifie ou crée une catégorie
+        if categorie:
+            # Modification d'une catégorie existante
+            categorie.nom = nom
+            categorie.description = description
+            categorie.save()
+            messages.success(request, f"La catégorie '{nom}' a été modifiée avec succès.")
+        else:
+            # Création d'une nouvelle catégorie
+            # Vérifier si une catégorie avec ce nom existe déjà
+            if Categorie.objects.filter(nom=nom).exists():
+                messages.error(request, f"Une catégorie avec le nom '{nom}' existe déjà.")
+                return render(request, 'admin/edit_categorie.html', {'categorie': None})
+            
+            Categorie.objects.create(nom=nom, description=description)
+            messages.success(request, f"La catégorie '{nom}' a été créée avec succès.")
+        
+        return redirect('labo:gestion_categories')
+    
+    # Afficher le formulaire (GET)
+    return render(request, 'admin/edit_categorie.html', {'categorie': categorie})
+
+@login_required
+def delete_categorie(request):
+    """Vue pour supprimer une catégorie."""
+    # Vérifier que l'utilisateur est admin
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    if request.method == 'POST':
+        categorie_id = request.POST.get('categorie_id', '')
+        
+        if categorie_id:
+            try:
+                categorie = Categorie.objects.get(pk=categorie_id)
+                
+                # Vérifier si des articles sont associés à cette catégorie
+                if categorie.article_set.exists():
+                    messages.error(request, f"Impossible de supprimer la catégorie '{categorie.nom}' car des articles y sont associés.")
+                else:
+                    nom = categorie.nom
+                    categorie.delete()
+                    messages.success(request, f"La catégorie '{nom}' a été supprimée avec succès.")
+            except Categorie.DoesNotExist:
+                messages.error(request, "La catégorie que vous essayez de supprimer n'existe pas.")
+    
+    return redirect('labo:gestion_categories')

@@ -60,6 +60,11 @@ urlpatterns = [
     path('gestion/theme/create/', views.create_edit_theme, name='create_theme'),
     path('gestion/theme/edit/<int:theme_id>/', views.create_edit_theme, name='edit_theme'),
     path('gestion/theme/delete/', views.delete_theme, name='delete_theme'),
-    # Authentification
+        # URLs pour la gestion des catégories
+    path('gestion/categories/', views.gestion_categories, name='gestion_categories'),
+    path('gestion/categorie/create/', views.create_edit_categorie, name='create_categorie'),
+    path('gestion/categorie/edit/<int:categorie_id>/', views.create_edit_categorie, name='edit_categorie'),
+    path('gestion/categorie/delete/', views.delete_categorie, name='delete_categorie'),
+        # Authentification
     path('register/<str:token>/', views.register_with_invitation, name='register_with_invitation'),
 ]

@@ -43,7 +43,7 @@ img {
 }
 
 .header.scrolled {
-  position: fixed;
+ /* position: fixed;*/
   top: 0;
   left: 0;
   width: 100%;
@@ -194,15 +194,16 @@ img {
 
 /* Footer */
 .footer {
+  margin-top: 5rem;
   background-color: var(--color-primary);
   color: white;
   position: relative;
-  padding-top: 70px; /* Pour laisser de la place à la vague du haut */
+  padding-top: 50px; /* Pour laisser de la place à la vague du haut */
 }
 
 .footer-wave-container {
   position: absolute;
-  top: -70px;
+  top: -80px;
   left: 0;
   width: 100%;
   overflow: hidden;
