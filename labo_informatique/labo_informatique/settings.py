@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-!86qik_na$v*tkt7!1z4g**1fh59ia58apq#(xedcbq(p%r^pd
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.103.206', '0.0.0.0','57d5-41-202-219-175.ngrok-free.app','3cb5-129-0-205-169.ngrok-free.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.103.206', '0.0.0.0','57d5-41-202-219-175.ngrok-free.app','f5d8-41-202-219-169.ngrok-free.app']
 
 
 # Application definition
@@ -155,6 +155,6 @@ except ImportError:
 DEFAULT_FROM_EMAIL = 'lontsilambou@gmail.com'
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://3cb5-129-0-205-169.ngrok-free.app'
+    'https://f5d8-41-202-219-169.ngrok-free.app'
 ]
 CONTACT_EMAIL = 'lontsilambou@gmail.com'
