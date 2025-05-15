@@ -162,6 +162,9 @@ EMAIL_HOST_USER = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL
 
 CSRF_TRUSTED_ORIGINS = [
-    '*'
+    'http://localhost',
+    'http://127.0.0.1',
+    # Tu peux ajouter ton IP de machine ou domaine ici si tu veux deployer sur un server 
+    'http://vmi1981421',
 ]
 CONTACT_EMAIL = CONTACT_EMAIL

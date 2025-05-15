@@ -1,9 +1,10 @@
 {% extends 'base.html' %}
+{% load static %}
 
 {% block title %}{{ article.titre }} - Laboratoire Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/article_detail.css">
+<link rel="stylesheet" href="{% static "/css/article_detail.css" %} ">
 {% endblock %}
 
 {% block header_content %}
