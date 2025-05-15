@@ -42,7 +42,7 @@ except ImportError:
     # Email settings
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.163.206', '0.0.0.0', '9c0b-129-0-226-184.ngrok-free.app']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -162,6 +162,6 @@ EMAIL_HOST_USER = EMAIL_HOST_USER
 DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL
 
 CSRF_TRUSTED_ORIGINS = [
-    'http://192.168.163.206:8000', 'https://9c0b-129-0-226-184.ngrok-free.app'
+    '*'
 ]
 CONTACT_EMAIL = CONTACT_EMAIL
