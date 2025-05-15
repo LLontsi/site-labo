@@ -9,8 +9,8 @@
 {% block header_content %}
 <div class="hero">
     <div class="hero-content">
-        <h1 class="hero-title">Bienvenue au Beta Lab</h1>
-        <p class="hero-subtitle">Un laboratoire de recherche en informatique innovant</p>
+        <h1 class="hero-title">  Beta Lab</h1>
+        <p class="hero-subtitle"> laboratoire de rechercher et  innovation</p>
         <div class="hero-buttons">
             <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Découvrir nos travaux</a>
             <a href="{% url 'labo:contact' %}" class="btn btn-secondary">Nous contacter</a>
@@ -23,11 +23,54 @@
 {% endblock %}
 
 {% block content %}
+<!-- Section événements -->
+<section class="events-section">
+    <div class="container">
+        <h2 class="section-title">Événements à venir</h2>
+        <div class="events-grid">
+            {% for evenement in evenements %}
+            <div class="event-card">
+                <div class="event-date">
+                    <span class="day">{{ evenement.date_debut|date:"d" }}</span>
+                    <span class="month">{{ evenement.date_debut|date:"M" }}</span>
+                </div>
+                <div class="event-details">
+                    <h3>{{ evenement.titre }}</h3>
+                    <div class="event-info">
+                        <span class="event-time"><i class="far fa-clock"></i> {{ evenement.date_debut|date:"H:i" }} - {{ evenement.date_fin|date:"H:i" }}</span>
+                        <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}</span>
+                    </div>
+                    <p class="event-description">{{ evenement.description|truncatechars:120 }}</p>
+                    <span class="event-type">{{ evenement.type_evenement }}</span>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-message">
+                <p>Aucun événement à venir n'est prévu pour le moment.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
 <!-- Section domaines d'expertise -->
 <section class="domains-section">
     <div class="container">
-        <h2 class="section-title">Nos domaines d'expertise</h2>
+        <h2 class="section-title">Nos domaines de recherche</h2>
         <div class="domains-grid">
+            <div class="domain-card">
+                <div class="domain-icon">
+                    <i class="fas fa-laptop-code"></i>
+                </div>
+                <h3>Systèmes d'Exploitation</h3>
+                <p>Développement et optimisation de systèmes d'exploitation, gestion des ressources et performance.</p>
+            </div>
+            <div class="domain-card">
+                <div class="domain-icon">
+                    <i class="fas fa-microchip"></i>
+                </div>
+                <h3>Internet des Objets (IoT)</h3>
+                <p>Conception de solutions connectées, réseaux de capteurs et applications pour objets intelligents.</p>
+            </div>
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-brain"></i>
@@ -37,10 +80,10 @@
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
-                    <i class="fas fa-shield-alt"></i>
+                    <i class="fas fa-cloud"></i>
                 </div>
-                <h3>Cybersécurité</h3>
-                <p>Protection des systèmes d'information et développement de méthodes de sécurisation innovantes.</p>
+                <h3>Cloud Computing</h3>
+                <p>Conception et optimisation d'infrastructures cloud, virtualisation et services distribués.</p>
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
@@ -56,10 +99,16 @@
                 <h3>Réseaux Informatiques</h3>
                 <p>Optimisation des infrastructures réseau et développement de protocoles de communication.</p>
             </div>
+            <div class="domain-card">
+                <div class="domain-icon">
+                    <i class="fas fa-code-branch"></i>
+                </div>
+                <h3>Systèmes d'Information et Génie Logiciel</h3>
+                <p>Conception, développement et maintenance de systèmes d'information et méthodes d'ingénierie logicielle.</p>
+            </div>
         </div>
     </div>
 </section>
-
 <!-- Section actualités récentes -->
 <section class="news-section">
     <div class="container">
@@ -79,7 +128,7 @@
                 <div class="news-content">
                     <div class="news-meta">
                         <span class="news-date">{{ article.date_creation|date:"d F Y" }}</span>
-                        {% for categorie in article.categories.all|slice:":1" %}
+                        {% for categorie in article.categories.all|slice:":2" %}
                         <span class="news-category">{{ categorie.nom }}</span>
                         {% endfor %}
                     </div>
@@ -143,77 +192,92 @@
         </div>
     </div>
 </section>
-
-<!-- Section équipe -->
-<section class="team-section">
+<!-- Section directeurs -->
+<section class="team-section director-section">
     <div class="container">
-        <h2 class="section-title">Notre équipe</h2>
+        <h2 class="section-title">Direction du laboratoire</h2>
         <div class="team-grid">
-            {% for membre in membres|slice:":3" %}
-            <div class="team-card">
-                <div class="team-photo">
-                    {% if membre.photo %}
-                    <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
-                    {% else %}
-                    <div class="default-avatar">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
-                    {% endif %}
-                </div>
-                <div class="team-info">
-                    <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
-                    <p class="team-title">{{ membre.titre }}</p>
-                    <p class="team-theme">{{ membre.theme.nom }}</p>
-                    <div class="team-social">
-                        {% if membre.linkedin %}
-                        <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                        {% endif %}
-                        {% if membre.github %}
-                        <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
-                        {% endif %}
-                        {% if membre.portfolio %}
-                        <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i></a>
+            {% for membre in membres %}
+                {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' or membre.user.first_name == 'ALain' or membre.user.last_name == 'TCHANA' or membre.user.first_name == 'Parfait' or membre.user.last_name == 'Bessala' %}
+                <div class="team-card">
+                    <div class="team-photo">
+                        {% if membre.photo %}
+                        <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
+                        {% else %}
+                        <div class="default-avatar">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
                         {% endif %}
                     </div>
+                    <div class="team-info">
+                        <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
+                        <p class="team-title">{{ membre.titre }}</p>
+                        {% if membre.theme %}
+                        <p class="team-theme">{{ membre.theme.nom }}</p>
+                        {% endif %}
+                        <div class="team-social">
+                            {% if membre.linkedin %}
+                            <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            {% endif %}
+                            {% if membre.github %}
+                            <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                            {% endif %}
+                            {% if membre.portfolio %}
+                            <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <a href="{% url 'labo:membre_detail' membre.id %}" class="team-link"></a>
                 </div>
-                <a href="{% url 'labo:membre_detail' membre.id %}" class="team-link"></a>
-            </div>
-            {% empty %}
-            <div class="empty-message">
-                <p>Aucun membre n'est disponible pour le moment.</p>
-            </div>
+                {% endif %}
             {% endfor %}
         </div>
         <div class="section-action">
-            <a href="{% url 'labo:team' %}" class="btn btn-primary">Voir toute l'équipe</a>
+            <a href="{% url 'labo:responsables' %}" class="btn btn-primary">Voir tout les responsables du laboratoire</a>
         </div>
     </div>
 </section>
 
-<!-- Section événements -->
-<section class="events-section">
+<!-- Section équipe (sans les directeurs) -->
+<section class="team-section">
     <div class="container">
-        <h2 class="section-title">Événements à venir</h2>
-        <div class="events-grid">
-            {% for evenement in evenements %}
-            <div class="event-card">
-                <div class="event-date">
-                    <span class="day">{{ evenement.date_debut|date:"d" }}</span>
-                    <span class="month">{{ evenement.date_debut|date:"M" }}</span>
-                </div>
-                <div class="event-details">
-                    <h3>{{ evenement.titre }}</h3>
-                    <div class="event-info">
-                        <span class="event-time"><i class="far fa-clock"></i> {{ evenement.date_debut|date:"H:i" }} - {{ evenement.date_fin|date:"H:i" }}</span>
-                        <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}</span>
+        <h2 class="section-title">Notre équipe</h2>
+        <div class="team-grid">
+            {% for membre in membres|slice:":4" %}
+                {% if not membre.titre == 'Directeur' and not membre.titre == 'Directrice' and not membre.user.first_name == 'ALain' and not membre.user.last_name == 'TCHANA' and not membre.user.first_name == 'Parfait' and not membre.user.last_name == 'Bessala' %}
+                <div class="team-card">
+                    <div class="team-photo">
+                        {% if membre.photo %}
+                        <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
+                        {% else %}
+                        <div class="default-avatar">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
+                        {% endif %}
                     </div>
-                    <p class="event-description">{{ evenement.description|truncatechars:120 }}</p>
-                    <span class="event-type">{{ evenement.type_evenement }}</span>
+                    <div class="team-info">
+                        <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
+                        <p class="team-title">{{ membre.titre }}</p>
+                        <p class="team-theme">{{ membre.theme.nom }}</p>
+                        <div class="team-social">
+                            {% if membre.linkedin %}
+                            <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            {% endif %}
+                            {% if membre.github %}
+                            <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                            {% endif %}
+                            {% if membre.portfolio %}
+                            <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    <a href="{% url 'labo:membre_detail' membre.id %}" class="team-link"></a>
                 </div>
-            </div>
+                {% endif %}
             {% empty %}
-            <div class="empty-message">
-                <p>Aucun événement à venir n'est prévu pour le moment.</p>
-            </div>
+                <div class="empty-message">
+                    <p>Aucun membre n'est disponible pour le moment.</p>
+                </div>
             {% endfor %}
+        </div>
+        <div class="section-action">
+            <a href="{% url 'labo:team' %}" class="btn btn-primary">Voir toute l'équipe</a>
         </div>
     </div>
 </section>

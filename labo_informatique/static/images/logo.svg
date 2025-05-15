@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 200" width="400" height="200">
+  <!-- Définition des couleurs du site -->
+  <defs>
+    <linearGradient id="gradient-primary" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ffffff" />
+      <stop offset="100%" stop-color="#f0f0f0" />
+    </linearGradient>
+    <linearGradient id="gradient-accent" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#ff6b6b" />
+      <stop offset="100%" stop-color="#ff8a8a" />
+    </linearGradient>
+  </defs>
+  
+  
+  <!-- Symbole principal - Hexagone avec lettre β -->
+  <g transform="translate(50, 100) scale(0.85)">
+    <!-- Hexagone avec superposition de formes -->
+    <polygon points="0,-70 60,-35 60,35 0,70 -60,35 -60,-35" fill="url(#gradient-primary)" stroke="#ffffff" stroke-width="1" />
+    <polygon points="0,-60 50,-30 50,30 0,60 -50,30 -50,-30" fill="none" stroke="#00a8e8" stroke-width="2" stroke-dasharray="5,3" />
+    
+    <!-- β stylisé -->
+    <path d="M-20,-35 L-20,35 
+             M-20,0 L5,0 
+             M-20,-35 L5,-35 C20,-35 20,-5 5,0 
+             M-20,0 L5,0 C25,0 25,35 5,35 
+             M-20,35 L5,35" 
+          stroke="#0a2472" fill="none" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" />
+          
+    <!-- Point d'accent - β -->
+    <circle cx="15" cy="-15" r="10" fill="url(#gradient-accent)" />
+  </g>
+  
+  <!-- Texte BETA LAB -->
+  <g transform="translate(110, 120)">
+    <text font-family="Poppins, sans-serif" font-weight="700" font-size="40" letter-spacing="2">
+      <tspan x="0" y="0" fill="#ffffff">BETA</tspan>
+      <tspan x="110" y="0" fill="#ff6b6b">LAB</tspan>
+    </text>
+    <!-- Ligne de séparation élégante -->
+    <path d="M0,12 L180,12" stroke="#00a8e8" stroke-width="3" />
+  </g>
+  
+  <!-- Petits éléments graphiques -->
+  <g>
+    <circle cx="305" cy="90" r="8" fill="#00a8e8" opacity="0.9" />
+    <circle cx="315" cy="110" r="5" fill="#ff6b6b" opacity="0.9" />
+    <circle cx="300" cy="125" r="3" fill="#ffffff" opacity="0.9" />
+  </g>
+</svg>

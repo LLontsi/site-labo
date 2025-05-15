@@ -20,13 +20,29 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-!86qik_na$v*tkt7!1z4g**1fh59ia58apq#(xedcbq(p%r^pd'
+# Importation des paramètres sensibles
+try:
+    from .settings_local import *
+except ImportError:
+    # Valeurs par défaut ou variables d'environnement si settings_local.py n'existe pas
+    import os
+    # Secret key
+    SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', '')
+    
+    # Debug mode
+    DEBUG = os.environ.get('DJANGO_DEBUG', 'False') == 'True'
+    
+    # Database settings
+    DATABASE_NAME = os.environ.get('DB_NAME', '')
+    DATABASE_USER = os.environ.get('DB_USER', '')
+    DATABASE_PASSWORD = os.environ.get('DB_PASSWORD', '')
+    DATABASE_HOST = os.environ.get('DB_HOST', 'localhost')
+    DATABASE_PORT = os.environ.get('DB_PORT', '5432')
+    
+    # Email settings
+    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.103.206', '0.0.0.0','57d5-41-202-219-175.ngrok-free.app','f5d8-41-202-219-169.ngrok-free.app']
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', '192.168.163.206', '0.0.0.0', '9c0b-129-0-226-184.ngrok-free.app']
 
 
 # Application definition
@@ -78,11 +94,11 @@ WSGI_APPLICATION = 'labo_informatique.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'labo_informatique_db',
-        'USER': 'postgres',
-        'PASSWORD': 'password',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': DATABASE_NAME,
+        'USER': DATABASE_USER,
+        'PASSWORD': DATABASE_PASSWORD,
+        'HOST': DATABASE_HOST,
+        'PORT': DATABASE_PORT,
     }
 }
 
@@ -138,23 +154,14 @@ LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
 # Configuration email
-# settings.py
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'lontsilambou@gmail.com'
-
-# Importation des paramètres sensibles
-try:
-    from .settings_local import *
-except ImportError:
-    # Valeurs par défaut ou variables d'environnement
-    import os
-    EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
-DEFAULT_FROM_EMAIL = 'lontsilambou@gmail.com'
+EMAIL_HOST_USER = EMAIL_HOST_USER
+DEFAULT_FROM_EMAIL = DEFAULT_FROM_EMAIL
 
 CSRF_TRUSTED_ORIGINS = [
-    'https://f5d8-41-202-219-169.ngrok-free.app'
+    'http://192.168.163.206:8000', 'https://9c0b-129-0-226-184.ngrok-free.app'
 ]
-CONTACT_EMAIL = 'lontsilambou@gmail.com'
+CONTACT_EMAIL = CONTACT_EMAIL

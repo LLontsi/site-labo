@@ -25,8 +25,8 @@
                 <div class="org-level-title">Direction</div>
                 <div class="org-boxes">
                     {% for resp in responsables %}
-                        {% if resp.titre == 'Directeur' or resp.titre == 'Directrice' %}
-                        <div class="org-box org-box-primary">
+                        {% if resp.titre == 'Directeur' or resp.titre == 'Directrice' or resp.user.first_name == 'ALain' or resp.user.last_name == 'TCHANA' or resp.user.first_name == 'Parfait' or resp.user.last_name == 'Bessala' %}
+                        <div class="org-box org-box-primary" data-name="{{ resp.user.first_name|lower }} {{ resp.user.last_name|lower }}">
                             <div class="org-member-photo">
                                 {% if resp.photo %}
                                     <img src="{{ resp.photo.url }}" alt="{{ resp.user.first_name }} {{ resp.user.last_name }}">
@@ -37,6 +37,9 @@
                             <div class="org-member-info">
                                 <h3>{{ resp.user.first_name }} {{ resp.user.last_name }}</h3>
                                 <p class="org-member-title">{{ resp.titre }}</p>
+                                {% if resp.theme %}
+                                <p class="org-member-theme">{{ resp.theme.nom }}</p>
+                                {% endif %}
                             </div>
                             <a href="{% url 'labo:membre_detail' resp.id %}" class="btn-view-profile">Voir le profil</a>
                         </div>
