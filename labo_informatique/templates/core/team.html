@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Notre équipe | Laboratoire Informatique{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/team.css">
+<link rel="stylesheet" href="{% static "css/team.css" %} ">
 {% endblock %}
 {% block header_content %}
 
@@ -72,5 +72,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/team.js"></script>
+<script src="{% static "js/team.js" %} "></script>
 {% endblock %}

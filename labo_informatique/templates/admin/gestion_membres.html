@@ -3,7 +3,9 @@
 {% block title %}Gestion des membres - Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+
 {% endblock %}
 
 {% block header_content %}

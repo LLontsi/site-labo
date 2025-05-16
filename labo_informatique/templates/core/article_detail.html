@@ -4,7 +4,7 @@
 {% block title %}{{ article.titre }} - Laboratoire Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static "/css/article_detail.css" %} ">
+<link rel="stylesheet" href="{% static "css/article_detail.css" %} ">
 {% endblock %}
 
 {% block header_content %}
@@ -158,5 +158,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/article_detail.js"></script>
+<script src="{% static "js/article_detail.js" %} "></script>
 {% endblock %}

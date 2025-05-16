@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Responsables et Collaborateurs - Laboratoire Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/responsables.css">
+<link rel="stylesheet" href="{% static "css/responsables.css" %} ">
 {% endblock %}
 
 {% block header_content %}
@@ -25,7 +25,7 @@
                 <div class="org-level-title">Direction</div>
                 <div class="org-boxes">
                     {% for resp in responsables %}
-                        {% if resp.titre == 'Directeur' or resp.titre == 'Directrice' or resp.user.first_name == 'ALain' or resp.user.last_name == 'TCHANA' or resp.user.first_name == 'Parfait' or resp.user.last_name == 'Bessala' %}
+                        {% if resp.titre == 'Directeur' or resp.titre == 'Directrice' %}
                         <div class="org-box org-box-primary" data-name="{{ resp.user.first_name|lower }} {{ resp.user.last_name|lower }}">
                             <div class="org-member-photo">
                                 {% if resp.photo %}
@@ -116,5 +116,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/responsables.js"></script>
+<script src="{% static "js/responsables.js" %} "></script>
 {% endblock %}

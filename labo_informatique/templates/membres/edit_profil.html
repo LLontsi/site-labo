@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}{% if is_new %}Compléter mon profil{% else %}Modifier mon profil{% endif %} - Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+<link rel="stylesheet" href="{% static "css/forms.css" %} ">
 {% endblock %}
 
 {% block header_content %}

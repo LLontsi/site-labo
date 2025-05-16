@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}{% if article %}Modifier l'article{% else %}Nouvel article{% endif %} - Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/rich-editor.css">
+<link rel="stylesheet" href="{% static "css/forms.css" %} ">
+<link rel="stylesheet" href="{% static "css/rich-editor.css" %} ">
 {% endblock %}
 
 {% block header_content %}
@@ -121,7 +121,7 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/rich-editor.js"></script>
+<script src="{% static "js/rich-editor.js" %} "></script>
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         const editor = document.querySelector('.rich-text-editor');

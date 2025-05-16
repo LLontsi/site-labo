@@ -3,7 +3,9 @@
 {% block title %}{{ title }} - Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+
 {% endblock %}
 {% block header_content %}
 <div class="page-header animated-gradient">
@@ -83,6 +85,13 @@
                                         </td>
                                         <td class="cell-actions">
                                             <a href="{% url 'labo:article_detail' article.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
+                                            <button class="table-action btn-delete-item" 
+                                                data-id="{{ article.id }}" 
+                                                data-nom="{{ article.titre }}"
+                                                data-type="article"
+                                                title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 {% empty %}
@@ -115,6 +124,13 @@
                                         <td>{{ presentation.date_creation|date:"d/m/Y" }}</td>
                                         <td class="cell-actions">
                                             <a href="{% url 'labo:presentation_detail' presentation.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
+                                            <button class="table-action btn-delete-categorie" 
+                                                data-id="{{ presentation.id }}" 
+                                                data-nom="{{ presentation.titre }}" 
+                                                title="Supprimer" 
+                                                {% if categorie.article_set.exists %}disabled{% endif %}>
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                         </td>
                                     </tr>
                                 {% empty %}
@@ -199,4 +215,78 @@
         </div>
     </div>
 </section>
+<!-- Modal de confirmation de suppression -->
+<div id="delete-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Confirmer la suppression</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer "<span id="item-name"></span>" ?</p>
+            <p class="warning">Cette action est irréversible.</p>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="delete-form">
+                {% csrf_token %}
+                <input type="hidden" name="item_id" id="delete_item_id">
+                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables pour la modal de suppression
+    const deleteModal = document.getElementById('delete-modal');
+    const itemNameSpan = document.getElementById('item-name');
+    const deleteItemIdInput = document.getElementById('delete_item_id');
+    const deleteForm = document.getElementById('delete-form');
+    const deleteButtons = document.querySelectorAll('.btn-delete-item');
+    const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
+    
+    // Ouvrir la modal de suppression
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.disabled) return;
+            
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            const type = this.getAttribute('data-type');
+            
+            // Définir l'action du formulaire en fonction du type
+            if (type === 'presentation') {
+                deleteForm.action = "{% url 'labo:delete_presentation' 0 %}".replace('0', id);
+            } else if (type === 'article') {
+                deleteForm.action = "{% url 'labo:delete_article' 0 %}".replace('0', id);
+            } else if (type === 'categorie') {
+                deleteForm.action = "{% url 'labo:delete_categorie' %}";
+                deleteItemIdInput.name = 'categorie_id'; // Pour la compatibilité
+            }
+            
+            itemNameSpan.textContent = nom;
+            deleteItemIdInput.value = id;
+            deleteModal.style.display = 'block';
+        });
+    });
+    
+    // Fermer la modal
+    modalCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            deleteModal.style.display = 'none';
+        });
+    });
+    
+    // Fermer la modal en cliquant à l'extérieur
+    window.addEventListener('click', function(event) {
+        if (event.target == deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+});
+</script>
+
 {% endblock %}

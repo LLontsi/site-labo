@@ -5,8 +5,9 @@
 {% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/forms.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
 {% endblock %}
 
 {% block header_content %}

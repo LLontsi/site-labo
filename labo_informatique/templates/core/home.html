@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Accueil - Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/home.css">
+<link rel="stylesheet" href="{% static "css/home.css" %} ">
 {% endblock %}
 
 {% block header_content %}
@@ -15,9 +15,6 @@
             <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Découvrir nos travaux</a>
             <a href="{% url 'labo:contact' %}" class="btn btn-secondary">Nous contacter</a>
         </div>
-    </div>
-    <div class="hero-image-container">
-        <img src="{{ STATIC_URL }}/static/images/hero.svg" alt="Illustration du laboratoire" class="hero-image">
     </div>
 </div>
 {% endblock %}
@@ -197,8 +194,8 @@
     <div class="container">
         <h2 class="section-title">Direction du laboratoire</h2>
         <div class="team-grid">
-            {% for membre in membres %}
-                {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' or membre.user.first_name == 'ALain' or membre.user.last_name == 'TCHANA' or membre.user.first_name == 'Parfait' or membre.user.last_name == 'Bessala' %}
+            {% for membre in membres1 %}
+                {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' %}
                 <div class="team-card">
                     <div class="team-photo">
                         {% if membre.photo %}
@@ -241,7 +238,7 @@
     <div class="container">
         <h2 class="section-title">Notre équipe</h2>
         <div class="team-grid">
-            {% for membre in membres|slice:":4" %}
+            {% for membre in membres|slice:":3" %}
                 {% if not membre.titre == 'Directeur' and not membre.titre == 'Directrice' and not membre.user.first_name == 'ALain' and not membre.user.last_name == 'TCHANA' and not membre.user.first_name == 'Parfait' and not membre.user.last_name == 'Bessala' %}
                 <div class="team-card">
                     <div class="team-photo">
@@ -319,5 +316,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/home.js"></script>
+<script src="{% static "js/home.js" %} "></script>
 {% endblock %}

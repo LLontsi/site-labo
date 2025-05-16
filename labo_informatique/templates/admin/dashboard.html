@@ -3,7 +3,9 @@
 {% block title %}Administration - Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/admin.css">
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+
 {% endblock %}
 
 {% block header_content %}
@@ -166,6 +168,6 @@
     </div>
 </section>
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/admin-dashboard.js"></script>
+<script src="{% static 'js/admin-dashboard.js' %}"></script>
 {% endblock %}
 {% endblock %}

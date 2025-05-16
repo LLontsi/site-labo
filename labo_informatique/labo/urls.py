@@ -33,8 +33,10 @@ urlpatterns = [
     path('profile/edit/', views.edit_profile, name='edit_profile'),
     path('presentation/create/', views.create_edit_presentation, name='create_presentation'),
     path('presentation/edit/<int:presentation_id>/', views.create_edit_presentation, name='edit_presentation'),
+    path('presentation/delete/<int:presentation_id>/',views.delete_presentation, name='delete_presentation'),
     path('article/create/', views.create_edit_article, name='create_article'),
     path('article/edit/<int:article_id>/', views.create_edit_article, name='edit_article'),
+    path('article/delete/<int:article_id>/', views.delete_article, name='delete_article'),
     path('devenir/edit/', views.create_edit_devenir, name='edit_devenir'),
     
     # Pages administration
@@ -65,6 +67,12 @@ urlpatterns = [
     path('gestion/categorie/create/', views.create_edit_categorie, name='create_categorie'),
     path('gestion/categorie/edit/<int:categorie_id>/', views.create_edit_categorie, name='edit_categorie'),
     path('gestion/categorie/delete/', views.delete_categorie, name='delete_categorie'),
-        # Authentification
+    
+    # Pour les présentations
+    path('gestion/presentation/delete/<int:presentation_id>/', views.delete_presentation, name='delete_presentation'),
+
+    # Pour les articles
+    path('gestion/article/delete/<int:article_id>/', views.delete_article, name='delete_article'),
+            # Authentification
     path('register/<str:token>/', views.register_with_invitation, name='register_with_invitation'),
 ]

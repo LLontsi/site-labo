@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}Présentations - Laboratoire Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/presentations.css">
+<link rel="stylesheet" href="{% static "css/presentations.css" %} ">
 {% endblock %}
 
 {% block header_content %}
@@ -101,5 +101,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/presentations.js"></script>
+<script src="{% static "js/presentations.js" %} "></script>
 {% endblock %}

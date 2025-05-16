@@ -37,7 +37,8 @@ def home(request):
     derniers_articles = Article.objects.filter(est_publie=True).order_by('-date_creation')[:3]
     
     # Récupérer 3 membres aléatoires (non anciens)
-    membres = Membre.objects.filter(est_ancien=False).order_by('?')[:3]
+    membres1 = Membre.objects.filter(est_responsable=True)
+    membres = Membre.objects.filter(est_ancien=False , est_responsable=False).order_by('?')[:6]
     
     # Récupérer 3 témoignages aléatoires
     temoignages = Temoignage.objects.all().order_by('?')[:3]
@@ -53,6 +54,7 @@ def home(request):
     
     context = {
         'derniers_articles': derniers_articles,
+        'membres1': membres1,
         'membres': membres,
         'temoignages': temoignages,
         'evenements': evenements,
@@ -571,7 +573,6 @@ def create_edit_article(request, article_id=None):
        'article': article,
    }
    return render(request, 'membres/edit_article.html', context)
-
 
 @login_required
 def create_edit_devenir(request):
@@ -1440,3 +1441,37 @@ def delete_categorie(request):
                 messages.error(request, "La catégorie que vous essayez de supprimer n'existe pas.")
     
     return redirect('labo:gestion_categories')
+
+@login_required
+def delete_presentation(request, presentation_id):
+   """Suppression d'une présentation."""
+   # Vérifier que l'utilisateur est bien administrateur
+   if not request.user.is_staff:
+       return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+   
+   presentation = get_object_or_404(Presentation, id=presentation_id)
+   presentation.delete()
+   
+   messages.success(request, "La présentation a été supprimée.")
+   if request.user.is_staff:
+        return redirect('labo:gestion_contenu', type_contenu='presentations')
+   else:
+        return redirect('labo:dashboard')
+
+@login_required
+def delete_article(request, article_id):
+   """Suppression d'un article."""
+   # Vérifier que l'utilisateur est bien administrateur
+   if not request.user.is_staff:
+       return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+   
+   article = get_object_or_404(Article, id=article_id)
+   article.delete()
+   
+   messages.success(request, "L'article a été supprimé.")
+   if request.user.is_staff:
+        return redirect('labo:gestion_contenu', type_contenu='articles')
+   else:
+        return redirect('labo:dashboard')
+
+

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
 
 {% block title %}Devenir des membres - Laboratoire Beta Lab{% endblock %}
-
+ {% load static %}
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/devenir.css">
+<link rel="stylesheet" href="{% static "css/devenir.css" %}">
 {% endblock %}
 
 {% block header_content %}
@@ -151,5 +151,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/devenir.js"></script>
+<script src="{% static "js/devenir.js" %} "></script>
 {% endblock %}

@@ -1,9 +1,9 @@
 {% extends 'base.html' %}
-
+{% load static %}
 {% block title %}{{ membre.user.first_name }} {{ membre.user.last_name }} - Laboratoire Beta Lab{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{{ STATIC_URL }}/static/css/membre_detail.css">
+<link rel="stylesheet" href="{% static "css/membre_detail.css" %} ">
 {% endblock %}
 
 {% block header_content %}
@@ -174,5 +174,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{{ STATIC_URL }}/static/js/membre_detail.js"></script>
+<script src="{% static "js/membre_detail.js" %} "></script>
 {% endblock %}
