@@ -768,20 +768,20 @@ COPY public.auth_user (id, password, last_login, is_superuser, username, first_n
 11	pbkdf2_sha256$600000$PmL5PS3XTfQOiO5s23OEjz$BeXC8F96Ojz/zlDMr/zzWpvRcnY+4lEMCl68CdhfCaI=	2025-05-14 20:33:22.824477+01	f	zaz	Achaire	ZOGO	achaire.zogo@facsciences-uy1.cm	f	t	2025-05-14 16:07:59.399687+01
 10	pbkdf2_sha256$600000$waw2E0pLEjuHXAaUHA6tVg$SqrYhCBSAEPZmwBA2qIIToPfhIVKmxMkn+yN2Vabv+E=	\N	f	Fideline	Fideline	KUETCHE NGOUFACK	fideline.kuetche@facsciences-uy1.cm	f	t	2025-05-14 15:41:32.093967+01
 9	pbkdf2_sha256$600000$di99o2eWjWaP4InleZvq6h$HSf7np/gLIET6/wu3jXLp1seOkQKf24zx9qM0eAORr0=	2025-05-14 15:45:27.498205+01	f	samsam237	samuel	BISSOG	sbissog@gmail.com	f	t	2025-05-14 15:40:31.583332+01
-2	pbkdf2_sha256$600000$TqtSioxM4zSexTKWNppiSJ$W+szFaDrF5XKllTQGoC2nYWgtz+qcNuMJOhtwrNrLcU=	\N	f	Bessala	Parfait	Bessala	lontsilambou@gmail.com	f	t	2025-04-23 07:01:56.885405+01
-3	pbkdf2_sha256$600000$rgdzdReIWEsPLlY1dJuNIp$0egrX42dC+Z3zR9YMGugnL3FmdkxK6B/s3YUoLf2xfY=	\N	f	lontsi	Ronaldino 	Lontsi Lambou	lambouronaldino@gmail.com	f	t	2025-04-23 07:10:59.946241+01
 18	pbkdf2_sha256$600000$dyXWS0svIAUOXq19S7qXcL$g2xiC/4EuV7Og5wwWe1ZZ41/UVOLqMMTxYmj8M/wGus=	2025-05-14 20:55:46.730305+01	f	minsih	LADO	SAHA	ladokihosaha@gmail.com	f	t	2025-05-14 20:50:06.236624+01
-1	pbkdf2_sha256$600000$o4IKI4Y0RQ9H5UDgxMWMgs$N4sBYKDgB/nneoB9uhzYE2e22bLZjsKvCv0w6bSq13c=	2025-05-15 07:47:29.13009+01	t	admin	ALain	TCHANA	alain.tchana@grenoble-inp.fr	t	t	2025-04-18 04:25:09.901641+01
 12	pbkdf2_sha256$600000$ODwlXX1DY7J2xOqcwV0Gbu$rOMKcroojP/XCMyVooyRJqtVk252vsgVgg8KZCAlc2A=	\N	f	Pegasus NATHANAEL	Nathanael	FETUE FOKO	nathanaelfetue1237@gmail.com	f	t	2025-05-14 16:16:48.286773+01
 5	pbkdf2_sha256$600000$peEvB4CLS5VJVpi3YTlSdk$c/JGabV3j/UZAgrpuSnvWJ51SBEsG4gbwo6J5m/WH/0=	\N	f	Franck	Franck	Feuwo	valeretamwo@gmail.com	f	t	2025-04-23 16:14:14.31592+01
 13	pbkdf2_sha256$600000$eL4fme306y5UQiTarvxDyM$Px42K1t+kDwtsZWIv64JFCxKuvGOEtYY3200+iFWr5Q=	\N	f	Thomas Messi Nguele	Thomas	Messi Nguele	thomas.messi@facsciences-uy1.cm	f	t	2025-05-14 16:19:51.321614+01
 16	pbkdf2_sha256$600000$t2Wya3yDIl0TN3zzpbpIwN$D+imYjZJh8/6917Jn7j8XxUK6pI24FpH662SOeZ0NAE=	\N	f	Tapamo	Hyppolite Michel	Tapamo Kenfack	hippolyte.tapamo@facsciences-uy1.cm	f	t	2025-05-14 16:32:22.778956+01
-4	pbkdf2_sha256$600000$O9rA0jIEyLp5JFCmGQJm2J$lFnfW7fXvHJaLrnyijmfKEPwYTnFwlvUczGNyw5BQw8=	2025-04-23 16:09:02.7398+01	f	Fetue Nathanael	Nathanael	Fetue	ronaldino.lontsi@facsciences-uy1.cm	f	t	2025-04-23 13:44:36.090141+01
 15	pbkdf2_sha256$600000$g2LwKZ0yo6oPIoS0isoqor$vhtauom9hQRcTQ2DYnuqSlBbh9zWw6ytgSzAVqNmXxc=	\N	f	BRICE EKANE APAH	BRICE 	EKANE APAH	brice.ekane@univ-rennes.fr	f	t	2025-05-14 16:30:40.553016+01
 17	pbkdf2_sha256$600000$l7qtmOHWZc0g6BfciEIQmY$eCf6c/36tBpUlKEZlvmk9iet2jBRWbN9uJ99SUWFeiM=	\N	f	 Mvondo Djob	Djob	 Mvondo	djobiii2078@gmail.com	f	t	2025-05-14 16:52:38.71449+01
+4	pbkdf2_sha256$600000$O9rA0jIEyLp5JFCmGQJm2J$lFnfW7fXvHJaLrnyijmfKEPwYTnFwlvUczGNyw5BQw8=	2025-04-23 16:09:02.7398+01	f	Fetue Nathanael	Nathanael	Fetue	tetuch@gmail.com	f	t	2025-04-23 13:44:36.090141+01
+3	pbkdf2_sha256$600000$rgdzdReIWEsPLlY1dJuNIp$0egrX42dC+Z3zR9YMGugnL3FmdkxK6B/s3YUoLf2xfY=	\N	f	lontsi	Ronaldino 	Lontsi Lambou	ronaldino.lontsi@facsciences-uy1.cm	f	t	2025-04-23 07:10:59.946241+01
 8	pbkdf2_sha256$600000$jnUPoyh3OL6Y9uqtuODK0c$vpu9wbUh/wZeg/joDNRjyBfyIKBAC92kYYGqKsxms8M=	\N	f	La machine Babatack 	Landry	Balekamen babatack	balekamenbabatacklandry@gmail.com	f	t	2025-05-14 11:46:14.291974+01
 7	pbkdf2_sha256$600000$JCesYHwiYM2aQqVPyya1YS$ceT8rNQ7RcUIrdgLTl38D1B2w9aW4XmwfQG7+NgeGPk=	\N	f	Romero	ROMERO	TCHIAZE FOUOSSO	romerotchiazefouosso@gmail.com	f	t	2025-05-14 11:45:22.54667+01
 14	pbkdf2_sha256$600000$Nbpzg315L60P2NTgTM6WiG$9Xazlgbm5ZJhXf/9Ze82abvX09EH/Z5D7crbyluH9wY=	2025-05-14 18:00:39.139013+01	f	RTTI	RUDY TCHAMBA	TCHAPTCHE ITIEL	tchaptche.rudy@facsciences-uy1.cm	f	t	2025-05-14 16:22:11.352059+01
+1	pbkdf2_sha256$600000$o4IKI4Y0RQ9H5UDgxMWMgs$N4sBYKDgB/nneoB9uhzYE2e22bLZjsKvCv0w6bSq13c=	2025-05-16 15:05:40.692541+01	t	admin	ALain	TCHANA	alain.tchana@grenoble-inp.fr	t	t	2025-04-18 04:25:09.901641+01
+2	pbkdf2_sha256$600000$TqtSioxM4zSexTKWNppiSJ$W+szFaDrF5XKllTQGoC2nYWgtz+qcNuMJOhtwrNrLcU=	\N	f	Bessala	Bessala 	Bessala 	bessala2@yahoo.fr	f	t	2025-04-23 07:01:56.885405+01
 \.
 
 
@@ -909,6 +909,9 @@ hluai0xdp3qxhklzku26w9u761moxlb8	.eJxVjDsOwyAQBe9CHSE-azAp0_sMaBfWwUmEJWNXUe4eIb
 qsjgq6osbqy6y7voxin87j0vlekcj2y0	.eJxVjEEOwiAQRe_C2hBKaQGX7nsGMsMMUjWQlHZlvLtt0oVu_3vvv0WAbc1ha7yEmcRVdE5cfkeE-ORyEHpAuVcZa1mXGeWhyJM2OVXi1-10_w4ytLzXiMnbRAN6R0YzEgGR91p5248DuZhUp63pHSijRr9zy71mhQasswzi8wUusjiq:1uFI9w:LJE4U1kZ1jev6JOWWu_EPFksyobgKgmvCkpcuraKYeM	2025-05-28 20:52:56.251935+01
 uplceeq7ruj3huq32rp14zxgq2fkct6j	.eJxVjEEOwiAQRe_C2hBKaQGX7nsGMsMMUjWQlHZlvLtt0oVu_3vvv0WAbc1ha7yEmcRVdE5cfkeE-ORyEHpAuVcZa1mXGeWhyJM2OVXi1-10_w4ytLzXiMnbRAN6R0YzEgGR91p5248DuZhUp63pHSijRr9zy71mhQasswzi8wUusjiq:1uFICg:PmyZCY4KxxPYY9jkvwGmYdQcUE14KFw6dYNcWqZEoy8	2025-05-28 20:55:46.734021+01
 lxo1wgy6jrfvbelddl912ae2t1y7vyf6	.eJxVjEEOwiAQRe_C2hAGBItL956BDDODVA1NSrsy3l2bdKHb_977L5VwXWpau8xpZHVWoA6_W0Z6SNsA37HdJk1TW-Yx603RO-36OrE8L7v7d1Cx129tRIJkLMHyYGP0NhtAH5hOJXhxBsgA2yEjO0MEGCGKQ5OBkY7Fi3p_APbQOKA:1uFSNN:hoLsnWpVAxcnJaNcXt_kF8m1xuaop7ed5Y51xcYlhd4	2025-05-29 07:47:29.131482+01
+ocelf3neipa41xopi17zo4mh0gogyyeo	.eJxVjEEOwiAQRe_C2hAGBItL956BDDODVA1NSrsy3l2bdKHb_977L5VwXWpau8xpZHVWoA6_W0Z6SNsA37HdJk1TW-Yx603RO-36OrE8L7v7d1Cx129tRIJkLMHyYGP0NhtAH5hOJXhxBsgA2yEjO0MEGCGKQ5OBkY7Fi3p_APbQOKA:1uFZyd:7JT0uJuscfE0ICfNJqsQPk9EyWxGlpn1sdbcfHGDDbE	2025-05-29 15:54:27.621123+01
+aa1zsq6nnntzztojvihvqja4mfl5uqpx	.eJxVjEEOwiAQRe_C2hAGBItL956BDDODVA1NSrsy3l2bdKHb_977L5VwXWpau8xpZHVWoA6_W0Z6SNsA37HdJk1TW-Yx603RO-36OrE8L7v7d1Cx129tRIJkLMHyYGP0NhtAH5hOJXhxBsgA2yEjO0MEGCGKQ5OBkY7Fi3p_APbQOKA:1uFp1T:bRe3_xDlf1EH2UFqE1CN5IF9ohuBRS44eLk-YOw0ASc	2025-05-30 07:58:23.837295+01
+2wcypy5qhe67wyul7ver0vespj4eyuty	.eJxVjEEOwiAQRe_C2hAGBItL956BDDODVA1NSrsy3l2bdKHb_977L5VwXWpau8xpZHVWoA6_W0Z6SNsA37HdJk1TW-Yx603RO-36OrE8L7v7d1Cx129tRIJkLMHyYGP0NhtAH5hOJXhxBsgA2yEjO0MEGCGKQ5OBkY7Fi3p_APbQOKA:1uFvgy:J_CdDMocsU9nGB1hrO8DsWBNgZiq0ACZBrQkKBMRQmA	2025-05-30 15:05:40.696662+01
 \.
 
 
@@ -997,10 +1000,7 @@ COPY public.labo_invitation (id, email, token, created_at, expires_at, is_used, 
 
 COPY public.labo_membre (id, photo, titre, bio, linkedin, github, theme_id, user_id, date_arrivee, date_depart, est_ancien, est_responsable, portfolio) FROM stdin;
 8	membres/photos/photo_2025-05-06_17-19-14.jpg	Etudiant			https://github.com/samsam237	\N	9	2025-04-01	\N	f	f	
-1	membres/photos/alain.png	Professeur	Titulaire d’un doctorat en informatique portant sur la conception des orchestrateurs pour le cloud, Alain Tchana s’est intéressé à l'optimisation des campagnes de test de logiciels. En 2013, il devient Maître de conférences à l'Institut National Polytechnique de Toulouse et oriente ses recherches vers le domaine des systèmes d'exploitation et hyperviseurs.			\N	1	2015-01-01	\N	f	t	
-2	membres/photos/Capture_décran_du_2025-04-23_03-24-57.png	docteur	Chez du centre de calcul a la faculté de médecin de Yaoundé actuellement Docteur et co-Encadreur du labo Beta lab 			\N	2	2015-01-01	\N	f	t	
-3	membres/photos/WhatsApp_Image_2025-04-22_at_21.58.35.jpeg	etudiant 	je suis lontsi lambou etudiant en master 1 a l'universite de yaounde 1 en specialite data science. Développeur fullstack web et mobile, passionné par les technologies modernes et les solutions innovantes en data science, business intelligence et administration de bases de données. Actuellement, je me perfectionne dans les systèmes d'exploitation afin d’élargir mes compétences en architecture système et infrastructure.	https://www.linkedin.com/in/lambou-ronaldino-lontsi-954895298?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app	https://github.com/LLontsi/	3	3	2024-11-10	\N	f	f	https://lontsi.propentatech.com
-4	membres/photos/photo_2025-04-15_16-54-53.jpg	etudiant 	Developpeur frontend et backend ,je suis programmer des sous systeme des systeme d'exploitation			2	4	2021-04-03	2023-05-02	t	f	
+2	membres/photos/Capture_décran_du_2025-04-23_03-24-57.png	Directeur	Chez du centre de calcul a la faculté de médecin de Yaoundé actuellement Docteur et co-Encadreur du labo Beta lab 			\N	2	2015-01-01	\N	f	t	
 9	membres/photos/Capture_décran_du_2025-05-14_15-37-06.png	Etudiant				1	10	2024-02-14	\N	f	f	
 7	membres/photos/IMG-20250327-WA0000.jpg	Étudiant 	Étudiant en science de données avec des compétences en développement d'applications Web et mobile. À participer à des projets qui sont en production et à des Hackathons. Passionné par l'innovation, la conception, le système d'exploitation et la science des données. 	https://www.linkedin.com/in/landry-balekamen-babatack-62857a2b4?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app		\N	8	2024-12-22	\N	f	f	
 5	membres/photos/Profile_Image.png	Etudiant Master 2	Étudiant motivé en informatique avec une solide expérience en science des données, en apprentissage automatique et en développement web. Passionné par la recherche en virtualisation, les systèmes distribués, Systeme d'Exploitation , Cloud Computing et l'intelligence artificielle. Aime le partage de connaissance et la  collaboration. 	https://www.linkedin.com/in/valere-tamwo-748896229/	http://github.com/valereTamwo/	1	6	2024-02-08	\N	f	f	https://feuwofranck.tech
@@ -1010,6 +1010,9 @@ COPY public.labo_membre (id, photo, titre, bio, linkedin, github, theme_id, user
 12	membres/photos/images_1.jpeg	Docteur 	I am MESSI NGUELE Thomas, a Computer Scientist. I was born on 17th March 1989 at Yaounde (Cameroon). I hold my Baccalaureat C in 2007 at Government High Bilingual School Ekounou. I got my bachelor degree in2010 (being the best of my promotion), and my Master degree in 2013 (Best of the promotion) at University of Yaounde 1. I defended my PhD (2018) in cotutelle between University Grenoble Alpes and University of Yaounde 1. I was an assistant-lecturer at University of Yaounde 1 from January 2020 to April 2022. Since May 2022 until now, I am senior lecturer at University of Yaounde 1.	https://www.linkedin.com/in/thomas-messi-ngu%C3%A9l%C3%A9-6b391473?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app		\N	13	2020-05-14	\N	f	t	
 13	membres/photos/IMG_20241214_141603_194.jpg	Étudiant		https://www.linkedin.com/in/rudy-itiel/	https://github.com/RudyTchamba/	\N	14	2024-10-10	\N	f	f	
 14	membres/photos/3.jpg	System Architect		https://https://www.linkedin.com/in/brice-ekane-apah-52631377/		\N	15	2020-01-01	\N	f	t	
+4	membres/photos/photo_2025-04-15_16-54-53.jpg	etudiant 	Developpeur frontend et backend ,je suis programmer des sous systeme des systeme d'exploitation			2	4	2021-04-03	2023-05-02	t	f	
+3	membres/photos/WhatsApp_Image_2025-04-22_at_21.58.35.jpeg	etudiant 	je suis lontsi lambou etudiant en master 1 a l'universite de yaounde 1 en specialite data science. Développeur fullstack web et mobile, passionné par les technologies modernes et les solutions innovantes en data science, business intelligence et administration de bases de données. Actuellement, je me perfectionne dans les systèmes d'exploitation afin d’élargir mes compétences en architecture système et infrastructure.	https://www.linkedin.com/in/lambou-ronaldino-lontsi-954895298?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=android_app	https://github.com/LLontsi/	\N	3	2024-11-10	\N	f	f	https://lontsi.propentatech.com
+1	membres/photos/alain.png	Directeur	Titulaire d’un doctorat en informatique portant sur la conception des orchestrateurs pour le cloud, Alain Tchana s’est intéressé à l'optimisation des campagnes de test de logiciels. En 2013, il devient Maître de conférences à l'Institut National Polytechnique de Toulouse et oriente ses recherches vers le domaine des systèmes d'exploitation et hyperviseurs.			\N	1	2015-01-01	\N	f	t	
 15	membres/photos/Tapamo.jpg	Enseignant Chercheur	Je suis Hyppolite Michel Tapamo Kenfack, enseignant-chercheur camerounais et maître de conférences à l’Université de Yaoundé I. J’interviens également en tant que vacataire à l’Institut Sous-régional de Statistique et d’Économie Appliquée (ISSEA).\r\n\r\nMes travaux de recherche couvrent plusieurs domaines tels que la géomatique, le traitement d’images, l’intelligence artificielle et l’apprentissage automatique. J’ai eu l’opportunité de contribuer à diverses publications scientifiques, parmi lesquelles :\r\n\r\n    Semantic segmentation of high-resolution aerial imagery using a fully convolutional network\r\n\r\n    Face Recognition in Databases of Images with Hidden Markov’s Models\r\n\r\n    An algorithm for computing the reversal degree of planar topological graphs\r\n\r\n    Detection and Classification of Coffee Plant Diseases by Image Processing and Machine Learning\r\n\r\nJ’ai également coécrit un article intitulé :\r\n"Dynamique spatio-temporelle de l’occupation du sol dans le Parc national du Mont Cameroun et sa périphérie (Région du Sud-Ouest Cameroun), entre 1986 et 2020", publié dans l’International Journal of Geomatics, Planning and Resources Management.			\N	16	2023-01-01	\N	f	t	
 16	membres/photos/4.jpg	Associate Professor at Université de Rennes I Inria/Irisa 	Passionate about Operating Systems' research and emerging technologies to ease applications development.\r\n2021 GDR/RSD Best Thesis prize winner.	https://www.linkedin.com/in/mvondo-djob-415820119/	https://github.com/djobiii2078	\N	17	2020-01-01	\N	f	t	
 17	membres/photos/POTRAIT.jpg	Etudiant	I am a Level 4 student at Polytechnique Yaoundé, passionate about Cybersecurity, System Programming, and AI. I have strong interests in Astronomy, Philosophy, and History, especially the link between identity and culture. Outside academics, I enjoy music, football, and self-reflection through writing.		https://github.com/lado-saha/	\N	18	2024-11-01	\N	f	f	
@@ -1156,7 +1159,7 @@ SELECT pg_catalog.setval('public.labo_evenement_id_seq', 3, true);
 -- Name: labo_imagepresentation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.labo_imagepresentation_id_seq', 1, true);
+SELECT pg_catalog.setval('public.labo_imagepresentation_id_seq', 2, true);
 
 
 --
@@ -1177,7 +1180,7 @@ SELECT pg_catalog.setval('public.labo_membre_id_seq', 17, true);
 -- Name: labo_presentation_id_seq; Type: SEQUENCE SET; Schema: public; Owner: postgres
 --
 
-SELECT pg_catalog.setval('public.labo_presentation_id_seq', 2, true);
+SELECT pg_catalog.setval('public.labo_presentation_id_seq', 3, true);
 
 
 --

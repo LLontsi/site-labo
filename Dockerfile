@@ -1,28 +1,36 @@
-# Image de base officielle Python
-FROM python:3.11-slim
+### === BUILDER ===
+FROM python:3.10-slim AS builder
 
-# Variables d'environnement
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+WORKDIR /install
 
-# Créer un dossier de travail
-WORKDIR /app
+RUN apt-get update && apt-get install -y --no-install-recommends \
+   build-essential \
+   gcc \
+   libpq-dev \
+   && rm -rf /var/lib/apt/lists/*
 
-# Copier le code source
-COPY . .
+COPY requirements.txt .
+RUN pip install --no-cache-dir --upgrade pip \
+    && pip install --no-cache-dir --prefix=/install/deps -r requirements.txt
 
-# Installer les dépendances Python
-RUN pip install --no-cache-dir -r requirements.txt
 
-# Changer de dossier vers l'application Django (labo_informatique)
-WORKDIR /app/labo_informatique
+### === FINAL IMAGE ===
+FROM python:3.10-slim
 
-# Collecter les fichiers statiques
-RUN python manage.py collectstatic --noinput
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONUNBUFFERED=1
 
-# Exposer le port 8000
+# Chemin vers le vrai dossier de ton app : on cible labo_informatique
+WORKDIR /labo-informatique/labo_informatique
+
+# Copier les dépendances Python compilées
+COPY --from=builder /install/deps /usr/local
+
+# Copier le code source entier
+COPY . /labo-informatique
+
 EXPOSE 8000
 
-# Commande pour lancer le serveur avec gunicorn
-CMD ["gunicorn", "labo_informatique.wsgi:application", "--bind", "0.0.0.0:8000"]
+# Lancer directement le serveur Django sans devoir naviguer dans les dossiers
+CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
 

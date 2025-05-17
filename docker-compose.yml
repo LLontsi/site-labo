@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_DB: labo_informatique_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    networks:
+      - labo_network
+    volumes:
+      - ./dump_labo_informatique.sql:/docker-entrypoint-initdb.d/dump_labo_informatique.sql
+
+  site-labo:
+    image: lontsi/betalab:latest
+    container_name: site-labo
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    networks:
+      - labo_network
+    depends_on:
+      - postgres
+    stdin_open: true      # équivalent à -it
+    tty: true
+
+networks:
+  labo_network:
+    driver: bridge
+
