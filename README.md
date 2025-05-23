@@ -21,7 +21,7 @@ Application web Django pour la gestion du laboratoire d'informatique, conteneuri
 
 ### 1. Cloner le dépôt
 ```bash
-git clone [URL_DU_DEPOT]
+git clone https://github.com/lontsi/site-labo.git
 cd site-labo
 ```
 
