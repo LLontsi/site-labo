@@ -47,7 +47,7 @@ def home(request):
     evenements = Evenement.objects.filter(date_debut__gte=timezone.now()).order_by('date_debut')[:3]
     
     # Statistiques
-    nb_membres = Membre.objects.filter(est_ancien=False).count()
+    nb_membres = Membre.objects.filter(est_ancien=False,est_responsable=True).count()
     nb_publications = Presentation.objects.count()
     nb_projets = Article.objects.filter(est_publie=True).count()  # Approximation
     nb_partenaires = Collaborateur.objects.count()
@@ -68,7 +68,17 @@ def home(request):
 
 def about(request):
     """Page À propos du laboratoire."""
-    context = {}
+    nb_membres = Membre.objects.filter(est_ancien=False,est_responsable=True).count()
+    nb_publications = Presentation.objects.count()
+    nb_projets = Article.objects.filter(est_publie=True).count()  # Approximation
+    nb_partenaires = Collaborateur.objects.count()
+    nb_publication1=nb_publications+nb_projets
+    context = {
+        'nb_membres': nb_membres,
+        'nb_publications': nb_publication1,
+        'nb_projets': nb_projets,
+        'nb_partenaires': nb_partenaires,
+    }
     return render(request, 'core/about.html', context)
 # 2. Fonctions de validation à utiliser dans la vue
 
@@ -114,7 +124,7 @@ def contact(request):
 def team(request):
    
     """Vue pour afficher tous les membres de l'équipe."""
-    membres = Membre.objects.filter(est_ancien=False).select_related('user', 'theme')
+    membres = Membre.objects.filter(est_ancien=False,est_responsable=False ).select_related('user', 'theme')
     themes = Theme.objects.all()
     
     context = {

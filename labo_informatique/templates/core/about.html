@@ -7,9 +7,9 @@
 {% endblock %}
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">À propos de notre laboratoire</h1>
+    <h1 class="page-title fade-in">À propos du laboratoire</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Innovation et recherche en informatique</p>
+    <p class="page-subtitle fade-in delay-200">recherche en informatique et Innovations technologiques</p>
 </div>
 {% endblock %}
 
@@ -19,12 +19,12 @@
     <div class="container">
         <div class="about-grid">
             <div class="about-content animate-on-scroll">
-                <h2 class="glowing-text">Notre histoire</h2>
+                <h2 class="glowing-text"> Histoire</h2>
                 <div class="content-line"></div>
-                <p>Fondé en 2019, notre laboratoire d'informatique est né de la vision commune du professeur Alain Tchana et du docteur Bessala Bessala Parfait. Tous deux passionnés, ils souhaitent repousser les frontières de l'innovation technologique, dans un cadre d'initialisation à la recherche.</p>
+                <p>Le Laboratoire Informatique de Recherche Avancée (Beta), dirigé par le Professeur Tchana Alain, est un espace dédié à la recherche et à l'innovation en informatique au Cameroun. Notre mission est de former des chercheurs et des développeurs de haut niveau, capables de relever les défis technologiques et scientifiques du continent africain.</p>
 
-                <p>Situé au cœur de la ville, notre laboratoire bénéficie d'un environnement propice à la recherche et à l'innovation. Nous collaborons étroitement avec des universités prestigieuses, des entreprises technologiques et des organismes de recherche à l'échelle mondiale.</p>
-                <a href="{% url 'labo:team' %}" class="btn btn-primary btn-glow">Découvrir notre équipe</a>
+                <p>Le laboratoire Beta offre un environnement propice à l'initiation à la la recherche et à l'innovation, avec une équipe de chercheurs expérimentés.</p>
+                
             </div>
             <div class="about-image-container animate-on-scroll delay-200">
                 <div class="image-frame">
@@ -45,11 +45,17 @@
 <!-- Section mission avec design moderne -->
 <section class="mission-section section bg-gradient">
     <div class="container">
-        <h2 class="section-title text-center light animate-on-scroll">Notre mission</h2>
+        <h2 class="section-title text-center light animate-on-scroll"> Mission</h2>
         <div class="section-line center light"></div>
         <div class="mission-content animate-on-scroll delay-200">
             <div class="mission-card">
-                <p class="mission-text">"Nous nous engageons à explorer et développer des technologies innovantes qui façonnent l'avenir numérique. Notre objectif est de créer des solutions informatiques qui répondent aux défis complexes de notre société tout en formant la prochaine génération de chercheurs et d'innovateurs."</p>
+                <p class="mission-text">
+                 Promouvoir la recherche en informatique de pointe<br>
+                 Développer les compétences des étudiants et des chercheurs dans le domaine de l'informatique<br>
+                 Favoriser la collaboration entre les chercheurs et les industriels<br>
+                 Contribuer à l’émergence de solutions technologiques innovantes pour les besoins spécifiques de l’Afrique
+                </p>
+
                 <div class="mission-icon-container">
                     <div class="mission-icon-circle">
                         <i class="fas fa-rocket"></i>
@@ -63,7 +69,7 @@
 <!-- Section valeurs avec cartes 3D -->
 <section class="values-section section">
     <div class="container">
-        <h2 class="section-title text-center animate-on-scroll">Nos valeurs</h2>
+        <h2 class="section-title text-center animate-on-scroll"> Valeurs</h2>
         <div class="section-line center"></div>
         
         <div class="values-grid">
@@ -129,7 +135,7 @@
 <!-- Section domaines de recherche avec design moderne -->
 <section class="research-section section bg-tech-pattern">
     <div class="container">
-        <h2 class="section-title text-center animate-on-scroll">Nos domaines de recherche</h2>
+        <h2 class="section-title text-center animate-on-scroll"> Domaines de recherche</h2>
         <div class="section-line center"></div>
         
         <div class="research-grid">
@@ -213,13 +219,13 @@
 <!-- Section statistiques avec compteurs animés -->
 <section class="stats-section section bg-gradient-dark text-light">
     <div class="container">
-        <h2 class="section-title light text-center animate-on-scroll">Notre impact en chiffres</h2>
+        <h2 class="section-title light text-center animate-on-scroll"> Impact en chiffres</h2>
         <div class="section-line center light"></div>
         
         <div class="stats-grid">
             <div class="stat-card animate-on-scroll">
                 <div class="stat-circle">
-                    <div class="stat-number counter" data-target="5">0</div>
+                    <div class="stat-number "data-count="{{ nb_membres }}" >0</div>
                 </div>
                 <div class="stat-label">Chercheurs</div>
                 <div class="stat-icon"><i class="fas fa-users"></i></div>
@@ -227,18 +233,10 @@
             
             <div class="stat-card animate-on-scroll delay-200">
                 <div class="stat-circle">
-                    <div class="stat-number counter" data-target="20">0</div>
+                    <div class="stat-number " data-count="{{ nb_publications }}" >0</div>
                 </div>
-                <div class="stat-label">Publications</div>
+                <div class="stat-label">Ressources</div>
                 <div class="stat-icon"><i class="fas fa-book"></i></div>
-            </div>
-            
-            <div class="stat-card animate-on-scroll delay-400">
-                <div class="stat-circle">
-                    <div class="stat-number counter" data-target="15">0</div>
-                </div>
-                <div class="stat-label">Projets actifs</div>
-                <div class="stat-icon"><i class="fas fa-project-diagram"></i></div>
             </div>
             
             <div class="stat-card animate-on-scroll delay-600">
@@ -255,7 +253,7 @@
 <!-- Section équipements avec effets au survol -->
 <section class="equipment-section section">
     <div class="container">
-        <h2 class="section-title text-center animate-on-scroll">Nos équipements</h2>
+        <h2 class="section-title text-center animate-on-scroll"> Equipements</h2>
         <div class="section-line center"></div>
         
         <div class="equipment-grid">
@@ -325,7 +323,7 @@
 <!-- Section partenaires avec slider -->
 <section class="partners-section section bg-light">
     <div class="container">
-        <h2 class="section-title text-center animate-on-scroll">Nos partenaires</h2>
+        <h2 class="section-title text-center animate-on-scroll"> Partenaires</h2>
         <div class="section-line center"></div>
         
         <div class="partners-slider animate-on-scroll delay-200">

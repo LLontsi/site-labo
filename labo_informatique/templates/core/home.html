@@ -10,7 +10,7 @@
 <div class="hero">
     <div class="hero-content">
         <h1 class="hero-title">  Beta Lab</h1>
-        <p class="hero-subtitle"> laboratoire de rechercher et  innovation</p>
+        <p class="hero-subtitle"> laboratoire de recherche informatique et innovations technologiques</p>
         <div class="hero-buttons">
             <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Découvrir nos travaux</a>
             <a href="{% url 'labo:contact' %}" class="btn btn-secondary">Nous contacter</a>
@@ -52,7 +52,7 @@
 <!-- Section domaines d'expertise -->
 <section class="domains-section">
     <div class="container">
-        <h2 class="section-title">Nos domaines de recherche</h2>
+        <h2 class="section-title"> Domaines de recherche</h2>
         <div class="domains-grid">
             <div class="domain-card">
                 <div class="domain-icon">
@@ -195,7 +195,7 @@
         <h2 class="section-title">Direction du laboratoire</h2>
         <div class="team-grid">
             {% for membre in membres1 %}
-                {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' %}
+                {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' or membre.user.first_name == 'ALain' or membre.user.last_name == 'TCHANA' or membre.user.first_name == 'Parfait' or membre.user.last_name == 'Bessala' %}
                 <div class="team-card">
                     <div class="team-photo">
                         {% if membre.photo %}
@@ -236,7 +236,7 @@
 <!-- Section équipe (sans les directeurs) -->
 <section class="team-section">
     <div class="container">
-        <h2 class="section-title">Notre équipe</h2>
+        <h2 class="section-title"> Etudiants</h2>
         <div class="team-grid">
             {% for membre in membres|slice:":3" %}
                 {% if not membre.titre == 'Directeur' and not membre.titre == 'Directrice' and not membre.user.first_name == 'ALain' and not membre.user.last_name == 'TCHANA' and not membre.user.first_name == 'Parfait' and not membre.user.last_name == 'Bessala' %}
@@ -274,7 +274,7 @@
             {% endfor %}
         </div>
         <div class="section-action">
-            <a href="{% url 'labo:team' %}" class="btn btn-primary">Voir toute l'équipe</a>
+            <a href="{% url 'labo:team' %}" class="btn btn-primary">Voir tout les Etudiants</a>
         </div>
     </div>
 </section>
@@ -289,15 +289,15 @@
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-count="{{ nb_publications }}">0</div>
-                <div class="stat-label">Publications</div>
+                <div class="stat-label">Presentations</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-count="{{ nb_projets }}">0</div>
-                <div class="stat-label">Projets</div>
+                <div class="stat-label">blogs</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-count="{{ nb_partenaires }}">0</div>
-                <div class="stat-label">Partenaires</div>
+                <div class="stat-label">Collaborateurs</div>
             </div>
         </div>
     </div>
