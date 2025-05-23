@@ -3,14 +3,14 @@ version: '3.8'
 services:
   postgres:
     image: postgres:15
-    container_name: postgres
+    container_name: postgres_labo_site
     restart: always
     environment:
       POSTGRES_DB: labo_informatique_db
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: password
     ports:
-      - "5432:5432"
+      - "54321:5432"
     networks:
       - labo_network
     volumes:
@@ -21,7 +21,7 @@ services:
     container_name: site-labo
     restart: unless-stopped
     ports:
-      - "8000:8000"
+      - "8022:8000"
     networks:
       - labo_network
     depends_on:
