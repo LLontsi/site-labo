@@ -28,9 +28,7 @@ services:
       - postgres
     stdin_open: true      # équivalent à -it
     tty: true
-    sh -c "python manage.py makemigrations &&
-             python manage.py migrate &&
-             gunicorn labo_informatique.wsgi:application --bind 0.0.0.0:8000"
+    # command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn labo_informatique.wsgi:application --bind 0.0.0.0:8000"
 networks:
   labo_network:
     driver: bridge

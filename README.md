@@ -17,7 +17,7 @@ Application web Django pour la gestion du laboratoire d'informatique, conteneuri
 - Python 3.8+
 - PostgreSQL 15 (géré via Docker)
 
-## 🚀 Installation
+## 🚀 Installation ZAZ
 
 ### 1. Cloner le dépôt
 ```bash
