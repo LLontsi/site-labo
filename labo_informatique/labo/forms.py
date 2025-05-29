@@ -1,11 +1,12 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Membre, Presentation, ImagePresentation, Article, Devenir, Temoignage, Evenement
+from .models import Membre, Presentation, ImagePresentation, Article, Devenir, Temoignage, Evenement,Projet,Collaborateur
 import re
 import socket
 import dns.resolver
 from django.core.exceptions import ValidationError
+from django.db.models import Q 
 from .utils import validate_email_domain
 
 class InvitationRegistrationForm(UserCreationForm):
@@ -157,12 +158,11 @@ class UserCreateForm(forms.ModelForm):
                 'unique': 'Ce nom d\'utilisateur est déjà utilisé.',
             },
         }
-
 class MembreForm(forms.ModelForm):
     """Formulaire pour créer ou modifier un profil de membre."""
     class Meta:
         model = Membre
-        fields = ['titre', 'theme', 'bio', 'est_responsable', 'est_ancien', 'photo', 
+        fields = ['titre', 'theme', 'bio', 'est_responsable', 'est_ancien', 'statut_ancien', 'photo', 
                  'date_arrivee', 'date_depart', 'linkedin', 'github', 'portfolio']
         widgets = {
             'titre': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titre/Poste'}),
@@ -170,6 +170,7 @@ class MembreForm(forms.ModelForm):
             'bio': forms.Textarea(attrs={'class': 'form-control', 'rows': 4, 'placeholder': 'Biographie du membre'}),
             'est_responsable': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
             'est_ancien': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
+            'statut_ancien': forms.Select(attrs={'class': 'form-control'}),
             'photo': forms.FileInput(attrs={'class': 'form-control-file'}),
             'date_arrivee': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'date_depart': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
@@ -183,6 +184,7 @@ class MembreForm(forms.ModelForm):
             'bio': 'Biographie',
             'est_responsable': 'Est responsable',
             'est_ancien': 'Est un ancien membre',
+            'statut_ancien': 'Statut de l\'ancien membre',
             'photo': 'Photo de profil',
             'date_arrivee': 'Date d\'arrivée',
             'date_depart': 'Date de départ',
@@ -190,3 +192,106 @@ class MembreForm(forms.ModelForm):
             'github': 'Profil GitHub',
             'portfolio': 'Site web personnel/Portfolio',
         }
+class ProjetForm(forms.ModelForm):
+    """Formulaire de création/édition de projet."""
+    
+    class Meta:
+        model = Projet
+        fields = [
+            'titre', 'description', 'description_courte', 'image_principale',
+            'date_debut', 'date_fin_prevue', 'date_fin_reelle',
+            'statut', 'type_projet', 'responsable', 'participants', 'collaborateurs_externes',
+            'lien_solution', 'lien_github', 'lien_documentation', 'lien_publication',
+            'technologies', 'mots_cles', 'est_public'
+        ]
+        widgets = {
+            'description': forms.Textarea(attrs={'rows': 6}),
+            'description_courte': forms.Textarea(attrs={'rows': 3}),
+            'date_debut': forms.DateInput(attrs={'type': 'date'}),
+            'date_fin_prevue': forms.DateInput(attrs={'type': 'date'}),
+            'date_fin_reelle': forms.DateInput(attrs={'type': 'date'}),
+            'participants': forms.CheckboxSelectMultiple(),
+            'collaborateurs_externes': forms.CheckboxSelectMultiple(),
+            'technologies': forms.TextInput(attrs={'placeholder': 'Python, Django, React, etc.'}),
+            'mots_cles': forms.TextInput(attrs={'placeholder': 'IA, Machine Learning, Web, etc.'}),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Filtrer les responsables : seuls les membres avec est_responsable=True
+        # Inclure les anciens responsables qui restent comme assistants
+        self.fields['responsable'].queryset = Membre.objects.filter(
+            est_responsable=True
+        ).filter(
+            Q(est_ancien=False) |  # Membres actuels
+            Q(est_ancien=True, statut_ancien='assistant')  # Anciens qui restent assistants
+        ).select_related('user').order_by('user__first_name', 'user__last_name')
+        
+        # Tous les membres peuvent être participants (actuels et anciens assistants)
+        participants_queryset = Membre.objects.filter(
+            Q(est_ancien=False) |  # Membres actuels
+            Q(est_ancien=True, statut_ancien='assistant')  # Anciens qui restent assistants
+        ).select_related('user').order_by('user__first_name', 'user__last_name')
+        
+        self.fields['participants'].queryset = participants_queryset
+        
+        # Améliorer l'affichage des participants dans la liste déroulante
+        self.fields['participants'].widget.choices = [
+            (membre.id, f"{membre.user.first_name} {membre.user.last_name} ({membre.titre})")
+            for membre in participants_queryset
+        ]
+        
+        # Tous les collaborateurs externes
+        collaborateurs_queryset = Collaborateur.objects.all().order_by('prenom', 'nom')
+        self.fields['collaborateurs_externes'].queryset = collaborateurs_queryset
+        
+        # Améliorer l'affichage des collaborateurs externes dans la liste déroulante
+        self.fields['collaborateurs_externes'].widget.choices = [
+            (collab.id, f"{collab.prenom} {collab.nom} ({collab.institution})")
+            for collab in collaborateurs_queryset
+        ]
+        
+        # Personnaliser les labels
+        self.fields['responsable'].label = "Chef de projet"
+        self.fields['responsable'].help_text = "Seuls les membres responsables peuvent être chefs de projet"
+        self.fields['participants'].label = "Participants"
+        self.fields['participants'].help_text = "Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs participants"
+        self.fields['collaborateurs_externes'].label = "Collaborateurs externes"
+        self.fields['collaborateurs_externes'].help_text = "Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs collaborateurs"
+        
+        # Style
+        self.fields['responsable'].widget.attrs.update({'class': 'form-control'})
+        
+        # Vérification de disponibilité
+        if not self.fields['responsable'].queryset.exists():
+            self.fields['responsable'].help_text = "⚠️ Aucun membre responsable disponible. Veuillez d'abord désigner des responsables."
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        
+        responsable = cleaned_data.get('responsable')
+        participants = cleaned_data.get('participants')
+        
+        # Vérifier que le responsable a bien le statut de responsable
+        if responsable and not responsable.est_responsable:
+            raise forms.ValidationError(
+                "Le membre sélectionné comme chef de projet doit avoir le statut de responsable."
+            )
+        
+        # Éviter la redondance responsable/participant
+        if responsable and participants and responsable in participants.all():
+            participants = participants.exclude(id=responsable.id)
+            cleaned_data['participants'] = participants
+        
+        return cleaned_data
+    
+    def save(self, commit=True):
+        projet = super().save(commit=False)
+        
+        if commit:
+            projet.save()
+            # Sauvegarder les relations ManyToMany
+            self.save_m2m()
+        
+        return projet

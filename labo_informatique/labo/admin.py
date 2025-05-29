@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.utils.html import format_html
 from .models import (Membre, Theme, Collaborateur, Devenir, Invitation,
                     Presentation, ImagePresentation, Categorie, Article,
-                    Temoignage, Evenement)
+                    Temoignage, Evenement,Projet)
 
 
 class MembreAdmin(admin.ModelAdmin):
@@ -133,6 +133,36 @@ class EvenementAdmin(admin.ModelAdmin):
     search_fields = ('titre', 'description', 'lieu')
     date_hierarchy = 'date_debut'
 
+class ProjetAdmin(admin.ModelAdmin):
+    list_display = ('titre', 'responsable', 'type_projet', 'statut', 'date_debut', 'est_public')
+    list_filter = ('statut', 'type_projet', 'est_public', 'date_debut')
+    search_fields = ('titre', 'description', 'technologies', 'mots_cles')
+    date_hierarchy = 'date_debut'
+    filter_horizontal = ('participants', 'collaborateurs_externes')
+    
+    fieldsets = (
+        ("Informations générales", {
+            'fields': ('titre', 'description', 'description_courte', 'image_principale')
+        }),
+        ("Classification", {
+            'fields': ('type_projet', 'statut')
+        }),
+        ("Dates", {
+            'fields': ('date_debut', 'date_fin_prevue', 'date_fin_reelle')
+        }),
+        ("Équipe", {
+            'fields': ('responsable', 'participants', 'collaborateurs_externes')
+        }),
+        ("Liens et ressources", {
+            'fields': ('lien_solution', 'lien_github', 'lien_documentation', 'lien_publication')
+        }),
+        ("Métadonnées", {
+            'fields': ('technologies', 'mots_cles', 'est_public')
+        }),
+    )
+
+# N'oubliez pas d'enregistrer le modèle
+admin.site.register(Projet, ProjetAdmin)
 
 admin.site.register(Membre, MembreAdmin)
 admin.site.register(Theme, ThemeAdmin)

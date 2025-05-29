@@ -106,6 +106,80 @@
         </div>
     </div>
 </section>
+
+<!-- Section à ajouter dans votre template home.html -->
+{% if projets_recents %}
+<section class="projects-home-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="title-icon"><i class="fas fa-project-diagram"></i></span>
+                Nos Projets Actuels
+            </h2>
+            <p class="section-subtitle">Découvrez nos derniers projets de recherche et développement</p>
+        </div>
+        
+        <div class="projects-home-grid">
+            {% for projet in projets_recents %}
+                <div class="project-home-card">
+                    <div class="project-home-image">
+                        {% if projet.image_principale %}
+                            <img src="{{ projet.image_principale.url }}" alt="{{ projet.titre }}">
+                        {% else %}
+                            <div class="project-home-placeholder">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                        {% endif %}
+                        <div class="project-home-status">
+                            <i class="fas fa-play"></i> En cours
+                        </div>
+                    </div>
+                    
+                    <div class="project-home-content">
+                        <div class="project-home-type">{{ projet.get_type_projet_display }}</div>
+                        <h3 class="project-home-title">{{ projet.titre }}</h3>
+                        <p class="project-home-description">{{ projet.description_courte|truncatechars:120 }}</p>
+                        
+                        <div class="project-home-meta">
+                            <div class="project-home-author">
+                                {% if projet.responsable.photo %}
+                                    <img src="{{ projet.responsable.photo.url }}" alt="{{ projet.responsable.user.first_name }}" class="author-avatar-small">
+                                {% else %}
+                                    <div class="author-avatar-placeholder">
+                                        {{ projet.responsable.user.first_name|first }}{{ projet.responsable.user.last_name|first }}
+                                    </div>
+                                {% endif %}
+                                <span>{{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}</span>
+                            </div>
+                        </div>
+                        
+                        {% if projet.get_technologies_list %}
+                        <div class="project-home-tech">
+                            {% for tech in projet.get_technologies_list|slice:":2" %}
+                                <span class="tech-tag-small">{{ tech }}</span>
+                            {% endfor %}
+                            {% if projet.get_technologies_list|length > 2 %}
+                                <span class="tech-more-small">+{{ projet.get_technologies_list|length|add:"-2" }}</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <a href="{% url 'labo:projet_detail' projet.id %}" class="project-home-link">
+                            En savoir plus <i class="fas fa-arrow-right"></i>
+                        </a>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        
+        <div class="section-action">
+            <a href="{% url 'labo:liste_projets' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-project-diagram"></i> Voir tous nos projets
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
 <!-- Section actualités récentes -->
 <section class="news-section">
     <div class="container">

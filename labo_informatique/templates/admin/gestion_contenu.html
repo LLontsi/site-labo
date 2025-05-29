@@ -25,17 +25,18 @@
                         <h3>Menu d'administration</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
-                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}" class="active">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}" class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
                         <li><a href="{% url 'labo:gestion_categories' %}" class="active">Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}">Thèmes de recherche</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Projets</a></li>
                         <li class="menu-divider">Gestion du contenu</li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" {% if type_contenu == 'articles' %}class="active"{% endif %}>Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}" {% if type_contenu == 'presentations' %}class="active"{% endif %}>Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" {% if type_contenu == 'temoignages' %}class="active"{% endif %}>Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" {% if type_contenu == 'evenements' %}class="active"{% endif %}>Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" {% if type_contenu == 'articles' %}{% endif %}>Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}" {% if type_contenu == 'presentations' %}{% endif %}>Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" {% if type_contenu == 'temoignages' %}{% endif %}>Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" {% if type_contenu == 'evenements' %}{% endif %}>Événements</a></li>
                     </ul>
                 </div>
             </div>
@@ -52,55 +53,87 @@
                 
                 <div class="admin-table-container">
                     {% if type_contenu == 'articles' %}
-                        <table class="admin-table">
-                            <thead>
-                                <tr>
-                                    <th>Titre</th>
-                                    <th>Auteur</th>
-                                    <th>Date</th>
-                                    <th>Catégories</th>
-                                    <th>Statut</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {% for article in items %}
-                                    <tr>
-                                        <td>{{ article.titre }}</td>
-                                        <td>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</td>
-                                        <td>{{ article.date_creation|date:"d/m/Y" }}</td>
-                                        <td>
-                                            {% for categorie in article.categories.all %}
-                                                <span class="status-badge">{{ categorie.nom }}</span>
-                                            {% empty %}
-                                                <span class="empty-value">Aucune</span>
-                                            {% endfor %}
-                                        </td>
-                                        <td>
-                                            {% if article.est_publie %}
-                                                <span class="status-badge published">Publié</span>
-                                            {% else %}
-                                                <span class="status-badge draft">Brouillon</span>
-                                            {% endif %}
-                                        </td>
-                                        <td class="cell-actions">
-                                            <a href="{% url 'labo:article_detail' article.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
-                                            <button class="table-action btn-delete-item" 
-                                                data-id="{{ article.id }}" 
-                                                data-nom="{{ article.titre }}"
-                                                data-type="article"
-                                                title="Supprimer">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </td>
-                                    </tr>
-                                {% empty %}
-                                    <tr>
-                                        <td colspan="6" class="empty-table">Aucun article n'a été trouvé.</td>
-                                    </tr>
-                                {% endfor %}
-                            </tbody>
-                        </table>
+                                <div class="admin-header">
+                                    <h2>{{ title }}</h2>
+                                    <div class="admin-actions">
+                                        <a href="{% url 'labo:articles_en_attente' %}" class="btn-action">
+                                            <i class="fas fa-clock"></i> Articles en attente 
+                                            <span class="badge">{{ articles_en_attente_count }}</span>
+                                        </a>
+                                    </div>
+                                </div>
+                                
+                                <table class="admin-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Titre</th>
+                                            <th>Auteur</th>
+                                            <th>Date</th>
+                                            <th>Catégories</th>
+                                            <th>Statut</th>
+                                            <th>Validation</th>
+                                            <th>Actions</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for article in items %}
+                                            <tr>
+                                                <td>{{ article.titre }}</td>
+                                                <td>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</td>
+                                                <td>{{ article.date_creation|date:"d/m/Y" }}</td>
+                                                <td>
+                                                    {% for categorie in article.categories.all %}
+                                                        <span class="status-badge">{{ categorie.nom }}</span>
+                                                    {% empty %}
+                                                        <span class="empty-value">Aucune</span>
+                                                    {% endfor %}
+                                                </td>
+                                                <td>
+                                                    {% if article.est_publie %}
+                                                        <span class="status-badge published">Publié</span>
+                                                    {% else %}
+                                                        <span class="status-badge draft">Brouillon</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td>
+                                                    {% if article.statut_validation == 'en_attente' %}
+                                                        <span class="status-badge warning">En attente</span>
+                                                    {% elif article.statut_validation == 'valide' %}
+                                                        <span class="status-badge success">Validé</span>
+                                                    {% elif article.statut_validation == 'rejete' %}
+                                                        <span class="status-badge error">Rejeté</span>
+                                                    {% endif %}
+                                                </td>
+                                                <td class="cell-actions">
+                                                    {% if article.est_visible_publiquement %}
+                                                        <a href="{% url 'labo:article_detail' article.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
+                                                    {% endif %}
+                                                    
+                                                    {% if article.statut_validation == 'en_attente' %}
+                                                        <button class="table-action btn-validate-item" 
+                                                            data-id="{{ article.id }}" 
+                                                            data-nom="{{ article.titre }}"
+                                                            title="Valider/Rejeter">
+                                                            <i class="fas fa-check-circle"></i>
+                                                        </button>
+                                                    {% endif %}
+                                                    
+                                                    <button class="table-action btn-delete-item" 
+                                                        data-id="{{ article.id }}" 
+                                                        data-nom="{{ article.titre }}"
+                                                        data-type="article"
+                                                        title="Supprimer">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </td>
+                                            </tr>
+                                        {% empty %}
+                                            <tr>
+                                                <td colspan="7" class="empty-table">Aucun article n'a été trouvé.</td>
+                                            </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
                     
                     {% elif type_contenu == 'presentations' %}
                         <table class="admin-table">
@@ -124,7 +157,7 @@
                                         <td>{{ presentation.date_creation|date:"d/m/Y" }}</td>
                                         <td class="cell-actions">
                                             <a href="{% url 'labo:presentation_detail' presentation.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
-                                            <button class="table-action btn-delete-categorie" 
+                                            <button class="table-action btn-delete-item" 
                                                 data-id="{{ presentation.id }}" 
                                                 data-nom="{{ presentation.titre }}" 
                                                 title="Supprimer" 
@@ -236,6 +269,31 @@
         </div>
     </div>
 </div>
+<!-- Modal de validation -->
+<div id="validate-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Validation de l'article</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Article : "<span id="validate-item-name"></span>"</p>
+            <div class="form-group">
+                <label for="commentaire_validation">Commentaire (optionnel)</label>
+                <textarea id="commentaire_validation" name="commentaire" rows="3" placeholder="Commentaire pour l'auteur..."></textarea>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="validate-form">
+                {% csrf_token %}
+                <input type="hidden" name="commentaire" id="validate_commentaire_input">
+                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
+                <button type="submit" name="action" value="rejeter" class="btn btn-danger">Rejeter</button>
+                <button type="submit" name="action" value="valider" class="btn btn-success">Valider</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block extra_js %}
 <script>
@@ -247,7 +305,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteForm = document.getElementById('delete-form');
     const deleteButtons = document.querySelectorAll('.btn-delete-item');
     const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
-    
+    const validateModal = document.getElementById('validate-modal');
+    const validateItemNameSpan = document.getElementById('validate-item-name');
+    const validateForm = document.getElementById('validate-form');
+    const validateButtons = document.querySelectorAll('.btn-validate-item');
+    const commentaireTextarea = document.getElementById('commentaire_validation');
+    const commentaireInput = document.getElementById('validate_commentaire_input');
+
     // Ouvrir la modal de suppression
     deleteButtons.forEach(button => {
         button.addEventListener('click', function() {
@@ -272,18 +336,38 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteModal.style.display = 'block';
         });
     });
-    
-    // Fermer la modal
-    modalCloseButtons.forEach(button => {
+    // Ouvrir la modal de validation
+    validateButtons.forEach(button => {
         button.addEventListener('click', function() {
-            deleteModal.style.display = 'none';
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            
+            validateForm.action = "{% url 'labo:valider_article' 0 %}".replace('0', id);
+            validateItemNameSpan.textContent = nom;
+            validateModal.style.display = 'block';
         });
     });
     
-    // Fermer la modal en cliquant à l'extérieur
+    // Synchroniser le commentaire
+    validateForm.addEventListener('submit', function() {
+        commentaireInput.value = commentaireTextarea.value;
+    });
+    
+     // Fermer les modals
+    document.querySelectorAll('.modal-close, .modal-close-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            deleteModal.style.display = 'none';
+            validateModal.style.display = 'none';
+        });
+    });
+    
+    // Fermer les modals en cliquant à l'extérieur
     window.addEventListener('click', function(event) {
         if (event.target == deleteModal) {
             deleteModal.style.display = 'none';
+        }
+        if (event.target == validateModal) {
+            validateModal.style.display = 'none';
         }
     });
 });

@@ -19,13 +19,13 @@ from .forms import ContactForm  # Assurez-vous d'avoir défini ce formulaire
 from django.db.models import Count
 from .models import (
     Membre, Theme, Collaborateur, Devenir, Invitation, Presentation, 
-    ImagePresentation, Categorie, Article, Temoignage, Evenement
+    ImagePresentation, Categorie, Article, Temoignage, Evenement,Projet
 )
 from .utils import validate_email_domain,is_valid_email_domain
 from .forms import (
     InvitationRegistrationForm, MembreProfileForm, PresentationForm, 
     ImagePresentationFormSet, ArticleForm, DevenirForm, ContactForm,
-    InvitationForm, TemoignageForm, EvenementForm,MembreForm,UserCreateForm
+    InvitationForm, TemoignageForm, EvenementForm,MembreForm,UserCreateForm,ProjetForm
 )
 import os
 
@@ -34,7 +34,7 @@ import os
 def home(request):
     """Page d'accueil du site."""
     # Récupérer les 3 derniers articles
-    derniers_articles = Article.objects.filter(est_publie=True).order_by('-date_creation')[:3]
+    derniers_articles = Article.objects.filter(est_publie=True,statut_validation='valide').order_by('-date_creation')[:3]
     
     # Récupérer 3 membres aléatoires (non anciens)
     membres1 = Membre.objects.filter(est_responsable=True)
@@ -51,6 +51,12 @@ def home(request):
     nb_publications = Presentation.objects.count()
     nb_projets = Article.objects.filter(est_publie=True).count()  # Approximation
     nb_partenaires = Collaborateur.objects.count()
+    # Récupérer 3 projets récents en cours
+    projets_recents = Projet.objects.filter(
+        est_public=True, 
+        statut='en_cours'
+    ).select_related('responsable', 'responsable__user').order_by('-date_creation')[:3]
+    
     
     context = {
         'derniers_articles': derniers_articles,
@@ -62,6 +68,7 @@ def home(request):
         'nb_publications': nb_publications,
         'nb_projets': nb_projets,
         'nb_partenaires': nb_partenaires,
+        'projets_recents': projets_recents,
     }
     return render(request, 'core/home.html', context)
 
@@ -136,30 +143,65 @@ def faq(request):
    
     return render(request, 'core/faq.html')
 
+# Mise à jour de votre vue membre_detail dans views.py
 
 def membre_detail(request, membre_id):
-    """Vue pour afficher le profil détaillé d'un membre."""
-    membre = get_object_or_404(Membre.objects.select_related('user', 'theme'), id=membre_id)
+    """Vue pour afficher le détail d'un membre."""
+    membre = get_object_or_404(
+        Membre.objects.select_related('user', 'theme').prefetch_related(
+            'historique_themes__theme'
+        ),
+        id=membre_id
+    )
     
     # Récupérer les présentations du membre
-    presentations = Presentation.objects.filter(membre=membre).order_by('-date_creation')
+    presentations = Presentation.objects.filter(
+        membre=membre
+    ).select_related('theme').order_by('-date_creation')[:5]
     
-    # Récupérer les articles du membre
-    articles = Article.objects.filter(auteur=membre, est_publie=True).order_by('-date_creation')
+    # Récupérer les articles publiés du membre
+    articles = Article.objects.filter(
+        auteur=membre,
+        est_visible_publiquement=True  # Utiliser la méthode du modèle si elle existe
+    ).prefetch_related('categories').order_by('-date_creation')[:5]
     
-    # Si c'est un ancien membre, récupérer son parcours
+    # Récupérer le parcours professionnel (pour les anciens)
     devenir = None
     if membre.est_ancien:
-        devenir = Devenir.objects.filter(membre=membre).first()
+        try:
+            devenir = Devenir.objects.get(membre=membre)
+        except Devenir.DoesNotExist:
+            pass
+    
+    # Récupérer l'historique des thèmes
+    historique_themes = membre.get_historique_themes_complet()
+    theme_actuel = membre.get_theme_actuel()
+    duree_theme_actuel = membre.get_duree_theme_actuel()
+    
+    # Récupérer les projets du membre (en tant que responsable ou participant)
+    projets_responsable = membre.projets_responsable.filter(
+        est_public=True
+    ).order_by('-date_debut')[:3]
+    
+    projets_participant = membre.projets_participant.filter(
+        est_public=True
+    ).exclude(
+        id__in=projets_responsable.values_list('id', flat=True)
+    ).order_by('-date_debut')[:3]
     
     context = {
         'membre': membre,
         'presentations': presentations,
         'articles': articles,
         'devenir': devenir,
+        'historique_themes': historique_themes,
+        'theme_actuel': theme_actuel,
+        'duree_theme_actuel': duree_theme_actuel,
+        'projets_responsable': projets_responsable,
+        'projets_participant': projets_participant,
     }
-    return render(request, 'core/membre_detail.html', context)
-
+    
+    return render(request, 'labo/membre_detail.html', context)
 
 def responsables(request):
     """Vue pour afficher les responsables et collaborateurs."""
@@ -223,15 +265,16 @@ def presentation_detail(request, presentation_id):
 
 def liste_articles(request):
     """Vue pour afficher la liste des articles du blog."""
-    articles_list = Article.objects.filter(est_publie=True).select_related('auteur', 'auteur__user').order_by('-date_creation')
+    articles_list = Article.objects.filter(est_publie=True,statut_validation='valide').select_related('auteur', 'auteur__user').order_by('-date_creation')
     categories = Categorie.objects.all()
     
     # Récupérer les articles récents pour le sidebar
-    articles_recents = Article.objects.filter(est_publie=True).order_by('-date_creation')[:5]
+    articles_recents = Article.objects.filter(est_publie=True,statut_validation='valide').order_by('-date_creation')[:5]
     
     # Récupérer les auteurs actifs
     auteurs = Membre.objects.filter(
-        article__est_publie=True
+        article__est_publie=True,
+        article__statut_validation='valide'
     ).distinct().select_related('user')[:6]
     
     # Récupérer les thèmes pour le sidebar
@@ -264,6 +307,7 @@ def liste_articles_par_categorie(request, categorie_id):
     categorie = get_object_or_404(Categorie, id=categorie_id)
     articles_list = Article.objects.filter(
         est_publie=True, 
+        statut_validation='valide',
         categories=categorie
     ).select_related('auteur', 'auteur__user').order_by('-date_creation')
     
@@ -307,6 +351,7 @@ def liste_articles_par_theme(request, theme_id):
    theme = get_object_or_404(Theme, id=theme_id)
    articles_list = Article.objects.filter(
        est_publie=True, 
+       statut_validation='valide',
        auteur__theme=theme
    ).select_related('auteur', 'auteur__user').order_by('-date_creation')
    
@@ -351,7 +396,8 @@ def article_detail(request, article_id):
    article = get_object_or_404(
        Article.objects.select_related('auteur', 'auteur__user'), 
        id=article_id,
-       est_publie=True
+       est_publie=True,
+       statut_validation='valide'
    )
    
    # Récupérer les catégories de l'article
@@ -389,6 +435,79 @@ def article_detail(request, article_id):
    }
    return render(request, 'core/article_detail.html', context)
 
+@login_required
+def valider_article(request, article_id):
+    """Valider un article."""
+    # Vérifier que l'utilisateur est bien administrateur
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    article = get_object_or_404(Article, id=article_id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        commentaire = request.POST.get('commentaire', '')
+        
+        if action == 'valider':
+            article.statut_validation = 'valide'
+            messages.success(request, f"L'article '{article.titre}' a été validé.")
+        elif action == 'rejeter':
+            article.statut_validation = 'rejete'
+            messages.success(request, f"L'article '{article.titre}' a été rejeté.")
+        
+        article.date_validation = timezone.now()
+        article.validateur = request.user
+        article.commentaire_validation = commentaire
+        article.save()
+        
+        # Optionnel : Envoyer un email à l'auteur
+      # Optionnel : Envoyer un email à l'auteur
+        try:
+            subject = f"Statut de votre article '{article.titre}'"
+            
+            # Construire le message étape par étape pour éviter les conflits de guillemets
+            statut_text = 'Validé' if action == 'valider' else 'Rejeté'
+            commentaire_text = f"Commentaire de l'administrateur : {commentaire}" if commentaire else ""
+            
+            message = f"""Bonjour {article.auteur.user.first_name},
+
+Le statut de votre article '{article.titre}' a été mis à jour.
+
+Nouveau statut : {statut_text}
+
+{commentaire_text}
+
+Cordialement,
+L'équipe Beta Lab
+"""
+            send_mail(
+                subject,
+                message,
+                settings.DEFAULT_FROM_EMAIL,
+                [article.auteur.user.email],
+                fail_silently=True,
+            )
+        except:
+            pass  # Ne pas faire échouer la validation si l'email ne part pas
+    
+    return redirect('labo:gestion_contenu', type_contenu='articles')
+
+@login_required
+def articles_en_attente(request):
+    """Vue pour afficher les articles en attente de validation."""
+    # Vérifier que l'utilisateur est bien administrateur
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    articles = Article.objects.filter(
+        statut_validation='en_attente'
+    ).select_related('auteur', 'auteur__user').order_by('-date_creation')
+    
+    context = {
+        'articles': articles,
+        'title': 'Articles en attente de validation',
+    }
+    return render(request, 'admin/articles_en_attente.html', context)
 
 def devenir_membres(request):
    """Vue pour afficher le parcours des anciens membres."""
@@ -882,6 +1001,21 @@ def cancel_invitation(request, invitation_id):
    messages.success(request, f"L'invitation pour {email} a été annulée.")
    return redirect('labo:gestion_invitations')
 # views.py
+@login_required
+def delete_membres(request, membre_id):
+   """Suppression d'un membre."""
+   # Vérifier que l'utilisateur est bien administrateur
+   if not request.user.is_staff:
+       return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+   
+   membre = get_object_or_404(Membre, id=membre_id)
+   membre.delete()
+   
+   messages.success(request, "Le membre a été supprimée.")
+   if request.user.is_staff:
+        return redirect('labo:gestion_membres')
+   else:
+        return redirect('labo:admin_dashboard')
 
 @login_required
 def create_membre(request):
@@ -895,7 +1029,7 @@ def create_membre(request):
     if request.method == 'POST':
         # Création d'un nouvel utilisateur
         username = request.POST.get('username', '')
-        password = User.objects.make_random_password()  # Génération d'un mot de passe aléatoire
+        password = User.objects.make_random_password()
         first_name = request.POST.get('first_name', '')
         last_name = request.POST.get('last_name', '')
         email = request.POST.get('email', '')
@@ -939,13 +1073,19 @@ def create_membre(request):
         membre.est_responsable = 'est_responsable' in request.POST
         membre.est_ancien = 'est_ancien' in request.POST
         
+        # Nouveau champ statut_ancien
+        if membre.est_ancien:
+            membre.statut_ancien = request.POST.get('statut_ancien', '')
+        
         date_arrivee = request.POST.get('date_arrivee', '')
         if date_arrivee:
             membre.date_arrivee = date_arrivee
         
-        date_depart = request.POST.get('date_depart', '')
-        if date_depart and membre.est_ancien:
-            membre.date_depart = date_depart
+        # Date de départ seulement si l'ancien membre a quitté le laboratoire
+        if membre.est_ancien and membre.statut_ancien == 'parti':
+            date_depart = request.POST.get('date_depart', '')
+            if date_depart:
+                membre.date_depart = date_depart
         
         # Gestion de la photo
         if 'photo' in request.FILES:
@@ -982,7 +1122,6 @@ L'équipe Beta Lab
         
         return redirect('labo:gestion_membres')
     
-    # Afficher le formulaire vide pour la création
     return render(request, 'admin/create_membre.html', {'themes': themes})
 
 @login_required
@@ -1085,9 +1224,19 @@ def gestion_contenu(request, type_contenu='articles'):
        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
    
    # Gestion des différents types de contenu
+   articles_en_attente_count = 0
    if type_contenu == 'articles':
        items = Article.objects.select_related('auteur', 'auteur__user').order_by('-date_creation')
        title = "Gestion des articles"
+       articles_en_attente_count = Article.objects.filter(statut_validation='en_attente').count()
+    
+       context = {
+            'items': items,
+            'type_contenu': type_contenu,
+            'title': title,
+            'articles_en_attente_count': articles_en_attente_count,
+       }
+       return render(request, 'admin/gestion_contenu.html', context)
    elif type_contenu == 'presentations':
        items = Presentation.objects.select_related('membre', 'membre__user', 'theme').order_by('-date_creation')
        title = "Gestion des présentations"
@@ -1485,3 +1634,144 @@ def delete_article(request, article_id):
         return redirect('labo:dashboard')
 
 
+
+def liste_projets(request):
+    """Vue pour afficher la liste des projets."""
+    # Filtres
+    statut_filtre = request.GET.get('statut', '')
+    type_filtre = request.GET.get('type', '')
+    
+    projets_list = Projet.objects.filter(est_public=True).select_related(
+        'responsable', 'responsable__user'
+    ).prefetch_related('participants', 'collaborateurs_externes')
+    
+    # Appliquer les filtres
+    if statut_filtre:
+        projets_list = projets_list.filter(statut=statut_filtre)
+    if type_filtre:
+        projets_list = projets_list.filter(type_projet=type_filtre)
+    
+    # Séparer projets en cours et terminés
+    projets_en_cours = projets_list.filter(statut='en_cours')
+    projets_termines = projets_list.filter(statut='termine')
+    autres_projets = projets_list.exclude(statut__in=['en_cours', 'termine'])
+    
+    # Récupérer les options de filtre
+    statuts = Projet.STATUT_CHOICES
+    types = Projet.TYPE_CHOICES
+    
+    # Statistiques
+    nb_projets_total = projets_list.count()
+    nb_projets_en_cours = projets_en_cours.count()
+    nb_projets_termines = projets_termines.count()
+    
+    context = {
+        'projets_en_cours': projets_en_cours,
+        'projets_termines': projets_termines,
+        'autres_projets': autres_projets,
+        'statuts': statuts,
+        'types': types,
+        'statut_filtre': statut_filtre,
+        'type_filtre': type_filtre,
+        'nb_projets_total': nb_projets_total,
+        'nb_projets_en_cours': nb_projets_en_cours,
+        'nb_projets_termines': nb_projets_termines,
+    }
+    return render(request, 'core/liste_projets.html', context)
+
+
+def projet_detail(request, projet_id):
+    """Vue pour afficher le détail d'un projet."""
+    projet = get_object_or_404(
+        Projet.objects.select_related('responsable', 'responsable__user').prefetch_related(
+            'participants', 'participants__user', 'collaborateurs_externes'
+        ),
+        id=projet_id,
+        est_public=True
+    )
+    
+    # Récupérer les projets similaires (même type, excluant celui-ci)
+    projets_similaires = Projet.objects.filter(
+        type_projet=projet.type_projet,
+        est_public=True
+    ).exclude(
+        id=projet.id
+    ).select_related('responsable', 'responsable__user')[:3]
+    
+    context = {
+        'projet': projet,
+        'projets_similaires': projets_similaires,
+    }
+    return render(request, 'core/projet_detail.html', context)
+
+
+# Vues d'administration
+@login_required
+def gestion_projets(request):
+    """Gestion des projets pour les administrateurs."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    projets = Projet.objects.select_related(
+        'responsable', 'responsable__user'
+    ).order_by('-date_creation')
+    
+    # Statistiques
+    nb_projets = projets.count()
+    nb_en_cours = projets.filter(statut='en_cours').count()
+    nb_termines = projets.filter(statut='termine').count()
+    
+    context = {
+        'projets': projets,
+        'nb_projets': nb_projets,
+        'nb_en_cours': nb_en_cours,
+        'nb_termines': nb_termines,
+    }
+    return render(request, 'admin/gestion_projets.html', context)
+
+
+@login_required
+def create_edit_projet(request, projet_id=None):
+    """Création/édition d'un projet."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    if projet_id:
+        projet = get_object_or_404(Projet, id=projet_id)
+    else:
+        projet = None
+    
+    if request.method == 'POST':
+        form = ProjetForm(request.POST, request.FILES, instance=projet)
+        
+        if form.is_valid():
+            projet = form.save()
+            
+            if projet_id:
+                messages.success(request, "Le projet a été mis à jour avec succès !")
+            else:
+                messages.success(request, "Le projet a été créé avec succès !")
+            
+            return redirect('labo:gestion_projets')
+    else:
+        form = ProjetForm(instance=projet)
+    
+    context = {
+        'form': form,
+        'projet': projet,
+    }
+    return render(request, 'admin/edit_projet.html', context)
+
+
+@login_required
+def delete_projet(request, projet_id):
+    """Suppression d'un projet."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    projet = get_object_or_404(Projet, id=projet_id)
+    titre = projet.titre
+    projet.delete()
+    
+    messages.success(request, f"Le projet '{titre}' a été supprimé.")
+    return redirect('labo:gestion_projets')

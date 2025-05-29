@@ -25,17 +25,18 @@
                         <h3>Menu d'administration</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
-                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}" class="active">Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}">Thèmes de recherche</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" >Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}"class="active">Thèmes de recherche</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Projets</a></li>
                         <li class="menu-divider">Gestion du contenu</li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
                     </ul>
                 </div>
             </div>
@@ -176,7 +177,17 @@
                                 </div>
                             </div>
                         </div>
-                        
+                        <!-- Champ pour le statut d'ancien membre -->
+                        <div class="form-group" id="statut_ancien_group" style="display: none;">
+                            <label for="statut_ancien">Statut de l'ancien membre</label>
+                            <select id="statut_ancien" name="statut_ancien">
+                                <option value="">Choisir un statut</option>
+                                <option value="parti">A quitté le laboratoire</option>
+                                <option value="assistant">Reste comme assistant à l'encadrement</option>
+                            </select>
+                            <div class="form-help">Précisez si l'ancien membre reste impliqué dans le laboratoire ou s'il est parti.</div>
+                        </div>
+
                         <div class="form-row">
                             <div class="form-group form-col">
                                 <label for="date_arrivee">Date d'arrivée</label>
@@ -205,10 +216,28 @@
 <script>
     function toggleAncien(checkbox) {
         const dateDepartGroup = document.getElementById('date_depart_group');
+        const statutAncienGroup = document.getElementById('statut_ancien_group');
+        const statutAncienSelect = document.getElementById('statut_ancien');
+        
         if (checkbox.checked) {
-            dateDepartGroup.style.display = 'block';
+            statutAncienGroup.style.display = 'block';
+            // Écouter les changements du statut d'ancien membre
+            statutAncienSelect.addEventListener('change', function() {
+                if (this.value === 'parti') {
+                    dateDepartGroup.style.display = 'block';
+                    document.getElementById('date_depart').required = true;
+                } else if (this.value === 'assistant') {
+                    dateDepartGroup.style.display = 'none';
+                    document.getElementById('date_depart').required = false;
+                    document.getElementById('date_depart').value = '';
+                }
+            });
         } else {
+            statutAncienGroup.style.display = 'none';
             dateDepartGroup.style.display = 'none';
+            statutAncienSelect.value = '';
+            document.getElementById('date_depart').required = false;
+            document.getElementById('date_depart').value = '';
         }
     }
     

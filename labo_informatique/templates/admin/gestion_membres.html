@@ -27,17 +27,18 @@
                         <h3>Menu d'administration</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
-                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}" class="active">Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}">Thèmes de recherche</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" >Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}"class="active">Thèmes de recherche</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Projets</a></li>
                         <li class="menu-divider">Gestion du contenu</li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
                     </ul>
                 </div>
             </div>
@@ -126,7 +127,15 @@
                                     <td class="cell-actions">
                                         <a href="{% url 'labo:membre_detail' membre.id %}" class="table-action" title="Voir le profil"><i class="fas fa-eye"></i></a>
                                         <a href="{% url 'labo:edit_membre' membre.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
+                                        <button class="table-action btn-delete-item" 
+                                                data-id="{{ membre.id }}" 
+                                                data-nom="{{ membre.user.first_name }}" 
+                                                data-type="membre"
+                                                title="Supprimer" >
+                                            <i class="fas fa-trash"></i>
+                                        </button>
                                     </td>
+                                    
                                 </tr>
                             {% empty %}
                                 <tr>
@@ -140,4 +149,69 @@
         </div>
     </div>
 </section>
+
+<!-- Modal de confirmation de suppression -->
+<div id="delete-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Confirmer la suppression</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer "<span id="item-name"></span>" ?</p>
+            <p class="warning">Cette action est irréversible.</p>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="delete-form">
+                {% csrf_token %}
+                <input type="hidden" name="item_id" id="delete_item_id">
+                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables pour la modal de suppression
+    const deleteModal = document.getElementById('delete-modal');
+    const itemNameSpan = document.getElementById('item-name');
+    const deleteItemIdInput = document.getElementById('delete_item_id');
+    const deleteForm = document.getElementById('delete-form');
+    const deleteButtons = document.querySelectorAll('.btn-delete-item');
+    const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
+    
+    // Ouvrir la modal de suppression
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            if (this.disabled) return;
+            
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            const type = this.getAttribute('data-type');
+            deleteForm.action = "{% url 'labo:delete_membres' 0 %}".replace('0', id);
+            itemNameSpan.textContent = nom;
+            deleteItemIdInput.value = id;
+            deleteModal.style.display = 'block';
+        });
+    });
+    
+    // Fermer la modal
+    modalCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            deleteModal.style.display = 'none';
+        });
+    });
+    
+    // Fermer la modal en cliquant à l'extérieur
+    window.addEventListener('click', function(event) {
+        if (event.target == deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+});
+</script>
+
 {% endblock %}
