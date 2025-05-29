@@ -1,0 +1,330 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ projet.titre }} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/projets1.css' %}">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <div class="container">
+        <div class="project-header-content">
+            <div class="project-header-text">
+                <div class="breadcrumb">
+                    <a href="{% url 'labo:liste_projets' %}">Projets</a>
+                    <span><i class="fas fa-chevron-right"></i></span>
+                    <span>{{ projet.titre }}</span>
+                </div>
+                <h1 class="page-title fade-in">{{ projet.titre }}</h1>
+                <div class="project-header-meta fade-in delay-200">
+                    <div class="project-status-header status-{{ projet.statut }}">
+                        {% if projet.statut == 'en_cours' %}
+                            <i class="fas fa-play"></i> En cours
+                        {% elif projet.statut == 'termine' %}
+                            <i class="fas fa-check"></i> Terminé
+                        {% elif projet.statut == 'suspendu' %}
+                            <i class="fas fa-pause"></i> Suspendu
+                        {% elif projet.statut == 'annule' %}
+                            <i class="fas fa-times"></i> Annulé
+                        {% endif %}
+                    </div>
+                    <div class="project-type-header">{{ projet.get_type_projet_display }}</div>
+                </div>
+            </div>
+            
+            {% if projet.image_principale %}
+            <div class="project-header-image fade-in delay-400">
+                <img src="{{ projet.image_principale.url }}" alt="{{ projet.titre }}">
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="project-detail-section">
+    <div class="container">
+        <div class="project-detail-grid">
+            <!-- Contenu principal -->
+            <div class="project-main-content">
+                <!-- Description -->
+                <div class="content-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-info-circle"></i> Description du projet
+                    </h2>
+                    <div class="project-description-full">
+                        {{ projet.description|linebreaks }}
+                    </div>
+                </div>
+                
+                <!-- Équipe -->
+                <div class="content-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-users"></i> Équipe du projet
+                    </h2>
+                    
+                    <!-- Responsable -->
+                    <div class="team-section">
+                        <h3 class="team-subtitle">Responsable</h3>
+                        <div class="team-member responsable">
+                            <div class="member-avatar">
+                                {% if projet.responsable.photo %}
+                                    <img src="{{ projet.responsable.photo.url }}" alt="{{ projet.responsable.user.first_name }}">
+                                {% else %}
+                                    <div class="avatar-placeholder">
+                                        {{ projet.responsable.user.first_name|first }}{{ projet.responsable.user.last_name|first }}
+                                    </div>
+                                {% endif %}
+                                <div class="member-role-badge">Chef de projet</div>
+                            </div>
+                            <div class="member-info">
+                                <h4>{{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}</h4>
+                                <p class="member-title">{{ projet.responsable.titre }}</p>
+                                {% if projet.responsable.theme %}
+                                    <p class="member-theme">{{ projet.responsable.theme.nom }}</p>
+                                {% endif %}
+                                <div class="member-links">
+                                    <a href="{% url 'labo:membre_detail' projet.responsable.id %}" class="member-link">
+                                        <i class="fas fa-user"></i> Profil
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Participants -->
+                    {% if projet.participants.all %}
+                    <div class="team-section">
+                        <h3 class="team-subtitle">Participants ({{ projet.participants.count }})</h3>
+                        <div class="team-grid">
+                            {% for participant in projet.participants.all %}
+                                <div class="team-member participant">
+                                    <div class="member-avatar">
+                                        {% if participant.photo %}
+                                            <img src="{{ participant.photo.url }}" alt="{{ participant.user.first_name }}">
+                                        {% else %}
+                                            <div class="avatar-placeholder">
+                                                {{ participant.user.first_name|first }}{{ participant.user.last_name|first }}
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                    <div class="member-info">
+                                        <h4>{{ participant.user.first_name }} {{ participant.user.last_name }}</h4>
+                                        <p class="member-title">{{ participant.titre }}</p>
+                                        <a href="{% url 'labo:membre_detail' participant.id %}" class="member-link">
+                                            <i class="fas fa-user"></i> Profil
+                                        </a>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    
+                    <!-- Collaborateurs externes -->
+                    {% if projet.collaborateurs_externes.all %}
+                    <div class="team-section">
+                        <h3 class="team-subtitle">Collaborateurs externes ({{ projet.collaborateurs_externes.count }})</h3>
+                        <div class="team-grid">
+                            {% for collaborateur in projet.collaborateurs_externes.all %}
+                                <div class="team-member collaborateur">
+                                    <div class="member-avatar">
+                                        {% if collaborateur.photo %}
+                                            <img src="{{ collaborateur.photo.url }}" alt="{{ collaborateur.prenom }}">
+                                        {% else %}
+                                            <div class="avatar-placeholder">
+                                                {{ collaborateur.prenom|first }}{{ collaborateur.nom|first }}
+                                            </div>
+                                        {% endif %}
+                                        <div class="member-role-badge external">Externe</div>
+                                    </div>
+                                    <div class="member-info">
+                                        <h4>{{ collaborateur.prenom }} {{ collaborateur.nom }}</h4>
+                                        <p class="member-title">{{ collaborateur.titre }}</p>
+                                        <p class="member-institution">{{ collaborateur.institution }}</p>
+                                        {% if collaborateur.lien %}
+                                            <a href="{{ collaborateur.lien }}" target="_blank" class="member-link">
+                                                <i class="fas fa-external-link-alt"></i> Profil
+                                            </a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <!-- Technologies -->
+                {% if projet.get_technologies_list %}
+                <div class="content-card">
+                    <h2 class="card-title">
+                        <i class="fas fa-code"></i> Technologies utilisées
+                    </h2>
+                    <div class="technologies-showcase">
+                        {% for tech in projet.get_technologies_list %}
+                            <div class="tech-item">
+                                <span class="tech-badge-large">{{ tech }}</span>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            <!-- Sidebar -->
+            <div class="project-sidebar">
+                <!-- Informations rapides -->
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Informations</h3>
+                    <div class="info-list">
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-alt"></i> Début
+                            </div>
+                            <div class="info-value">{{ projet.date_debut|date:"d F Y" }}</div>
+                        </div>
+                        
+                        {% if projet.date_fin_prevue %}
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-times"></i> Fin prévue
+                            </div>
+                            <div class="info-value">{{ projet.date_fin_prevue|date:"d F Y" }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        {% if projet.date_fin_reelle %}
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-calendar-check"></i> Fin réelle
+                            </div>
+                            <div class="info-value">{{ projet.date_fin_reelle|date:"d F Y" }}</div>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-tag"></i> Type
+                            </div>
+                            <div class="info-value">{{ projet.get_type_projet_display }}</div>
+                        </div>
+                        
+                        <div class="info-item">
+                            <div class="info-label">
+                                <i class="fas fa-info-circle"></i> Statut
+                            </div>
+                            <div class="info-value">
+                                <span class="status-badge status-{{ projet.statut }}">
+                                    {{ projet.get_statut_display }}
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Liens et ressources -->
+                {% if projet.lien_solution or projet.lien_github or projet.lien_documentation or projet.lien_publication %}
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Liens et ressources</h3>
+                    <div class="links-list">
+                        {% if projet.lien_solution %}
+                        <a href="{{ projet.lien_solution }}" target="_blank" class="resource-link solution">
+                            <i class="fas fa-external-link-alt"></i>
+                            <span>Voir la solution</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if projet.lien_github %}
+                        <a href="{{ projet.lien_github }}" target="_blank" class="resource-link github">
+                            <i class="fab fa-github"></i>
+                            <span>Code source</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if projet.lien_documentation %}
+                        <a href="{{ projet.lien_documentation }}" target="_blank" class="resource-link docs">
+                            <i class="fas fa-book"></i>
+                            <span>Documentation</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {% endif %}
+                        
+                        {% if projet.lien_publication %}
+                        <a href="{{ projet.lien_publication }}" target="_blank" class="resource-link publication">
+                            <i class="fas fa-file-alt"></i>
+                            <span>Publication</span>
+                            <i class="fas fa-arrow-right"></i>
+                        </a>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                <!-- Mots-clés -->
+                {% if projet.get_mots_cles_list %}
+                <div class="sidebar-card">
+                    <h3 class="sidebar-title">Mots-clés</h3>
+                    <div class="keywords-list">
+                        {% for mot_cle in projet.get_mots_cles_list %}
+                            <span class="keyword-tag">{{ mot_cle }}</span>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Section projets similaires -->
+{% if projets_similaires %}
+<section class="related-projects-section">
+    <div class="container">
+        <h2 class="section-title">
+            <span class="title-icon"><i class="fas fa-project-diagram"></i></span>
+            Projets similaires
+        </h2>
+        
+        <div class="projects-grid">
+            {% for projet_similaire in projets_similaires %}
+                <div class="project-card related-project">
+                    <div class="project-image">
+                        {% if projet_similaire.image_principale %}
+                            <img src="{{ projet_similaire.image_principale.url }}" alt="{{ projet_similaire.titre }}">
+                        {% else %}
+                            <div class="default-image">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                        {% endif %}
+                        <div class="project-status status-{{ projet_similaire.statut }}">
+                            {{ projet_similaire.get_statut_display }}
+                        </div>
+                    </div>
+                    
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h3 class="project-title">{{ projet_similaire.titre }}</h3>
+                            <div class="project-type">{{ projet_similaire.get_type_projet_display }}</div>
+                        </div>
+                        
+                        <p class="project-description">{{ projet_similaire.description_courte }}</p>
+                        
+                        <div class="project-actions">
+                            <a href="{% url 'labo:projet_detail' projet_similaire.id %}" class="btn-project-detail">
+                                Voir détails <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

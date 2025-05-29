@@ -25,17 +25,18 @@
                         <h3>Menu d'administration</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
-                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}" class="active">Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}">Thèmes de recherche</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}"class="active" >Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}" >Catégories d'articles</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}"class="active">Thèmes de recherche</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Projets</a></li>
                         <li class="menu-divider">Gestion du contenu</li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
                     </ul>
                 </div>
             </div>

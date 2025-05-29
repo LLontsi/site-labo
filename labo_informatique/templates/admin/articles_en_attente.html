@@ -1,0 +1,414 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ title }} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+{% load static %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">{{ title }}</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Articles en attente de validation</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Menu d'administration</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}">Catégories d'articles</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}">Thèmes de recherche</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Projets</a></li>
+                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
+                        <li><a href="{% url 'labo:articles_en_attente' %}" class="active">Articles en attente</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}">Présentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>{{ title }}</h2>
+                    <a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Retour aux articles
+                    </a>
+                </div>
+                
+                {% if messages %}
+                <div class="messages">
+                    {% for message in messages %}
+                    <div class="message message-{{ message.tags }}">
+                        {{ message }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                
+                <div class="admin-table-container">
+                    {% if articles %}
+                        <table class="admin-table">
+                            <thead>
+                                <tr>
+                                    <th>Titre</th>
+                                    <th>Auteur</th>
+                                    <th>Date de création</th>
+                                    <th>Catégories</th>
+                                    <th>Aperçu</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for article in articles %}
+                                    <tr>
+                                        <td>
+                                            <div class="article-title">
+                                                <strong>{{ article.titre }}</strong>
+                                                <div class="article-excerpt">
+                                                    {{ article.contenu|striptags|truncatechars:100 }}
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div class="author-info">
+                                                {% if article.auteur.photo %}
+                                                    <img src="{{ article.auteur.photo.url }}" alt="{{ article.auteur.user.first_name }}" class="author-avatar">
+                                                {% else %}
+                                                    <div class="avatar-placeholder">{{ article.auteur.user.first_name|first }}{{ article.auteur.user.last_name|first }}</div>
+                                                {% endif %}
+                                                <span>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
+                                            </div>
+                                        </td>
+                                        <td>{{ article.date_creation|date:"d/m/Y à H:i" }}</td>
+                                        <td>
+                                            {% for categorie in article.categories.all %}
+                                                <span class="status-badge">{{ categorie.nom }}</span>
+                                            {% empty %}
+                                                <span class="empty-value">Aucune</span>
+                                            {% endfor %}
+                                        </td>
+                                        <td>
+                                            {% if article.image_principale %}
+                                                <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}" class="article-preview-image">
+                                            {% else %}
+                                                <div class="no-image">Pas d'image</div>
+                                            {% endif %}
+                                        </td>
+                                        <td class="cell-actions">
+                                            <button class="table-action btn-validate-item" 
+                                                data-id="{{ article.id }}" 
+                                                data-nom="{{ article.titre }}"
+                                                title="Valider/Rejeter">
+                                                <i class="fas fa-check-circle"></i>
+                                            </button>
+                                            <button class="table-action btn-preview-article" 
+                                                data-id="{{ article.id }}" 
+                                                data-titre="{{ article.titre }}"
+                                                data-contenu="{{ article.contenu|striptags }}"
+                                                data-auteur="{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}"
+                                                data-date="{{ article.date_creation|date:'d/m/Y à H:i' }}"
+                                                title="Aperçu">
+                                                <i class="fas fa-eye"></i>
+                                            </button>
+                                            <button class="table-action btn-delete-item" 
+                                                data-id="{{ article.id }}" 
+                                                data-nom="{{ article.titre }}"
+                                                data-type="article"
+                                                title="Supprimer">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    {% else %}
+                        <div class="empty-content">
+                            <div class="empty-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <h3>Aucun article en attente</h3>
+                            <p>Tous les articles ont été traités !</p>
+                            <a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" class="btn btn-primary">
+                                Voir tous les articles
+                            </a>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Modal de validation -->
+<div id="validate-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Validation de l'article</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Article : "<span id="validate-item-name"></span>"</p>
+            <div class="form-group">
+                <label for="commentaire_validation">Commentaire pour l'auteur (optionnel)</label>
+                <textarea id="commentaire_validation" name="commentaire" rows="4" placeholder="Commentaire à envoyer à l'auteur..."></textarea>
+                <div class="form-help">Ce commentaire sera envoyé par email à l'auteur.</div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="validate-form">
+                {% csrf_token %}
+                <input type="hidden" name="commentaire" id="validate_commentaire_input">
+                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
+                <button type="submit" name="action" value="rejeter" class="btn btn-danger">
+                    <i class="fas fa-times"></i> Rejeter
+                </button>
+                <button type="submit" name="action" value="valider" class="btn btn-success">
+                    <i class="fas fa-check"></i> Valider
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal d'aperçu -->
+<div id="preview-modal" class="modal" style="display: none;">
+    <div class="modal-content modal-large">
+        <div class="modal-header">
+            <h3>Aperçu de l'article</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="article-preview">
+                <h2 id="preview-titre"></h2>
+                <div class="article-meta">
+                    <span><i class="fas fa-user"></i> <span id="preview-auteur"></span></span>
+                    <span><i class="fas fa-calendar"></i> <span id="preview-date"></span></span>
+                </div>
+                <div class="article-content" id="preview-contenu"></div>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="btn btn-secondary modal-close-btn">Fermer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de suppression -->
+<div id="delete-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Confirmer la suppression</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Êtes-vous sûr de vouloir supprimer l'article "<span id="item-name"></span>" ?</p>
+            <p class="warning">Cette action est irréversible.</p>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="delete-form">
+                {% csrf_token %}
+                <input type="hidden" name="item_id" id="delete_item_id">
+                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
+                <button type="submit" class="btn btn-danger">Supprimer</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Variables pour les modals
+    const validateModal = document.getElementById('validate-modal');
+    const previewModal = document.getElementById('preview-modal');
+    const deleteModal = document.getElementById('delete-modal');
+    
+    const validateItemNameSpan = document.getElementById('validate-item-name');
+    const validateForm = document.getElementById('validate-form');
+    const commentaireTextarea = document.getElementById('commentaire_validation');
+    const commentaireInput = document.getElementById('validate_commentaire_input');
+    
+    const itemNameSpan = document.getElementById('item-name');
+    const deleteForm = document.getElementById('delete-form');
+    const deleteItemIdInput = document.getElementById('delete_item_id');
+    
+    // Boutons
+    const validateButtons = document.querySelectorAll('.btn-validate-item');
+    const previewButtons = document.querySelectorAll('.btn-preview-article');
+    const deleteButtons = document.querySelectorAll('.btn-delete-item');
+    const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
+    
+    // Ouvrir la modal de validation
+    validateButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            
+            validateForm.action = "{% url 'labo:valider_article' 0 %}".replace('0', id);
+            validateItemNameSpan.textContent = nom;
+            validateModal.style.display = 'block';
+        });
+    });
+    
+    // Ouvrir la modal d'aperçu
+    previewButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const titre = this.getAttribute('data-titre');
+            const contenu = this.getAttribute('data-contenu');
+            const auteur = this.getAttribute('data-auteur');
+            const date = this.getAttribute('data-date');
+            
+            document.getElementById('preview-titre').textContent = titre;
+            document.getElementById('preview-auteur').textContent = auteur;
+            document.getElementById('preview-date').textContent = date;
+            document.getElementById('preview-contenu').innerHTML = contenu.replace(/\n/g, '<br>');
+            
+            previewModal.style.display = 'block';
+        });
+    });
+    
+    // Ouvrir la modal de suppression
+    deleteButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            
+            deleteForm.action = "{% url 'labo:delete_article' 0 %}".replace('0', id);
+            itemNameSpan.textContent = nom;
+            deleteItemIdInput.value = id;
+            deleteModal.style.display = 'block';
+        });
+    });
+    
+    // Synchroniser le commentaire avant soumission
+    validateForm.addEventListener('submit', function() {
+        commentaireInput.value = commentaireTextarea.value;
+    });
+    
+    // Fermer les modals
+    modalCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            validateModal.style.display = 'none';
+            previewModal.style.display = 'none';
+            deleteModal.style.display = 'none';
+        });
+    });
+    
+    // Fermer les modals en cliquant à l'extérieur
+    window.addEventListener('click', function(event) {
+        if (event.target == validateModal) {
+            validateModal.style.display = 'none';
+        }
+        if (event.target == previewModal) {
+            previewModal.style.display = 'none';
+        }
+        if (event.target == deleteModal) {
+            deleteModal.style.display = 'none';
+        }
+    });
+});
+</script>
+
+<style>
+/* Styles supplémentaires pour cette page */
+.article-title {
+    max-width: 200px;
+}
+
+.article-excerpt {
+    font-size: 0.9em;
+    color: #666;
+    margin-top: 5px;
+}
+
+.author-info {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.author-avatar {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #007bff;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.article-preview-image {
+    width: 60px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 4px;
+}
+
+.no-image {
+    color: #999;
+    font-style: italic;
+    font-size: 0.9em;
+}
+
+.modal-large {
+    max-width: 800px;
+    width: 90%;
+}
+
+.article-preview h2 {
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.article-meta {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 20px;
+    color: #666;
+    font-size: 0.9em;
+}
+
+.article-content {
+    line-height: 1.6;
+    color: #333;
+}
+
+.empty-content {
+    text-align: center;
+    padding: 60px 20px;
+}
+
+.empty-icon {
+    font-size: 4em;
+    color: #28a745;
+    margin-bottom: 20px;
+}
+</style>
+{% endblock %}

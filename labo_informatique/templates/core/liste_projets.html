@@ -1,0 +1,366 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Projets - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/projets.css' %}">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Nos Projets</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Découvrez nos projets de recherche et développement</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Section Statistiques -->
+<section class="stats-section">
+    <div class="container">
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon">
+                    <i class="fas fa-project-diagram"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ nb_projets_total }}</h3>
+                    <p>Projets total</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon active">
+                    <i class="fas fa-play-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ nb_projets_en_cours }}</h3>
+                    <p>En cours</p>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-icon completed">
+                    <i class="fas fa-check-circle"></i>
+                </div>
+                <div class="stat-content">
+                    <h3>{{ nb_projets_termines }}</h3>
+                    <p>Terminés</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Section Filtres Moderne -->
+<section class="filters-section-modern">
+    <div class="container">
+        <div class="filters-container">
+            <!-- Filtre par Statut -->
+            <div class="filter-category">
+                <h3 class="filter-title">Filtrer par statut</h3>
+                <div class="filter-buttons">
+                    <a href="{% url 'labo:liste_projets' %}" 
+                       class="filter-btn {% if not statut_filtre %}active{% endif %}">
+                        Tous
+                    </a>
+                    {% for value, label in statuts %}
+                        <a href="?statut={{ value }}{% if type_filtre %}&type={{ type_filtre }}{% endif %}" 
+                           class="filter-btn {% if statut_filtre == value %}active{% endif %}">
+                            {{ label }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Filtre par Type -->
+            <div class="filter-category">
+                <h3 class="filter-title">Type de projet</h3>
+                <div class="filter-buttons">
+                    <a href="{% url 'labo:liste_projets' %}{% if statut_filtre %}?statut={{ statut_filtre }}{% endif %}" 
+                       class="filter-btn {% if not type_filtre %}active{% endif %}">
+                        Tous
+                    </a>
+                    {% for value, label in types %}
+                        <a href="?type={{ value }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}" 
+                           class="filter-btn {% if type_filtre == value %}active{% endif %}">
+                            {{ label }}
+                        </a>
+                    {% endfor %}
+                </div>
+            </div>
+
+            <!-- Indicateur de filtres actifs -->
+            {% if statut_filtre or type_filtre %}
+            <div class="active-filters">
+                <span class="active-filters-label">Filtres actifs :</span>
+                {% if statut_filtre %}
+                    <span class="active-filter-tag">
+                        Statut: 
+                        {% for value, label in statuts %}
+                            {% if value == statut_filtre %}{{ label }}{% endif %}
+                        {% endfor %}
+                        <a href="?{% if type_filtre %}type={{ type_filtre }}{% endif %}" class="remove-filter">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                {% endif %}
+                {% if type_filtre %}
+                    <span class="active-filter-tag">
+                        Type: 
+                        {% for value, label in types %}
+                            {% if value == type_filtre %}{{ label }}{% endif %}
+                        {% endfor %}
+                        <a href="?{% if statut_filtre %}statut={{ statut_filtre }}{% endif %}" class="remove-filter">
+                            <i class="fas fa-times"></i>
+                        </a>
+                    </span>
+                {% endif %}
+                <a href="{% url 'labo:liste_projets' %}" class="clear-all-filters">
+                    <i class="fas fa-trash-alt"></i> Tout effacer
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+
+<!-- Section Projets en cours -->
+{% if projets_en_cours %}
+<section class="projects-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="title-icon"><i class="fas fa-play-circle"></i></span>
+                Projets en cours
+            </h2>
+            <div class="projects-count">{{ projets_en_cours.count }} projet{{ projets_en_cours.count|pluralize }}</div>
+        </div>
+        
+        <div class="projects-grid">
+            {% for projet in projets_en_cours %}
+                <div class="project-card active-project">
+                    <div class="project-image">
+                        {% if projet.image_principale %}
+                            <img src="{{ projet.image_principale.url }}" alt="{{ projet.titre }}">
+                        {% else %}
+                            <div class="default-image">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                        {% endif %}
+                        <div class="project-status status-en-cours">
+                            <i class="fas fa-play"></i> En cours
+                        </div>
+                    </div>
+                    
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h3 class="project-title">{{ projet.titre }}</h3>
+                            <div class="project-type">{{ projet.get_type_projet_display }}</div>
+                        </div>
+                        
+                        <p class="project-description">{{ projet.description_courte }}</p>
+                        
+                        <div class="project-meta">
+                            <div class="project-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Début : {{ projet.date_debut|date:"M Y" }}
+                            </div>
+                            <div class="project-responsable">
+                                <i class="fas fa-user"></i>
+                                {{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}
+                            </div>
+                        </div>
+                        
+                        {% if projet.get_technologies_list %}
+                        <div class="project-technologies">
+                            {% for tech in projet.get_technologies_list|slice:":3" %}
+                                <span class="tech-badge">{{ tech }}</span>
+                            {% endfor %}
+                            {% if projet.get_technologies_list|length > 3 %}
+                                <span class="tech-more">+{{ projet.get_technologies_list|length|add:"-3" }}</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="project-actions">
+                            <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
+                                Voir détails <i class="fas fa-arrow-right"></i>
+                            </a>
+                            {% if projet.lien_solution %}
+                                <a href="{{ projet.lien_solution }}" target="_blank" class="btn-project-demo">
+                                    <i class="fas fa-external-link-alt"></i> Démo
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Section Projets terminés -->
+{% if projets_termines %}
+<section class="projects-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="title-icon"><i class="fas fa-check-circle"></i></span>
+                Projets terminés
+            </h2>
+            <div class="projects-count">{{ projets_termines.count }} projet{{ projets_termines.count|pluralize }}</div>
+        </div>
+        
+        <div class="projects-grid">
+            {% for projet in projets_termines %}
+                <div class="project-card completed-project">
+                    <div class="project-image">
+                        {% if projet.image_principale %}
+                            <img src="{{ projet.image_principale.url }}" alt="{{ projet.titre }}">
+                        {% else %}
+                            <div class="default-image">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                        {% endif %}
+                        <div class="project-status status-termine">
+                            <i class="fas fa-check"></i> Terminé
+                        </div>
+                    </div>
+                    
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h3 class="project-title">{{ projet.titre }}</h3>
+                            <div class="project-type">{{ projet.get_type_projet_display }}</div>
+                        </div>
+                        
+                        <p class="project-description">{{ projet.description_courte }}</p>
+                        
+                        <div class="project-meta">
+                            <div class="project-date">
+                                <i class="fas fa-calendar-check"></i>
+                                {% if projet.date_fin_reelle %}
+                                    Terminé : {{ projet.date_fin_reelle|date:"M Y" }}
+                                {% else %}
+                                    Début : {{ projet.date_debut|date:"M Y" }}
+                                {% endif %}
+                            </div>
+                            <div class="project-responsable">
+                                <i class="fas fa-user"></i>
+                                {{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}
+                            </div>
+                        </div>
+                        
+                        {% if projet.get_technologies_list %}
+                        <div class="project-technologies">
+                            {% for tech in projet.get_technologies_list|slice:":3" %}
+                                <span class="tech-badge">{{ tech }}</span>
+                            {% endfor %}
+                            {% if projet.get_technologies_list|length > 3 %}
+                                <span class="tech-more">+{{ projet.get_technologies_list|length|add:"-3" }}</span>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                        
+                        <div class="project-actions">
+                            <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
+                                Voir détails <i class="fas fa-arrow-right"></i>
+                            </a>
+                            {% if projet.lien_solution %}
+                                <a href="{{ projet.lien_solution }}" target="_blank" class="btn-project-demo">
+                                    <i class="fas fa-external-link-alt"></i> Solution
+                                </a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Section Autres projets -->
+{% if autres_projets %}
+<section class="projects-section">
+    <div class="container">
+        <div class="section-header">
+            <h2 class="section-title">
+                <span class="title-icon"><i class="fas fa-pause-circle"></i></span>
+                Autres projets
+            </h2>
+            <div class="projects-count">{{ autres_projets.count }} projet{{ autres_projets.count|pluralize }}</div>
+        </div>
+        
+        <div class="projects-grid">
+            {% for projet in autres_projets %}
+                <div class="project-card other-project">
+                    <div class="project-image">
+                        {% if projet.image_principale %}
+                            <img src="{{ projet.image_principale.url }}" alt="{{ projet.titre }}">
+                        {% else %}
+                            <div class="default-image">
+                                <i class="fas fa-project-diagram"></i>
+                            </div>
+                        {% endif %}
+                        <div class="project-status status-{{ projet.statut }}">
+                            {% if projet.statut == 'suspendu' %}
+                                <i class="fas fa-pause"></i> Suspendu
+                            {% elif projet.status == 'annule' %}
+                                <i class="fas fa-times"></i> Annulé
+                            {% else %}
+                                {{ projet.get_statut_display }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                    <div class="project-content">
+                        <div class="project-header">
+                            <h3 class="project-title">{{ projet.titre }}</h3>
+                            <div class="project-type">{{ projet.get_type_projet_display }}</div>
+                        </div>
+                        
+                        <p class="project-description">{{ projet.description_courte }}</p>
+                        
+                        <div class="project-meta">
+                            <div class="project-date">
+                                <i class="fas fa-calendar-alt"></i>
+                                Début : {{ projet.date_debut|date:"M Y" }}
+                            </div>
+                            <div class="project-responsable">
+                                <i class="fas fa-user"></i>
+                                {{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}
+                            </div>
+                        </div>
+                        
+                        <div class="project-actions">
+                            <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
+                                Voir détails <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Section vide -->
+{% if not projets_en_cours and not projets_termines and not autres_projets %}
+<section class="empty-section">
+    <div class="container">
+        <div class="empty-content">
+            <div class="empty-icon">
+                <i class="fas fa-project-diagram"></i>
+            </div>
+            <h3>Aucun projet trouvé</h3>
+            <p>Aucun projet ne correspond à vos critères de recherche.</p>
+            <a href="{% url 'labo:liste_projets' %}" class="btn btn-primary">
+                Voir tous les projets
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

@@ -19,6 +19,11 @@ class Theme(models.Model):
 
 class Membre(models.Model):
     """Profil étendu pour chaque utilisateur du laboratoire."""
+    STATUT_ANCIEN_CHOICES = [
+        ('parti', 'A quitté le laboratoire'),
+        ('assistant', 'Reste comme assistant à l\'encadrement'),
+    ]
+    
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     photo = models.ImageField(upload_to='membres/photos/', blank=True, null=True)
     titre = models.CharField(max_length=100)
@@ -32,6 +37,13 @@ class Membre(models.Model):
     date_arrivee = models.DateField(default=date(2023, 1, 1))
     date_depart = models.DateField(blank=True, null=True)
     est_ancien = models.BooleanField(default=False)
+    statut_ancien = models.CharField(
+        max_length=20, 
+        choices=STATUT_ANCIEN_CHOICES, 
+        blank=True, 
+        null=True,
+        help_text="Statut de l'ancien membre"
+    )
     
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
@@ -39,7 +51,24 @@ class Membre(models.Model):
     class Meta:
         verbose_name = "Membre"
         verbose_name_plural = "Membres"
-
+        
+    def get_theme_actuel(self):
+        """Retourne le thème de recherche actuel"""
+        historique_actuel = self.historique_themes.filter(date_fin__isnull=True).first()
+        if historique_actuel:
+            return historique_actuel.theme
+        return self.theme  # Fallback sur l'ancien champ
+    
+    def get_historique_themes_complet(self):
+        """Retourne l'historique complet des thèmes"""
+        return self.historique_themes.select_related('theme').order_by('-date_debut')
+    
+    def get_duree_theme_actuel(self):
+        """Retourne la durée dans le thème actuel en mois"""
+        historique_actuel = self.historique_themes.filter(date_fin__isnull=True).first()
+        if historique_actuel:
+            return historique_actuel.duree_mois
+        return None
 
 class Collaborateur(models.Model):
     """Personnes externes collaborant avec le laboratoire."""
@@ -162,6 +191,12 @@ class Categorie(models.Model):
 
 class Article(models.Model):
     """Articles de blog publiés par les membres."""
+    STATUT_VALIDATION_CHOICES = [
+        ('en_attente', 'En attente de validation'),
+        ('valide', 'Validé'),
+        ('rejete', 'Rejeté'),
+    ]
+    
     titre = models.CharField(max_length=200)
     contenu = models.TextField()
     image_principale = models.ImageField(upload_to='articles/images/', blank=True, null=True)
@@ -171,13 +206,38 @@ class Article(models.Model):
     categories = models.ManyToManyField(Categorie)
     est_publie = models.BooleanField(default=True)
     
+    # Nouveaux champs pour la validation
+    statut_validation = models.CharField(
+        max_length=20, 
+        choices=STATUT_VALIDATION_CHOICES, 
+        default='en_attente',
+        help_text="Statut de validation par l'administrateur"
+    )
+    date_validation = models.DateTimeField(blank=True, null=True)
+    validateur = models.ForeignKey(
+        User, 
+        on_delete=models.SET_NULL, 
+        null=True, 
+        blank=True,
+        related_name='articles_valides',
+        help_text="Administrateur qui a validé l'article"
+    )
+    commentaire_validation = models.TextField(
+        blank=True, 
+        null=True,
+        help_text="Commentaire de l'administrateur lors de la validation/rejet"
+    )
+    
     def __str__(self):
         return self.titre
+    
+    def est_visible_publiquement(self):
+        """Retourne True si l'article peut être affiché publiquement"""
+        return self.est_publie and self.statut_validation == 'valide'
     
     class Meta:
         verbose_name = "Article"
         verbose_name_plural = "Articles"
-
 
 class Temoignage(models.Model):
     """Témoignages des membres ou partenaires."""
@@ -219,3 +279,191 @@ class Evenement(models.Model):
     class Meta:
         verbose_name = "Événement"
         verbose_name_plural = "Événements"
+        
+        
+class Projet(models.Model):
+    """Projets du laboratoire."""
+    STATUT_CHOICES = [
+        ('en_cours', 'En cours'),
+        ('termine', 'Terminé'),
+        ('suspendu', 'Suspendu'),
+        ('annule', 'Annulé'),
+    ]
+    
+    TYPE_CHOICES = [
+        ('recherche', 'Recherche'),
+        ('developpement', 'Développement'),
+        ('formation', 'Formation'),
+        ('collaboration', 'Collaboration'),
+        ('innovation', 'Innovation'),
+    ]
+    
+    titre = models.CharField(max_length=200)
+    description = models.TextField()
+    description_courte = models.CharField(
+        max_length=300, 
+        help_text="Description courte pour les listes"
+    )
+    image_principale = models.ImageField(
+        upload_to='projets/images/', 
+        blank=True, 
+        null=True
+    )
+    
+    # Dates
+    date_debut = models.DateField()
+    date_fin_prevue = models.DateField(blank=True, null=True)
+    date_fin_reelle = models.DateField(blank=True, null=True)
+    
+    # Statut et type
+    statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_cours')
+    type_projet = models.CharField(max_length=20, choices=TYPE_CHOICES, default='recherche')
+    
+    # Participants
+    responsable = models.ForeignKey(
+        Membre, 
+        on_delete=models.CASCADE, 
+        related_name='projets_responsable'
+    )
+    participants = models.ManyToManyField(
+        Membre, 
+        blank=True, 
+        related_name='projets_participant'
+    )
+    collaborateurs_externes = models.ManyToManyField(
+        Collaborateur, 
+        blank=True,
+        help_text="Collaborateurs externes au projet"
+    )
+    
+    # Liens et ressources
+    lien_solution = models.URLField(
+        blank=True, 
+        null=True,
+        help_text="Lien vers la solution/démo"
+    )
+    lien_github = models.URLField(
+        blank=True, 
+        null=True,
+        help_text="Lien vers le repository GitHub"
+    )
+    lien_documentation = models.URLField(
+        blank=True, 
+        null=True,
+        help_text="Lien vers la documentation"
+    )
+    lien_publication = models.URLField(
+        blank=True, 
+        null=True,
+        help_text="Lien vers publication scientifique"
+    )
+    
+    # Métadonnées
+    technologies = models.CharField(
+        max_length=500, 
+        blank=True,
+        help_text="Technologies utilisées (séparées par des virgules)"
+    )
+    mots_cles = models.CharField(
+        max_length=300, 
+        blank=True,
+        help_text="Mots-clés (séparés par des virgules)"
+    )
+    
+    # Gestion
+    date_creation = models.DateTimeField(auto_now_add=True)
+    date_modification = models.DateTimeField(auto_now=True)
+    est_public = models.BooleanField(
+        default=True, 
+        help_text="Le projet est-il visible publiquement ?"
+    )
+    
+    def __str__(self):
+        return self.titre
+    
+    def get_technologies_list(self):
+        """Retourne la liste des technologies"""
+        if self.technologies:
+            return [tech.strip() for tech in self.technologies.split(',')]
+        return []
+    
+    def get_mots_cles_list(self):
+        """Retourne la liste des mots-clés"""
+        if self.mots_cles:
+            return [mot.strip() for mot in self.mots_cles.split(',')]
+        return []
+    
+    def est_en_cours(self):
+        """Retourne True si le projet est en cours"""
+        return self.statut == 'en_cours'
+    
+    def est_termine(self):
+        """Retourne True si le projet est terminé"""
+        return self.statut == 'termine'
+    
+    class Meta:
+        verbose_name = "Projet"
+        verbose_name_plural = "Projets"
+        ordering = ['-date_debut']
+        
+        
+
+class HistoriqueTheme(models.Model):
+    """Historique des thèmes de recherche d'un membre."""
+    membre = models.ForeignKey(
+        Membre, 
+        on_delete=models.CASCADE, 
+        related_name='historique_themes'
+    )
+    theme = models.ForeignKey(
+        Theme, 
+        on_delete=models.CASCADE
+    )
+    date_debut = models.DateField(
+        help_text="Date de début de ce thème de recherche"
+    )
+    date_fin = models.DateField(
+        null=True, 
+        blank=True,
+        help_text="Date de fin de ce thème (vide si actuel)"
+    )
+    description = models.TextField(
+        blank=True,
+        help_text="Description des travaux réalisés dans ce thème"
+    )
+    date_creation = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        fin = f" - {self.date_fin}" if self.date_fin else " - Actuel"
+        return f"{self.membre} : {self.theme.nom} ({self.date_debut}{fin})"
+    
+    @property
+    def est_actuel(self):
+        """Retourne True si c'est le thème actuel du membre"""
+        return self.date_fin is None
+    
+    @property
+    def duree_mois(self):
+        """Calcule la durée en mois"""
+        if self.date_fin:
+            fin = self.date_fin
+        else:
+            fin = date.today()
+        
+        delta = fin - self.date_debut
+        return round(delta.days / 30.44)  # Moyenne de jours par mois
+    
+    class Meta:
+        verbose_name = "Historique de thème"
+        verbose_name_plural = "Historiques de thèmes"
+        ordering = ['-date_debut']  # Plus récent en premier
+        
+        # Un membre ne peut pas avoir le même thème en même temps
+        constraints = [
+            models.UniqueConstraint(
+                fields=['membre', 'theme'],
+                condition=models.Q(date_fin__isnull=True),
+                name='unique_theme_actuel_par_membre'
+            )
+        ]
+

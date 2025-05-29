@@ -67,7 +67,10 @@ urlpatterns = [
     path('gestion/categorie/create/', views.create_edit_categorie, name='create_categorie'),
     path('gestion/categorie/edit/<int:categorie_id>/', views.create_edit_categorie, name='edit_categorie'),
     path('gestion/categorie/delete/', views.delete_categorie, name='delete_categorie'),
-    
+    path('gestion/membres/delete/<int:membre_id>/', views.delete_membres, name='delete_membres'),
+        # Validation des articles
+    path('gestion/article/valider/<int:article_id>/', views.valider_article, name='valider_article'),
+    path('gestion/articles/en-attente/', views.articles_en_attente, name='articles_en_attente'),
     # Pour les présentations
     path('gestion/presentation/delete/<int:presentation_id>/', views.delete_presentation, name='delete_presentation'),
 
@@ -75,4 +78,14 @@ urlpatterns = [
     path('gestion/article/delete/<int:article_id>/', views.delete_article, name='delete_article'),
             # Authentification
     path('register/<str:token>/', views.register_with_invitation, name='register_with_invitation'),
+    
+    # Pages Projets
+    path('projets/', views.liste_projets, name='liste_projets'),
+    path('projet/<int:projet_id>/', views.projet_detail, name='projet_detail'),
+
+    # Administration des projets
+    path('gestion/projets/', views.gestion_projets, name='gestion_projets'),
+    path('gestion/projet/create/', views.create_edit_projet, name='create_projet'),
+    path('gestion/projet/edit/<int:projet_id>/', views.create_edit_projet, name='edit_projet'),
+    path('gestion/projet/delete/<int:projet_id>/', views.delete_projet, name='delete_projet'),
 ]
