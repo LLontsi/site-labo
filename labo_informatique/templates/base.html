@@ -32,9 +32,9 @@
                             <span></span>
                         </div>
                        <ul class="nav-menu">                             
-                            <li><a href="{% url 'labo:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Accueil</a></li>                             
+                            <li><a href="{% url 'labo:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Accueil</a></li>  
+                            <li><a href="{% url 'labo:liste_projets' %}" {% if 'projet' in request.path %}class="active"{% endif %}>Projets</a></li>                                                      
                             <li><a href="{% url 'labo:about' %}" {% if 'about' in request.path %}class="active"{% endif %}>À propos</a></li> 
-                            <li><a href="{% url 'labo:liste_projets' %}" {% if 'projet' in request.path %}class="active"{% endif %}>Projets</a></li>                           
                             <li><a href="{% url 'labo:team' %}" {% if 'team' in request.path %}class="active"{% endif %}>Etudiants</a></li>                             
                             <li><a href="{% url 'labo:responsables' %}" {% if 'responsables' in request.path %}class="active"{% endif %}>Responsables</a></li>                             
                             <li><a href="{% url 'labo:liste_articles' %}" {% if 'blog' in request.path %}class="active"{% endif %}>Blog</a></li>                             

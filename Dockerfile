@@ -32,5 +32,7 @@ COPY . /labo-informatique
 EXPOSE 8000
 
 # Lancer directement le serveur Django sans devoir naviguer dans les dossiers
-CMD ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+
+CMD ["sh", "-c", "python3 manage.py makemigrations && python3 manage.py migrate && python3 manage.py runserver 0.0.0.0:8000"]
+
 

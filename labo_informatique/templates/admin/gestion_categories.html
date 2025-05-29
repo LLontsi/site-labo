@@ -24,14 +24,14 @@
                     <div class="admin-menu-header">
                         <h3>Menu d'administration</h3>
                     </div>
-                    <ul>
+                   <ul>
                         <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}"class="active" >Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
                         <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}"class="active">Thèmes de recherche</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Projets</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
                         <li class="menu-divider">Gestion du contenu</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>

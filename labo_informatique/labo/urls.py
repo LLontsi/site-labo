@@ -84,7 +84,7 @@ urlpatterns = [
     path('projet/<int:projet_id>/', views.projet_detail, name='projet_detail'),
 
     # Administration des projets
-    path('gestion/projets/', views.gestion_projets, name='gestion_projets'),
+    path('gestion/gestion-projets/', views.gestion_projets, name='gestion_projets'),
     path('gestion/projet/create/', views.create_edit_projet, name='create_projet'),
     path('gestion/projet/edit/<int:projet_id>/', views.create_edit_projet, name='edit_projet'),
     path('gestion/projet/delete/<int:projet_id>/', views.delete_projet, name='delete_projet'),
