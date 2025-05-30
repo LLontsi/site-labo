@@ -222,6 +222,9 @@ class Article(models.Model):
         related_name='articles_valides',
         help_text="Administrateur qui a validé l'article"
     )
+    def est_visible_publiquement(self):
+   
+        return self.est_publie and self.statut_validation == 'valide'
     commentaire_validation = models.TextField(
         blank=True, 
         null=True,

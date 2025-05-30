@@ -88,4 +88,13 @@ urlpatterns = [
     path('gestion/projet/create/', views.create_edit_projet, name='create_projet'),
     path('gestion/projet/edit/<int:projet_id>/', views.create_edit_projet, name='edit_projet'),
     path('gestion/projet/delete/<int:projet_id>/', views.delete_projet, name='delete_projet'),
+    
+    # Dans urlpatterns, ajoutez ces lignes après vos URLs d'administration existantes :
+
+    # Gestion des historiques de thèmes
+    path('gestion/historique-themes/', views.gestion_historique_themes, name='gestion_historique_themes'),
+    path('gestion/historique-theme/create/', views.create_edit_historique_theme, {'membre_id': None}, name='create_historique_theme_general'),
+     path('gestion/historique-theme/create/<int:membre_id>/', views.create_edit_historique_theme, name='create_historique_theme'),
+     path('gestion/historique-theme/edit/<int:historique_id>/', views.create_edit_historique_theme, name='edit_historique_theme'),
+    path('gestion/historique-theme/delete/<int:historique_id>/', views.delete_historique_theme, name='delete_historique_theme'),
 ]

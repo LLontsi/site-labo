@@ -1,11 +1,13 @@
 from django import forms
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
-from .models import Membre, Presentation, ImagePresentation, Article, Devenir, Temoignage, Evenement,Projet,Collaborateur
+from .models import Membre, Presentation, ImagePresentation, Article, Devenir, Temoignage, Evenement,Projet,Collaborateur,HistoriqueTheme,Theme
 import re
 import socket
 import dns.resolver
 from django.core.exceptions import ValidationError
+from datetime import date
+from datetime import timedelta
 from django.db.models import Q 
 from .utils import validate_email_domain
 
@@ -295,3 +297,128 @@ class ProjetForm(forms.ModelForm):
             self.save_m2m()
         
         return projet
+class HistoriqueThemeForm(forms.ModelForm):
+    """Formulaire pour créer/éditer un historique de thème."""
+    
+    class Meta:
+        model = HistoriqueTheme
+        fields = ['membre', 'theme', 'date_debut', 'date_fin', 'description']
+        widgets = {
+            'date_debut': forms.DateInput(attrs={
+                'type': 'date',
+                'required': True
+            }),
+            'date_fin': forms.DateInput(attrs={
+                'type': 'date',
+                'required': False
+            }),
+            'description': forms.Textarea(attrs={
+                'rows': 4,
+                'required': False
+            }),
+        }
+    
+    def __init__(self, *args, **kwargs):
+        membre = kwargs.pop('membre', None)
+        super().__init__(*args, **kwargs)
+        
+        self.fields['theme'].required = True
+        self.fields['date_debut'].required = True
+        self.fields['date_fin'].required = False
+        self.fields['description'].required = False
+        
+        if membre and not self.instance.pk:
+            self.fields['membre'].widget = forms.HiddenInput()
+            self.fields['membre'].initial = membre
+            self.fields['membre'].required = False
+        else:
+            self.fields['membre'].required = True
+            self.fields['membre'].queryset = Membre.objects.select_related('user').order_by('user__first_name', 'user__last_name')
+        
+        self.fields['theme'].queryset = Theme.objects.all().order_by('nom')
+        
+        for field_name, field in self.fields.items():
+            if not isinstance(field.widget, forms.HiddenInput):
+                field.widget.attrs.update({'class': 'form-control'})
+        
+        self.fields['date_debut'].help_text = "Date de début de ce thème de recherche"
+        self.fields['date_fin'].help_text = "Laissez vide pour le thème actuel"
+        self.fields['description'].help_text = "Description des travaux réalisés dans ce thème"
+    
+    def clean(self):
+        cleaned_data = super().clean()
+        membre = cleaned_data.get('membre')
+        theme = cleaned_data.get('theme')
+        date_debut = cleaned_data.get('date_debut')
+        date_fin = cleaned_data.get('date_fin')
+        
+        if not membre and self.instance and self.instance.membre:
+            membre = self.instance.membre
+            cleaned_data['membre'] = membre
+        
+        if not all([membre, theme, date_debut]):
+            return cleaned_data
+        
+        # Vérifier que la date de fin est après la date de début
+        if date_fin and date_fin <= date_debut:
+            raise ValidationError("La date de fin doit être postérieure à la date de début.")
+        
+        # ✅ NOUVELLE LOGIQUE : Gérer automatiquement les chevauchements
+        queryset = HistoriqueTheme.objects.filter(membre=membre)
+        if self.instance.pk:
+            queryset = queryset.exclude(pk=self.instance.pk)
+        
+        # Si on crée un nouveau thème actuel (sans date_fin)
+        if not date_fin:
+            themes_actuels = queryset.filter(date_fin__isnull=True)
+            if themes_actuels.exists():
+                # On va automatiquement terminer l'ancien thème
+                # Pas d'erreur ici, on le gère dans save()
+                pass
+        else:
+            # Vérifier les chevauchements normalement pour les thèmes avec date de fin
+            for historique in queryset:
+                if self._periodes_chevauchent(date_debut, date_fin, historique.date_debut, historique.date_fin):
+                    raise ValidationError(
+                        f"Cette période chevauche avec un autre thème : "
+                        f"{historique.theme.nom} ({historique.date_debut} - "
+                        f"{historique.date_fin or 'Actuel'})"
+                    )
+        
+        return cleaned_data
+    
+    def save(self, commit=True):
+        """Sauvegarder en gérant automatiquement les thèmes actuels."""
+        from datetime import date
+        
+        instance = super().save(commit=False)
+        
+        # ✅ Si on crée un nouveau thème actuel, terminer l'ancien
+        if not instance.date_fin and instance.membre:  # Nouveau thème actuel
+            # Trouver les thèmes actuels existants
+            themes_actuels = HistoriqueTheme.objects.filter(
+                membre=instance.membre,
+                date_fin__isnull=True
+            )
+            
+            # Si on modifie un existant, l'exclure
+            if instance.pk:
+                themes_actuels = themes_actuels.exclude(pk=instance.pk)
+            
+            # Terminer tous les thèmes actuels à la veille du nouveau thème
+            if themes_actuels.exists():
+                date_fin_ancien = instance.date_debut - timedelta(days=1)
+                themes_actuels.update(date_fin=date_fin_ancien)
+                print(f"Anciens thèmes terminés le {date_fin_ancien}")
+        
+        if commit:
+            instance.save()
+        
+        return instance
+    
+    def _periodes_chevauchent(self, debut1, fin1, debut2, fin2):
+        """Vérifie si deux périodes se chevauchent."""
+        from datetime import date, timedelta
+        fin1 = fin1 or date.today() + timedelta(days=365*10)
+        fin2 = fin2 or date.today() + timedelta(days=365*10)
+        return not (fin1 <= debut2 or fin2 <= debut1)

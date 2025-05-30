@@ -1,0 +1,281 @@
+
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.form-card {
+    background: white;
+    border-radius: 12px;
+    padding: 30px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+}
+
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    padding-bottom: 20px;
+    border-bottom: 2px solid #f8f9fa;
+}
+
+.form-header h2 {
+    margin: 0;
+    color: var(--project-dark);
+}
+
+.btn-back {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: #6c757d;
+    color: white;
+    text-decoration: none;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    background: #545b62;
+    color: white;
+    text-decoration: none;
+}
+
+.form-section {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+}
+
+.form-section-title {
+    margin-bottom: 20px;
+}
+
+.form-section-title h3 {
+    margin: 0;
+    color: var(--project-primary);
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control {
+    width: 100%;
+    padding: 12px;
+    border: 2px solid #e9ecef;
+    border-radius: 8px;
+    font-size: 14px;
+    transition: border-color 0.3s ease;
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--project-primary);
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-help {
+    font-size: 0.9rem;
+    color: #6c757d;
+    margin-top: 5px;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.form-errors {
+    margin-top: 5px;
+}
+
+.form-errors .error {
+    color: #dc3545;
+    font-size: 0.9rem;
+    display: block;
+    margin-top: 3px;
+}
+/* Correction des styles pour les boutons */
+.form-actions {
+    display: flex;
+    gap: 15px;
+    margin-top: 30px;
+    justify-content: center;
+    padding: 20px 0;
+    background: transparent; /* Assurez-vous que l'arrière-plan n'est pas caché */
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+    min-height: 44px; /* Hauteur minimum pour être cliquable */
+    line-height: 1;
+    vertical-align: middle;
+    opacity: 1 !important; /* Forcer l'opacité à 1 */
+    visibility: visible !important; /* Forcer la visibilité */
+    z-index: 10; /* S'assurer qu'il est au-dessus des autres éléments */
+    position: relative;
+}
+
+.btn-primary {
+    background: #007bff !important;
+    color: white !important;
+    border: 2px solid #007bff;
+}
+
+.btn-primary:hover {
+    background: #0056b3 !important;
+    color: white !important;
+    text-decoration: none;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,123,255,0.3);
+}
+
+.btn-secondary {
+    background: #6c757d !important;
+    color: white !important;
+    border: 2px solid #6c757d;
+}
+
+.btn-secondary:hover {
+    background: #545b62 !important;
+    color: white !important;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+/* S'assurer que les icônes sont visibles */
+.btn i {
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Correction pour mobile */
+@media (max-width: 768px) {
+    .form-actions {
+        flex-direction: column;
+        align-items: center;
+    }
+    
+    .btn {
+        width: 100%;
+        max-width: 300px;
+        justify-content: center;
+    }
+}
+.messages {
+    margin-bottom: 20px;
+}
+
+.message {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 10px;
+}
+
+.message-success {
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+    color: #155724;
+}
+
+.message-error {
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+    color: #721c24;
+}
+
+@media (max-width: 768px) {
+    .form-container {
+        margin: 20px;
+    }
+    
+    .form-card {
+        padding: 20px;
+    }
+    
+    .form-header {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 15px;
+    }
+    
+    .form-row {
+        grid-template-columns: 1fr;
+    }
+    
+    .form-actions {
+        flex-direction: column;
+    }
+}
+
+/* Ajoutez dans la section <style> du template */
+.membre-preselectionne {
+    background: #e3f2fd;
+    border: 2px solid #2196f3;
+    border-radius: 8px;
+    padding: 20px;
+}
+
+.membre-info-display {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.membre-avatar-small {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder-small {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--project-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.membre-info-display h4 {
+    margin: 0;
+    color: var(--project-primary);
+}
+
+.membre-info-display p {
+    margin: 5px 0 0;
+    color: #666;
+    font-size: 0.9rem;
+}

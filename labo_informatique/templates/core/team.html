@@ -43,7 +43,7 @@
                 <div class="member-info">
                     <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
                     <p class="member-title">{{ membre.titre }}</p>
-                    <p class="member-theme">{% if membre.theme %}{{ membre.theme.nom }}{% endif %}</p>
+                    <p class="member-theme">{% if membre.theme_actuel %}{{ membre.theme_actuel.nom }}{% endif %}</p>
                     <div class="member-bio">
                         <p>{{ membre.bio|truncatechars:150 }}</p>
                     </div>

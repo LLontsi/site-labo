@@ -19,13 +19,13 @@ from .forms import ContactForm  # Assurez-vous d'avoir défini ce formulaire
 from django.db.models import Count
 from .models import (
     Membre, Theme, Collaborateur, Devenir, Invitation, Presentation, 
-    ImagePresentation, Categorie, Article, Temoignage, Evenement,Projet
+    ImagePresentation, Categorie, Article, Temoignage, Evenement,Projet,HistoriqueTheme
 )
 from .utils import validate_email_domain,is_valid_email_domain
 from .forms import (
     InvitationRegistrationForm, MembreProfileForm, PresentationForm, 
     ImagePresentationFormSet, ArticleForm, DevenirForm, ContactForm,
-    InvitationForm, TemoignageForm, EvenementForm,MembreForm,UserCreateForm,ProjetForm
+    InvitationForm, TemoignageForm, EvenementForm,MembreForm,UserCreateForm,ProjetForm,HistoriqueThemeForm  
 )
 import os
 
@@ -131,13 +131,21 @@ def contact(request):
 def team(request):
    
     """Vue pour afficher tous les membres de l'équipe."""
-    membres = Membre.objects.filter(est_ancien=False,est_responsable=False ).select_related('user', 'theme')
-    themes = Theme.objects.all()
+    membres = Membre.objects.filter(est_ancien=False,est_responsable=False ).select_related('user', 'theme').prefetch_related(
+        'historique_themes__theme'
+    ).order_by('user__first_name', 'user__last_name')
+     # Récupérer tous les thèmes pour les filtres
+    themes = Theme.objects.all().order_by('nom')
+    
+    # ✅ Ajouter le thème actuel à chaque membre
+    for membre in membres:
+        membre.theme_actuel = membre.get_theme_actuel()
     
     context = {
         'membres': membres,
-        'themes': themes,
+        'themes': membre.theme_actuel,
     }
+    
     return render(request, 'core/team.html', context)
 def faq(request):
    
@@ -159,10 +167,11 @@ def membre_detail(request, membre_id):
         membre=membre
     ).select_related('theme').order_by('-date_creation')[:5]
     
-    # Récupérer les articles publiés du membre
+    # ✅ CORRECTION : Utiliser les champs de base de données au lieu de la méthode
     articles = Article.objects.filter(
         auteur=membre,
-        est_visible_publiquement=True  # Utiliser la méthode du modèle si elle existe
+        est_publie=True,
+        statut_validation='valide'  # Au lieu de est_visible_publiquement=True
     ).prefetch_related('categories').order_by('-date_creation')[:5]
     
     # Récupérer le parcours professionnel (pour les anciens)
@@ -178,7 +187,7 @@ def membre_detail(request, membre_id):
     theme_actuel = membre.get_theme_actuel()
     duree_theme_actuel = membre.get_duree_theme_actuel()
     
-    # Récupérer les projets du membre (en tant que responsable ou participant)
+    # Récupérer les projets du membre
     projets_responsable = membre.projets_responsable.filter(
         est_public=True
     ).order_by('-date_debut')[:3]
@@ -201,7 +210,7 @@ def membre_detail(request, membre_id):
         'projets_participant': projets_participant,
     }
     
-    return render(request, 'labo/membre_detail.html', context)
+    return render(request, 'core/membre_detail.html', context)
 
 def responsables(request):
     """Vue pour afficher les responsables et collaborateurs."""
@@ -1775,3 +1784,126 @@ def delete_projet(request, projet_id):
     
     messages.success(request, f"Le projet '{titre}' a été supprimé.")
     return redirect('labo:gestion_projets')
+
+
+@login_required
+def gestion_historique_themes(request):
+    """Vue d'administration pour gérer les historiques de thèmes."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    # Filtres
+    membre_id = request.GET.get('membre', '')
+    theme_id = request.GET.get('theme', '')
+    
+    # Requête de base
+    historiques = HistoriqueTheme.objects.select_related(
+        'membre__user', 'theme'
+    ).order_by('-date_debut')
+    
+    # Appliquer les filtres
+    if membre_id:
+        historiques = historiques.filter(membre_id=membre_id)
+    if theme_id:
+        historiques = historiques.filter(theme_id=theme_id)
+    
+    # Pour les filtres
+    membres = Membre.objects.select_related('user').order_by('user__first_name', 'user__last_name')
+    themes = Theme.objects.all().order_by('nom')
+    
+    # Statistiques
+    nb_total = HistoriqueTheme.objects.count()
+    nb_actuels = HistoriqueTheme.objects.filter(date_fin__isnull=True).count()
+    nb_membres_avec_historique = Membre.objects.filter(historique_themes__isnull=False).distinct().count()
+    
+    context = {
+        'historiques': historiques,
+        'membres': membres,
+        'themes': themes,
+        'membre_id': int(membre_id) if membre_id.isdigit() else None,
+        'theme_id': int(theme_id) if theme_id.isdigit() else None,
+        'nb_total': nb_total,
+        'nb_actuels': nb_actuels,
+        'nb_membres_avec_historique': nb_membres_avec_historique,
+    }
+    
+    return render(request, 'admin/gestion_historique_themes.html', context)
+
+@login_required
+def create_edit_historique_theme(request, membre_id=None, historique_id=None):
+    """Vue pour créer/éditer un historique de thème."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    if historique_id:
+        # Mode édition
+        historique = get_object_or_404(HistoriqueTheme, id=historique_id)
+        membre = historique.membre
+    elif membre_id and membre_id != 0:
+        # Mode création pour un membre spécifique
+        membre = get_object_or_404(Membre, id=membre_id)
+        historique = None
+    else:
+        # Mode création général
+        membre = None
+        historique = None
+    
+    if request.method == 'POST':
+        print(f"POST reçu : {request.POST}")  # Debug
+        form = HistoriqueThemeForm(request.POST, instance=historique, membre=membre)
+        
+        print(f"Formulaire valide : {form.is_valid()}")  # Debug
+        if not form.is_valid():
+            print(f"Erreurs formulaire : {form.errors}")  # Debug
+        
+        if form.is_valid():
+            try:
+                historique = form.save()
+                print(f"Historique sauvé : {historique}")  # Debug
+                
+                if historique_id:
+                    messages.success(request, "L'historique de thème a été mis à jour avec succès.")
+                else:
+                    messages.success(request, f"Historique de thème créé pour {historique.membre}.")
+                
+                return redirect('labo:gestion_historique_themes')
+            except Exception as e:
+                print(f"Erreur lors de la sauvegarde : {e}")  # Debug
+                messages.error(request, f"Erreur lors de la sauvegarde : {e}")
+        else:
+            # Afficher les erreurs
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{field}: {error}")
+    else:
+        form = HistoriqueThemeForm(instance=historique, membre=membre)
+    
+    context = {
+        'form': form,
+        'historique': historique,
+        'membre': membre,
+    }
+    
+    return render(request, 'admin/edit_historique_theme.html', context)
+
+@login_required
+def delete_historique_theme(request, historique_id):
+    """Vue pour supprimer un historique de thème."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    historique = get_object_or_404(HistoriqueTheme, id=historique_id)
+    
+    if request.method == 'POST':
+        membre_nom = str(historique.membre)
+        theme_nom = historique.theme.nom
+        historique.delete()
+        
+        messages.success(request, f"Historique de thème supprimé : {membre_nom} - {theme_nom}")
+        return redirect('labo:gestion_historique_themes')
+    
+    context = {
+        'historique': historique,
+    }
+    
+    return render(request, 'admin/confirm_delete_historique.html', context)

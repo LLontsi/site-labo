@@ -1,0 +1,258 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    {% if historique %}Modifier l'historique{% else %}Nouvel historique{% endif %} - Beta Lab
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+<link rel="stylesheet" href="{% static 'css/forms.css' %}">
+<link rel="stylesheet" href="{% static "css/editThene.css" %}">
+<style>
+</style>
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">
+        {% if historique %}Modifier l'historique de thème{% else %}Nouvel historique de thème{% endif %}
+    </h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">
+        {% if membre %}Pour {{ membre.user.first_name }} {{ membre.user.last_name }}{% endif %}
+    </p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="form-container">
+            <div class="form-card">
+                <div class="form-header">
+                    <h2>
+                        {% if historique %}Modifier l'historique{% else %}Créer un historique{% endif %}
+                    </h2>
+                    <a href="{% url 'labo:gestion_historique_themes' %}" class="btn-back">
+                        <i class="fas fa-arrow-left"></i> Retour à la liste
+                    </a>
+                </div>
+                
+                {% if messages %}
+                    <div class="messages">
+                        {% for message in messages %}
+                            <div class="message message-{{ message.tags }}">
+                                {{ message }}
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+                
+                <form method="post" class="historique-form">
+                    {% csrf_token %}
+                    
+                    <!-- Dans la section Membre, remplacez par : -->
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <h3><i class="fas fa-user"></i> Membre</h3>
+                        </div>
+                        
+                        {% if membre and not historique %}
+                            <!-- Affichage du membre pré-sélectionné -->
+                            <div class="membre-preselectionne">
+                                <div class="membre-info-display">
+                                    {% if membre.photo %}
+                                        <img src="{{ membre.photo.url }}" alt="{{ membre }}" class="membre-avatar-small">
+                                    {% else %}
+                                        <div class="avatar-placeholder-small">{{ membre.user.first_name|first }}{{ membre.user.last_name|first }}</div>
+                                    {% endif %}
+                                    <div>
+                                        <h4>{{ membre.user.first_name }} {{ membre.user.last_name }}</h4>
+                                        <p>{{ membre.titre }}</p>
+                                    </div>
+                                </div>
+                                {{ form.membre }}  <!-- Champ caché -->
+                            </div>
+                        {% else %}
+                            <!-- Sélection normale du membre -->
+                            <div class="form-group">
+                                <label for="{{ form.membre.id_for_label }}">{{ form.membre.label }}</label>
+                                {{ form.membre }}
+                                {% if form.membre.errors %}
+                                    <div class="form-errors">
+                                        {% for error in form.membre.errors %}
+                                            <span class="error">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <h3><i class="fas fa-tag"></i> Thème</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.theme.id_for_label }}">{{ form.theme.label }}</label>
+                            {{ form.theme }}
+                            {% if form.theme.errors %}
+                                <div class="form-errors">
+                                    {% for error in form.theme.errors %}
+                                        <span class="error">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% if membre and not historique %}
+                        <div class="info-box" style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <h4 style="margin: 0 0 10px; color: #856404;"><i class="fas fa-info-circle"></i> Information</h4>
+                            <p style="margin: 0; color: #856404;">
+                                Si ce membre a déjà un thème actuel, il sera automatiquement terminé la veille de la nouvelle date de début.
+                            </p>
+                        </div>
+                    {% endif %}
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <h3><i class="fas fa-calendar"></i> Période</h3>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label }}</label>
+                                {{ form.date_debut }}
+                                <div class="form-help">{{ form.date_debut.help_text }}</div>
+                                {% if form.date_debut.errors %}
+                                    <div class="form-errors">
+                                        {% for error in form.date_debut.errors %}
+                                            <span class="error">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="{{ form.date_fin.id_for_label }}">{{ form.date_fin.label }}</label>
+                                {{ form.date_fin }}
+                                <div class="form-help">{{ form.date_fin.help_text }}</div>
+                                {% if form.date_fin.errors %}
+                                    <div class="form-errors">
+                                        {% for error in form.date_fin.errors %}
+                                            <span class="error">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-section">
+                        <div class="form-section-title">
+                            <h3><i class="fas fa-comment"></i> Description</h3>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
+                            {{ form.description }}
+                            <div class="form-help">{{ form.description.help_text }}</div>
+                            {% if form.description.errors %}
+                                <div class="form-errors">
+                                    {% for error in form.description.errors %}
+                                        <span class="error">{{ error }}</span>
+                                    {% endfor %}
+                                </div>
+                            {% endif %}
+                        </div>
+                    </div>
+                    
+                   <!-- Remplacez la section form-actions par : -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary" id="submit-btn">
+                            <i class="fas fa-save"></i>
+                            {% if historique %}Mettre à jour{% else %}Créer l'historique{% endif %}
+                        </button>
+                        <a href="{% url 'labo:gestion_historique_themes' %}" class="btn btn-secondary" id="cancel-btn">
+                            <i class="fas fa-times"></i> Annuler
+                        </a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+{% block extra_js %}<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const submitBtn = document.getElementById('submit-btn');
+    const form = document.querySelector('form');
+    
+    // Debug pour voir si le bouton est cliquable
+    submitBtn.addEventListener('click', function(e) {
+        console.log('Bouton cliqué!');
+        
+        // Vérifier la validité du formulaire
+        if (form.checkValidity()) {
+            console.log('Formulaire valide, soumission...');
+        } else {
+            console.log('Formulaire invalide');
+            e.preventDefault();
+            
+            // ✅ IDENTIFIER LES CHAMPS INVALIDES
+            const invalidFields = form.querySelectorAll(':invalid');
+            console.log('Champs invalides:');
+            invalidFields.forEach(field => {
+                console.log('- Champ:', field.name, 'Valeur:', field.value, 'Message:', field.validationMessage);
+                
+                // Mettre en évidence les champs invalides
+                field.style.border = '2px solid red';
+                field.style.backgroundColor = '#ffe6e6';
+                
+                // Ajouter un message d'erreur visible
+                let errorDiv = field.parentNode.querySelector('.validation-error');
+                if (!errorDiv) {
+                    errorDiv = document.createElement('div');
+                    errorDiv.className = 'validation-error';
+                    errorDiv.style.color = 'red';
+                    errorDiv.style.fontSize = '0.9rem';
+                    errorDiv.style.marginTop = '5px';
+                    field.parentNode.appendChild(errorDiv);
+                }
+                errorDiv.textContent = field.validationMessage;
+            });
+            
+            // Faire défiler vers le premier champ invalide
+            if (invalidFields.length > 0) {
+                invalidFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                invalidFields[0].focus();
+            }
+        }
+    });
+    
+    // Nettoyer les erreurs quand l'utilisateur corrige
+    form.addEventListener('input', function(e) {
+        if (e.target.checkValidity()) {
+            e.target.style.border = '';
+            e.target.style.backgroundColor = '';
+            
+            const errorDiv = e.target.parentNode.querySelector('.validation-error');
+            if (errorDiv) {
+                errorDiv.remove();
+            }
+        }
+    });
+    
+    // S'assurer que les boutons sont visibles
+    submitBtn.style.display = 'inline-flex';
+    submitBtn.style.opacity = '1';
+    submitBtn.style.visibility = 'visible';
+    
+    const cancelBtn = document.getElementById('cancel-btn');
+    cancelBtn.style.display = 'inline-flex';
+    cancelBtn.style.opacity = '1';
+    cancelBtn.style.visibility = 'visible';
+});
+</script>
+{% endblock extra_js %}

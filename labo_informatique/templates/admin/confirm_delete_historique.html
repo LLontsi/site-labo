@@ -1,0 +1,298 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Supprimer l'historique - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+<style>
+.delete-container {
+    max-width: 600px;
+    margin: 50px auto;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+    overflow: hidden;
+}
+
+.delete-header {
+    background: #dc3545;
+    color: white;
+    padding: 25px;
+    text-align: center;
+}
+
+.delete-header h2 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+.delete-header .icon {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    opacity: 0.9;
+}
+
+.delete-content {
+    padding: 30px;
+}
+
+.historique-info {
+    background: #f8f9fa;
+    border-left: 4px solid #dc3545;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 0 8px 8px 0;
+}
+
+.historique-detail {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 15px;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.membre-avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--project-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+}
+
+.membre-name {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--project-dark);
+    margin: 0;
+}
+
+.membre-title {
+    color: #6c757d;
+    margin: 5px 0 0;
+}
+
+.theme-info {
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    margin: 15px 0;
+}
+
+.theme-name {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--project-primary);
+    margin-bottom: 10px;
+}
+
+.periode-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    color: #6c757d;
+}
+
+.periode-dates {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.date-badge {
+    background: #e9ecef;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+}
+
+.date-badge.actuel {
+    background: #d4edda;
+    color: #155724;
+}
+
+.warning-box {
+    background: #fff3cd;
+    border: 1px solid #ffeaa7;
+    border-left: 4px solid #f39c12;
+    padding: 15px;
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+}
+
+.warning-box h4 {
+    margin: 0 0 10px;
+    color: #856404;
+}
+
+.warning-box p {
+    margin: 0;
+    color: #856404;
+}
+
+.delete-actions {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 30px;
+}
+
+.btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    transition: all 0.3s ease;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+.btn-danger:hover {
+    background: #c82333;
+    color: white;
+    text-decoration: none;
+    transform: translateY(-1px);
+}
+
+.btn-secondary {
+    background: #6c757d;
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: #545b62;
+    color: white;
+    text-decoration: none;
+}
+
+@media (max-width: 768px) {
+    .delete-container {
+        margin: 20px;
+    }
+    
+    .delete-content {
+        padding: 20px;
+    }
+    
+    .historique-detail {
+        grid-template-columns: 1fr;
+        text-align: center;
+    }
+    
+    .delete-actions {
+        flex-direction: column;
+    }
+}
+</style>
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Suppression d'historique</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Confirmer la suppression de l'historique de thème</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="delete-container">
+            <div class="delete-header">
+                <div class="icon">
+                    <i class="fas fa-exclamation-triangle"></i>
+                </div>
+                <h2>Confirmer la suppression</h2>
+            </div>
+            
+            <div class="delete-content">
+                <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
+                    Êtes-vous sûr de vouloir supprimer cet historique de thème ?
+                </p>
+                
+                <div class="historique-info">
+                    <div class="historique-detail">
+                        {% if historique.membre.photo %}
+                            <img src="{{ historique.membre.photo.url }}" alt="{{ historique.membre }}" class="membre-avatar">
+                        {% else %}
+                            <div class="avatar-placeholder">{{ historique.membre.user.first_name|first }}{{ historique.membre.user.last_name|first }}</div>
+                        {% endif %}
+                        <div>
+                            <h3 class="membre-name">{{ historique.membre.user.first_name }} {{ historique.membre.user.last_name }}</h3>
+                            <p class="membre-title">{{ historique.membre.titre }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="theme-info">
+                        <div class="theme-name">{{ historique.theme.nom }}</div>
+                        <div class="periode-info">
+                            <div class="periode-dates">
+                                <span class="date-badge">{{ historique.date_debut|date:"d/m/Y" }}</span>
+                                <i class="fas fa-arrow-right" style="color: var(--project-primary);"></i>
+                                {% if historique.date_fin %}
+                                    <span class="date-badge">{{ historique.date_fin|date:"d/m/Y" }}</span>
+                                {% else %}
+                                    <span class="date-badge actuel">Actuel</span>
+                                {% endif %}
+                            </div>
+                            <div style="margin-left: auto;">
+                                <i class="fas fa-clock"></i> {{ historique.duree_mois }} mois
+                            </div>
+                        </div>
+                        
+                        {% if historique.description %}
+                            <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef;">
+                                <strong>Description :</strong>
+                                <p style="margin: 5px 0 0; color: #666;">{{ historique.description }}</p>
+                            </div>
+                        {% endif %}
+                    </div>
+                </div>
+                
+                <div class="warning-box">
+                    <h4><i class="fas fa-exclamation-triangle"></i> Attention</h4>
+                    <p>Cette action est <strong>irréversible</strong>. L'historique de ce thème sera définitivement supprimé et ne pourra pas être récupéré.</p>
+                    {% if historique.est_actuel %}
+                        <p style="margin-top: 10px;"><strong>Note :</strong> Cet historique correspond au thème actuel du membre. Sa suppression laissera le membre sans thème actuel.</p>
+                    {% endif %}
+                </div>
+                
+                <div class="delete-actions">
+                    <form method="post" style="display: inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous vraiment sûr ? Cette action ne peut pas être annulée.');">
+                            <i class="fas fa-trash"></i> Oui, supprimer définitivement
+                        </button>
+                    </form>
+                    <a href="{% url 'labo:gestion_historique_themes' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Annuler
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

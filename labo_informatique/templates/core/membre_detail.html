@@ -34,10 +34,18 @@
                 </div>
                 <div class="profile-info">
                     <div class="info-block">
-                        <h3>Thème de recherche</h3>
-                        <p>{% if membre.theme %}{{ membre.theme.nom }}{% else %}Non spécifié{% endif %}</p>
+                        <h3>Thème de recherche actuel</h3>
+                        <p>
+                            {% if theme_actuel %}
+                                {{ theme_actuel.nom }}
+                                {% if duree_theme_actuel %}
+                                    <small class="theme-duration">({{ duree_theme_actuel }} mois)</small>
+                                {% endif %}
+                            {% else %}
+                                Non spécifié
+                            {% endif %}
+                        </p>
                     </div>
-                    
                     <div class="info-block">
                         <h3>Au laboratoire depuis</h3>
                         <p>{{ membre.date_arrivee|date:"F Y" }}</p>
@@ -74,7 +82,37 @@
                         {{ membre.bio|linebreaks }}
                     </div>
                 </div>
-                
+                <!-- Section Historique des thèmes -->
+                {% if historique_themes %}
+                <div class="themes-section">
+                    <h2>Évolution des thèmes de recherche</h2>
+                    <div class="themes-timeline">
+                        {% for historique in historique_themes %}
+                            <div class="theme-item{% if historique.est_actuel %} current{% endif %}">
+                                <div class="theme-header">
+                                    <h3 class="theme-title">{{ historique.theme.nom }}</h3>
+                                    <div class="theme-period{% if historique.est_actuel %} theme-current{% endif %}">
+                                        {% if historique.est_actuel %}
+                                            <i class="fas fa-circle" style="color: #28a745; font-size: 0.6rem;"></i>
+                                            Depuis {{ historique.date_debut|date:"M Y" }}
+                                        {% else %}
+                                            {{ historique.date_debut|date:"M Y" }} - {{ historique.date_fin|date:"M Y" }}
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                {% if historique.description %}
+                                    <div class="theme-description">
+                                        {{ historique.description|linebreaks }}
+                                    </div>
+                                {% endif %}
+                                <div class="theme-duration">
+                                    Durée : {{ historique.duree_mois }} mois
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
                 <div class="presentations-section">
                     <h2>Présentations</h2>
                     {% if presentations %}
