@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Gestion des membres - Beta Lab{% endblock %}
+{% block title %}Member Management - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -10,9 +10,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Gestion des membres</h1>
+    <h1 class="page-title fade-in">Member Management</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Administrer les profils des membres du laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">Administer laboratory member profiles</p>
 </div>
 
 {% endblock %}
@@ -24,33 +24,33 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" >Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" >Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Gestion des membres</h2>
+                    <h2>Member Management</h2>
                     <!-- Ajout du bouton pour créer un nouveau membre -->
                     <div class="admin-actions">
                         <a href="{% url 'labo:create_membre' %}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Ajouter un membre
+                            <i class="fas fa-plus"></i> Add a member
                         </a>
                     </div>
                 </div>
@@ -58,35 +58,35 @@
                 <div class="admin-filters">
                     <form method="get" class="filter-form">
                         <div class="filter-group">
-                            <label>Statut</label>
+                            <label>Status</label>
                             <select name="ancien" onchange="this.form.submit()">
-                                <option value="">Tous les membres</option>
-                                <option value="false" {% if est_ancien == 'false' %}selected{% endif %}>Membres actifs</option>
-                                <option value="true" {% if est_ancien == 'true' %}selected{% endif %}>Anciens membres</option>
+                                <option value="">All members</option>
+                                <option value="false" {% if est_ancien == 'false' %}selected{% endif %}>Active members</option>
+                                <option value="true" {% if est_ancien == 'true' %}selected{% endif %}>Former members</option>
                             </select>
                         </div>
                         
                         <div class="filter-group">
-                            <label>Responsable</label>
+                            <label>Manager</label>
                             <select name="responsable" onchange="this.form.submit()">
-                                <option value="">Tous</option>
-                                <option value="true" {% if est_responsable == 'true' %}selected{% endif %}>Uniquement responsables</option>
-                                <option value="false" {% if est_responsable == 'false' %}selected{% endif %}>Non responsables</option>
+                                <option value="">All</option>
+                                <option value="true" {% if est_responsable == 'true' %}selected{% endif %}>Only managers</option>
+                                <option value="false" {% if est_responsable == 'false' %}selected{% endif %}>Non-managers</option>
                             </select>
                         </div>
                         
                         <div class="filter-group">
-                            <label>Thème</label>
+                            <label>Theme</label>
                             <select name="theme" onchange="this.form.submit()">
-                                <option value="">Tous les thèmes</option>
+                                <option value="">All themes</option>
                                 {% for theme in themes %}
                                     <option value="{{ theme.id }}" {% if theme_id == theme.id|stringformat:"i" %}selected{% endif %}>{{ theme.nom }}</option>
                                 {% endfor %}
                             </select>
                         </div>
                         
-                        <button type="submit" class="btn-filter">Filtrer</button>
-                        <a href="{% url 'labo:gestion_membres' %}" class="btn-reset">Réinitialiser</a>
+                        <button type="submit" class="btn-filter">Filter</button>
+                        <a href="{% url 'labo:gestion_membres' %}" class="btn-reset">Reset</a>
                     </form>
                 </div>
                 
@@ -94,11 +94,11 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Nom</th>
-                                <th>Titre</th>
-                                <th>Thème</th>
-                                <th>Statut</th>
-                                <th>Date d'arrivée</th>
+                                <th>Name</th>
+                                <th>Title</th>
+                                <th>Theme</th>
+                                <th>Status</th>
+                                <th>Arrival date</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -119,20 +119,20 @@
                                         </div>
                                     </td>
                                     <td>{{ membre.titre }}</td>
-                                    <td>{% if membre.theme %}{{ membre.theme.nom }}{% else %}<span class="empty-value">Non spécifié</span>{% endif %}</td>
+                                    <td>{% if membre.theme %}{{ membre.theme.nom }}{% else %}<span class="empty-value">Not specified</span>{% endif %}</td>
                                     <td>
-                                        {% if membre.est_responsable %}<span class="status-badge responsable">Responsable</span>{% endif %}
-                                        {% if membre.est_ancien %}<span class="status-badge ancien">Ancien</span>{% else %}<span class="status-badge actif">Actif</span>{% endif %}
+                                        {% if membre.est_responsable %}<span class="status-badge responsable">Manager</span>{% endif %}
+                                        {% if membre.est_ancien %}<span class="status-badge ancien">Former</span>{% else %}<span class="status-badge actif">Active</span>{% endif %}
                                     </td>
                                     <td>{{ membre.date_arrivee|date:"d/m/Y" }}</td>
                                     <td class="cell-actions">
-                                        <a href="{% url 'labo:membre_detail' membre.id %}" class="table-action" title="Voir le profil"><i class="fas fa-eye"></i></a>
-                                        <a href="{% url 'labo:edit_membre' membre.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
+                                        <a href="{% url 'labo:membre_detail' membre.id %}" class="table-action" title="View profile"><i class="fas fa-eye"></i></a>
+                                        <a href="{% url 'labo:edit_membre' membre.id %}" class="table-action" title="Edit"><i class="fas fa-edit"></i></a>
                                         <button class="table-action btn-delete-item" 
                                                 data-id="{{ membre.id }}" 
                                                 data-nom="{{ membre.user.first_name }}" 
                                                 data-type="membre"
-                                                title="Supprimer" >
+                                                title="Delete" >
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
@@ -140,7 +140,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="6" class="empty-table">Aucun membre trouvé.</td>
+                                    <td colspan="6" class="empty-table">No members found.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -155,19 +155,19 @@
 <div id="delete-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Confirmer la suppression</h3>
+            <h3>Confirm deletion</h3>
             <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body">
-            <p>Êtes-vous sûr de vouloir supprimer "<span id="item-name"></span>" ?</p>
-            <p class="warning">Cette action est irréversible.</p>
+            <p>Are you sure you want to delete "<span id="item-name"></span>"?</p>
+            <p class="warning">This action is irreversible.</p>
         </div>
         <div class="modal-footer">
             <form method="post" action="" id="delete-form">
                 {% csrf_token %}
                 <input type="hidden" name="item_id" id="delete_item_id">
-                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
-                <button type="submit" class="btn btn-danger">Supprimer</button>
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
     </div>

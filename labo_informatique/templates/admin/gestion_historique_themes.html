@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Gestion des historiques de thèmes - Beta Lab{% endblock %}
+{% block title %}Theme History Management - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/admin.css' %}">
@@ -12,9 +12,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Gestion des historiques de thèmes</h1>
+    <h1 class="page-title fade-in">Theme History Management</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Gérer l'évolution des thèmes de recherche des membres</p>
+    <p class="page-subtitle fade-in delay-200">Manage the evolution of members' research themes</p>
 </div>
 {% endblock %}
 
@@ -25,32 +25,32 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" >Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" >Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Historiques de thèmes</h2>
+                    <h2>Theme History</h2>
                     <div class="admin-actions">
                         <a href="{% url 'labo:create_historique_theme' 0 %}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Ajouter un historique
+                            <i class="fas fa-plus"></i> Add a history
                         </a>
                     </div>
                 </div>
@@ -59,15 +59,15 @@
                 <div class="stats-row">
                     <div class="stat-box">
                         <div class="stat-number">{{ nb_total }}</div>
-                        <div class="stat-label">Total historiques</div>
+                        <div class="stat-label">Total histories</div>
                     </div>
                     <div class="stat-box">
                         <div class="stat-number">{{ nb_actuels }}</div>
-                        <div class="stat-label">Thèmes actuels</div>
+                        <div class="stat-label">Current themes</div>
                     </div>
                     <div class="stat-box">
                         <div class="stat-number">{{ nb_membres_avec_historique }}</div>
-                        <div class="stat-label">Membres avec historique</div>
+                        <div class="stat-label">Members with history</div>
                     </div>
                 </div>
                 
@@ -75,9 +75,9 @@
                 <div class="admin-filters">
                     <form method="get" class="filter-form">
                         <div class="filter-group">
-                            <label>Membre</label>
+                            <label>Member</label>
                             <select name="membre" onchange="this.form.submit()">
-                                <option value="">Tous les membres</option>
+                                <option value="">All members</option>
                                 {% for membre in membres %}
                                     <option value="{{ membre.id }}" {% if membre_id == membre.id %}selected{% endif %}>
                                         {{ membre.user.first_name }} {{ membre.user.last_name }}
@@ -87,9 +87,9 @@
                         </div>
                         
                         <div class="filter-group">
-                            <label>Thème</label>
+                            <label>Theme</label>
                             <select name="theme" onchange="this.form.submit()">
-                                <option value="">Tous les thèmes</option>
+                                <option value="">All themes</option>
                                 {% for theme in themes %}
                                     <option value="{{ theme.id }}" {% if theme_id == theme.id %}selected{% endif %}>
                                         {{ theme.nom }}
@@ -98,7 +98,7 @@
                             </select>
                         </div>
                         
-                        <a href="{% url 'labo:gestion_historique_themes' %}" class="btn-reset">Réinitialiser</a>
+                        <a href="{% url 'labo:gestion_historique_themes' %}" class="btn-reset">Reset</a>
                     </form>
                 </div>
                 
@@ -119,13 +119,13 @@
                                     </div>
                                 </div>
                                 <div class="actions-buttons">
-                                    <a href="{% url 'labo:create_historique_theme' historique.membre.id %}" class="btn-action btn-edit" title="Ajouter un historique pour ce membre">
+                                    <a href="{% url 'labo:create_historique_theme' historique.membre.id %}" class="btn-action btn-edit" title="Add a history for this member">
                                         <i class="fas fa-plus"></i>
                                     </a>
-                                    <a href="{% url 'labo:edit_historique_theme' historique.id %}" class="btn-action btn-edit" title="Modifier">
+                                    <a href="{% url 'labo:edit_historique_theme' historique.id %}" class="btn-action btn-edit" title="Edit">
                                         <i class="fas fa-edit"></i>
                                     </a>
-                                    <a href="{% url 'labo:delete_historique_theme' historique.id %}" class="btn-action btn-delete" title="Supprimer">
+                                    <a href="{% url 'labo:delete_historique_theme' historique.id %}" class="btn-action btn-delete" title="Delete">
                                         <i class="fas fa-trash"></i>
                                     </a>
                                 </div>
@@ -135,26 +135,26 @@
                                 <div class="theme-name">{{ historique.theme.nom }}</div>
                                 <div class="periode-dates">
                                     <div class="date-box">
-                                        <div class="date-label">Début</div>
+                                        <div class="date-label">Start</div>
                                         <div class="date-value">{{ historique.date_debut|date:"d/m/Y" }}</div>
                                     </div>
                                     <div style="font-size: 1.5rem; color: var(--project-primary);">→</div>
                                     <div class="date-box {% if historique.est_actuel %}actuel{% endif %}">
-                                        <div class="date-label">Fin</div>
+                                        <div class="date-label">End</div>
                                         <div class="date-value">
                                             {% if historique.date_fin %}
                                                 {{ historique.date_fin|date:"d/m/Y" }}
                                             {% else %}
-                                                Actuel
+                                                Current
                                             {% endif %}
                                         </div>
                                     </div>
                                 </div>
                                 <div style="margin-top: 10px;">
-                                    <span class="duree-badge">{{ historique.duree_mois }} mois</span>
+                                    <span class="duree-badge">{{ historique.duree_mois }} months</span>
                                     {% if historique.est_actuel %}
                                         <span class="duree-badge" style="background: #d4edda; color: #155724; margin-left: 10px;">
-                                            <i class="fas fa-circle" style="font-size: 0.6rem;"></i> Thème actuel
+                                            <i class="fas fa-circle" style="font-size: 0.6rem;"></i> Current theme
                                         </span>
                                     {% endif %}
                                 </div>
@@ -162,7 +162,7 @@
                             
                             {% if historique.description %}
                                 <div class="description">
-                                    <strong>Description :</strong>
+                                    <strong>Description:</strong>
                                     <p style="margin: 5px 0 0; color: #666;">{{ historique.description }}</p>
                                 </div>
                             {% endif %}
@@ -170,10 +170,10 @@
                     {% empty %}
                         <div class="empty-content">
                             <div class="empty-icon"><i class="fas fa-history"></i></div>
-                            <h3>Aucun historique trouvé</h3>
-                            <p>Aucun historique de thème ne correspond aux critères sélectionnés.</p>
+                            <h3>No history found</h3>
+                            <p>No theme history matches the selected criteria.</p>
                             <a href="{% url 'labo:create_historique_theme' 0 %}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Créer le premier historique
+                                <i class="fas fa-plus"></i> Create the first history
                             </a>
                         </div>
                     {% endfor %}

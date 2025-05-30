@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Responsables et Collaborateurs - Laboratoire Beta Lab{% endblock %}
+{% block title %}Managers and Collaborators - Beta Lab Laboratory{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/responsables.css" %} ">
@@ -8,9 +8,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Responsables et Collaborateurs</h1>
+    <h1 class="page-title fade-in">Managers and Collaborators</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Découvrez l'équipe dirigeante et les partenaires de recherche</p>
+    <p class="page-subtitle fade-in delay-200">Discover the leadership team and research partners</p>
 </div>
 
 {% endblock %}
@@ -18,11 +18,11 @@
 {% block content %}
 <section class="responsables-section">
     <div class="container">
-        <h2>L'équipe dirigeante</h2>
+        <h2>Leadership team</h2>
         
         <div class="org-chart">
             <div class="org-level">
-                <div class="org-level-title">Co-directeurs</div>
+                <div class="org-level-title">Co-directors</div>
                 <div class="org-boxes">
                     {% for resp in responsables %}
                        {% if resp.titre == 'Directeur' or resp.titre == 'Directrice' or resp.user.first_name == 'Alain' or resp.user.last_name == 'TCHANA' or resp.user.first_name|lower == 'Bessala' or resp.user.last_name == 'Bessala' %}
@@ -41,7 +41,7 @@
                                 <p class="org-member-theme">{{ resp.theme.nom }}</p>
                                 {% endif %}
                             </div>
-                            <a href="{% url 'labo:membre_detail' resp.id %}" class="btn-view-profile">Voir le profil</a>
+                            <a href="{% url 'labo:membre_detail' resp.id %}" class="btn-view-profile">View profile</a>
                         </div>
                         {% endif %}
                     {% endfor %}
@@ -49,7 +49,7 @@
             </div>
             
             <div class="org-level">
-                <div class="org-level-title">Responsables de recherche</div>
+                <div class="org-level-title">Research managers</div>
                 <div class="org-boxes">
                     {% for resp in responsables %}
                         
@@ -66,7 +66,7 @@
                                 <p class="org-member-title">{{ resp.titre }}</p>
                                 <p class="org-member-theme">{{ resp.theme.nom }}</p>
                             </div>
-                            <a href="{% url 'labo:membre_detail' resp.id %}" class="btn-view-profile">Voir le profil</a>
+                            <a href="{% url 'labo:membre_detail' resp.id %}" class="btn-view-profile">View profile</a>
                         </div>
                        
                     {% endfor %}
@@ -78,7 +78,7 @@
 
 <section class="collaborateurs-section">
     <div class="container">
-        <h2>Collaborations externes</h2>
+        <h2>External collaborations</h2>
         
         <div class="collaborateurs-grid">
             {% for collab in collaborateurs %}
@@ -107,7 +107,7 @@
             </div>
             {% empty %}
             <div class="empty-message">
-                <p>Aucun collaborateur n'est enregistré pour le moment.</p>
+                <p>No collaborators are registered at the moment.</p>
             </div>
             {% endfor %}
         </div>

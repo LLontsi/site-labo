@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %} - Beta Lab{% endblock %}
+{% block title %}{% if evenement %}Edit Event{% else %}Add Event{% endif %} - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -10,9 +10,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if evenement %}Edit Event{% else %}Add Event{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">{% if evenement %}{{ evenement.titre }}{% else %}Nouvel événement{% endif %}</p>
+    <p class="page-subtitle fade-in delay-200">{% if evenement %}{{ evenement.titre }}{% else %}New Event{% endif %}</p>
 </div>
 {% endblock %}
 
@@ -23,30 +23,30 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>{% if evenement %}Modifier l'événement{% else %}Ajouter un événement{% endif %}</h2>
-                    <a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>{% if evenement %}Edit Event{% else %}Add Event{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
                 
                 <div class="form-card">
@@ -54,11 +54,11 @@
                         {% csrf_token %}
                         
                         <div class="form-section-title">
-                            <h3>Informations générales</h3>
+                            <h3>General Information</h3>
                         </div>
                         
                         <div class="form-group">
-                            <label for="{{ form.titre.id_for_label }}">Titre de l'événement</label>
+                            <label for="{{ form.titre.id_for_label }}">Event Title</label>
                             {{ form.titre }}
                             {% if form.titre.errors %}
                                 <div class="form-error">{{ form.titre.errors.0 }}</div>
@@ -74,7 +74,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="{{ form.type_evenement.id_for_label }}">Type d'événement</label>
+                            <label for="{{ form.type_evenement.id_for_label }}">Event Type</label>
                             {{ form.type_evenement }}
                             {% if form.type_evenement.errors %}
                                 <div class="form-error">{{ form.type_evenement.errors.0 }}</div>
@@ -82,12 +82,12 @@
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Date et lieu</h3>
+                            <h3>Date and Location</h3>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="{{ form.date_debut.id_for_label }}">Date et heure de début</label>
+                                <label for="{{ form.date_debut.id_for_label }}">Start Date and Time</label>
                                 {{ form.date_debut }}
                                 {% if form.date_debut.errors %}
                                     <div class="form-error">{{ form.date_debut.errors.0 }}</div>
@@ -95,7 +95,7 @@
                             </div>
                             
                             <div class="form-group form-col">
-                                <label for="{{ form.date_fin.id_for_label }}">Date et heure de fin</label>
+                                <label for="{{ form.date_fin.id_for_label }}">End Date and Time</label>
                                 {{ form.date_fin }}
                                 {% if form.date_fin.errors %}
                                     <div class="form-error">{{ form.date_fin.errors.0 }}</div>
@@ -104,7 +104,7 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="{{ form.lieu.id_for_label }}">Lieu</label>
+                            <label for="{{ form.lieu.id_for_label }}">Location</label>
                             {{ form.lieu }}
                             {% if form.lieu.errors %}
                                 <div class="form-error">{{ form.lieu.errors.0 }}</div>
@@ -119,13 +119,13 @@
                             <div class="photo-upload">
                                 {% if evenement.image %}
                                     <div class="current-photo">
-                                        <img src="{{ evenement.image.url }}" alt="Image actuelle">
-                                        <p>Image actuelle</p>
+                                        <img src="{{ evenement.image.url }}" alt="Current Image">
+                                        <p>Current Image</p>
                                     </div>
                                 {% endif %}
                                 <div class="file-input-group">
                                     {{ form.image }}
-                                    <div class="form-help">Image promotionnelle pour l'événement.</div>
+                                    <div class="form-help">Promotional image for the event.</div>
                                     {% if form.image.errors %}
                                         <div class="form-error">{{ form.image.errors.0 }}</div>
                                     {% endif %}
@@ -134,8 +134,8 @@
                         </div>
                         
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                            <a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>

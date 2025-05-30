@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{% if presentation %}Modifier la présentation{% else %}Nouvelle présentation{% endif %} - Beta Lab{% endblock %}
+{% block title %}{% if presentation %}Edit presentation{% else %}New presentation{% endif %} - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/forms.css" %} ">
@@ -8,9 +8,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if presentation %}Modifier la présentation{% else %}Nouvelle présentation{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if presentation %}Edit presentation{% else %}New presentation{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Partagez vos travaux et documents avec la communauté</p>
+    <p class="page-subtitle fade-in delay-200">Share your work and documents with the community</p>
 </div>
 {% endblock %}
 
@@ -22,11 +22,11 @@
                 {% csrf_token %}
                 
                 <div class="form-section-title">
-                    <h2>Informations générales</h2>
+                    <h2>General information</h2>
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.titre.id_for_label }}">Titre de la présentation</label>
+                    <label for="{{ form.titre.id_for_label }}">Presentation title</label>
                     {{ form.titre }}
                     {% if form.titre.errors %}
                         <div class="form-error">{{ form.titre.errors.0 }}</div>
@@ -39,11 +39,11 @@
                     {% if form.description.errors %}
                         <div class="form-error">{{ form.description.errors.0 }}</div>
                     {% endif %}
-                    <div class="form-help">Décrivez brièvement le contenu et l'objectif de cette présentation.</div>
+                    <div class="form-help">Briefly describe the content and objective of this presentation.</div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.theme.id_for_label }}">Thème associé</label>
+                    <label for="{{ form.theme.id_for_label }}">Associated theme</label>
                     {{ form.theme }}
                     {% if form.theme.errors %}
                         <div class="form-error">{{ form.theme.errors.0 }}</div>
@@ -51,19 +51,19 @@
                 </div>
                 
                 <div class="form-section-title">
-                    <h2>Fichier principal</h2>
+                    <h2>Main file</h2>
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.fichier.id_for_label }}">Fichier</label>
+                    <label for="{{ form.fichier.id_for_label }}">File</label>
                     <div class="file-input-group">
                         {% if presentation and presentation.fichier %}
                             <div class="current-file">
-                                <p>Fichier actuel : <a href="{{ presentation.fichier.url }}" target="_blank">{{ presentation.fichier.name|default:""|cut:"/media/presentations/"|default:"Fichier" }}</a></p>
+                                <p>Current file: <a href="{{ presentation.fichier.url }}" target="_blank">{{ presentation.fichier.name|default:""|cut:"/media/presentations/"|default:"File" }}</a></p>
                             </div>
                         {% endif %}
                         {{ form.fichier }}
-                        <div class="form-help">Formats acceptés : PDF, PPTX, DOCX, etc.</div>
+                        <div class="form-help">Accepted formats: PDF, PPTX, DOCX, etc.</div>
                         {% if form.fichier.errors %}
                             <div class="form-error">{{ form.fichier.errors.0 }}</div>
                         {% endif %}
@@ -71,7 +71,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.type_fichier.id_for_label }}">Type de fichier</label>
+                    <label for="{{ form.type_fichier.id_for_label }}">File type</label>
                     {{ form.type_fichier }}
                     {% if form.type_fichier.errors %}
                         <div class="form-error">{{ form.type_fichier.errors.0 }}</div>
@@ -79,8 +79,8 @@
                 </div>
                 
                 <div class="form-section-title">
-                    <h2>Images supplémentaires</h2>
-                    <p class="form-subtitle">Ajoutez des captures d'écran ou des illustrations de votre présentation</p>
+                    <h2>Additional images</h2>
+                    <p class="form-subtitle">Add screenshots or illustrations of your presentation</p>
                 </div>
                 
                 {{ formset.management_form }}
@@ -110,7 +110,7 @@
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label for="{{ image_form.legende.id_for_label }}">Légende</label>
+                                    <label for="{{ image_form.legende.id_for_label }}">Caption</label>
                                     {{ image_form.legende }}
                                     {% if image_form.legende.errors %}
                                         <div class="form-error">{{ image_form.legende.errors.0 }}</div>
@@ -122,8 +122,8 @@
                 </div>
                 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

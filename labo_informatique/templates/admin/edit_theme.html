@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{% if theme %}Modifier le thème{% else %}Ajouter un thème{% endif %} - Beta Lab
+{% if theme %}Edit Theme{% else %}Add Theme{% endif %} - Beta Lab
 {% endblock %}
 
 {% block extra_css %}
@@ -12,9 +12,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if theme %}Modifier le thème{% else %}Ajouter un thème{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if theme %}Edit Theme{% else %}Add Theme{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">{% if theme %}{{ theme.nom }}{% else %}Nouveau thème de recherche{% endif %}</p>
+    <p class="page-subtitle fade-in delay-200">{% if theme %}{{ theme.nom }}{% else %}New Research Theme{% endif %}</p>
 </div>
 {% endblock %}
 
@@ -25,30 +25,30 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                    <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" >Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" >Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>{% if theme %}Modifier le thème{% else %}Ajouter un thème{% endif %}</h2>
-                    <a href="{% url 'labo:gestion_themes' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>{% if theme %}Edit Theme{% else %}Add Theme{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_themes' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
                 
                 {% if messages %}
@@ -66,21 +66,21 @@
                         {% csrf_token %}
                         
                         <div class="form-group">
-                            <label for="nom">Nom du thème</label>
+                            <label for="nom">Theme Name</label>
                             <input type="text" id="nom" name="nom" value="{% if theme %}{{ theme.nom }}{% endif %}" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea id="description" name="description" rows="6">{% if theme %}{{ theme.description }}{% endif %}</textarea>
-                            <div class="form-help">Décrivez le domaine de recherche couvert par ce thème.</div>
+                            <div class="form-help">Describe the research domain covered by this theme.</div>
                         </div>
                         
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
-                                {% if theme %}Enregistrer les modifications{% else %}Créer le thème{% endif %}
+                                {% if theme %}Save Changes{% else %}Create Theme{% endif %}
                             </button>
-                            <a href="{% url 'labo:gestion_themes' %}" class="btn btn-secondary">Annuler</a>
+                            <a href="{% url 'labo:gestion_themes' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>

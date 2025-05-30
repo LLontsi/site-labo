@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %} - Beta Lab{% endblock %}
+{% block title %}{% if temoignage %}Edit Testimonial{% else %}Add Testimonial{% endif %} - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -10,9 +10,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if temoignage %}Edit Testimonial{% else %}Add Testimonial{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">{% if temoignage %}{{ temoignage.nom }}{% else %}Nouveau témoignage{% endif %}</p>
+    <p class="page-subtitle fade-in delay-200">{% if temoignage %}{{ temoignage.nom }}{% else %}New Testimonial{% endif %}</p>
 </div>
 {% endblock %}
 
@@ -23,30 +23,30 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>{% if temoignage %}Modifier le témoignage{% else %}Ajouter un témoignage{% endif %}</h2>
-                    <a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>{% if temoignage %}Edit Testimonial{% else %}Add Testimonial{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
                 
                 <div class="form-card">
@@ -54,11 +54,11 @@
                         {% csrf_token %}
                         
                         <div class="form-section-title">
-                            <h3>Informations sur le témoin</h3>
+                            <h3>Witness Information</h3>
                         </div>
                         
                         <div class="form-group">
-                            <label for="{{ form.nom.id_for_label }}">Nom complet</label>
+                            <label for="{{ form.nom.id_for_label }}">Full Name</label>
                             {{ form.nom }}
                             {% if form.nom.errors %}
                                 <div class="form-error">{{ form.nom.errors.0 }}</div>
@@ -66,12 +66,12 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="{{ form.role.id_for_label }}">Rôle / Fonction</label>
+                            <label for="{{ form.role.id_for_label }}">Role / Position</label>
                             {{ form.role }}
                             {% if form.role.errors %}
                                 <div class="form-error">{{ form.role.errors.0 }}</div>
                             {% endif %}
-                            <div class="form-help">Ex: "Ancien étudiant", "Partenaire industriel", etc.</div>
+                            <div class="form-help">E.g., "Former Student", "Industry Partner", etc.</div>
                         </div>
                         
                         <div class="form-section-title">
@@ -82,13 +82,13 @@
                             <div class="photo-upload">
                                 {% if temoignage.photo %}
                                     <div class="current-photo">
-                                        <img src="{{ temoignage.photo.url }}" alt="Photo actuelle">
-                                        <p>Photo actuelle</p>
+                                        <img src="{{ temoignage.photo.url }}" alt="Current Photo">
+                                        <p>Current Photo</p>
                                     </div>
                                 {% endif %}
                                 <div class="file-input-group">
                                     {{ form.photo }}
-                                    <div class="form-help">Format recommandé : image carrée de 300x300 pixels minimum.</div>
+                                    <div class="form-help">Recommended format: square image of 300x300 pixels minimum.</div>
                                     {% if form.photo.errors %}
                                         <div class="form-error">{{ form.photo.errors.0 }}</div>
                                     {% endif %}
@@ -97,11 +97,11 @@
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Contenu du témoignage</h3>
+                            <h3>Testimonial Content</h3>
                         </div>
                         
                         <div class="form-group">
-                            <label for="{{ form.contenu.id_for_label }}">Témoignage</label>
+                            <label for="{{ form.contenu.id_for_label }}">Testimonial</label>
                             {{ form.contenu }}
                             {% if form.contenu.errors %}
                                 <div class="form-error">{{ form.contenu.errors.0 }}</div>
@@ -117,8 +117,8 @@
                         </div>
                         
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                            <a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Gestion des projets - Beta Lab{% endblock %}
+{% block title %}Project Management - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -10,9 +10,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Gestion des projets</h1>
+    <h1 class="page-title fade-in">Project Management</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Administration des projets du laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">Laboratory project administration</p>
 </div>
 {% endblock %}
 
@@ -23,31 +23,31 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                      <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Gestion des projets</h2>
+                    <h2>Project Management</h2>
                     <a href="{% url 'labo:create_projet' %}" class="btn-action">
-                        <i class="fas fa-plus"></i> Nouveau projet
+                        <i class="fas fa-plus"></i> New project
                     </a>
                 </div>
                 
@@ -69,7 +69,7 @@
                         </div>
                         <div class="stat-content">
                             <h3>{{ nb_projets }}</h3>
-                            <p>Total projets</p>
+                            <p>Total projects</p>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -78,7 +78,7 @@
                         </div>
                         <div class="stat-content">
                             <h3>{{ nb_en_cours }}</h3>
-                            <p>En cours</p>
+                            <p>In progress</p>
                         </div>
                     </div>
                     <div class="stat-card">
@@ -87,7 +87,7 @@
                         </div>
                         <div class="stat-content">
                             <h3>{{ nb_termines }}</h3>
-                            <p>Terminés</p>
+                            <p>Completed</p>
                         </div>
                     </div>
                 </div>
@@ -97,12 +97,12 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Projet</th>
-                                    <th>Responsable</th>
+                                    <th>Project</th>
+                                    <th>Manager</th>
                                     <th>Type</th>
-                                    <th>Statut</th>
+                                    <th>Status</th>
                                     <th>Dates</th>
-                                    <th>Visibilité</th>
+                                    <th>Visibility</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -144,28 +144,28 @@
                                         <td>
                                             <span class="status-badge status-{{ projet.statut }}">
                                                 {% if projet.statut == 'en_cours' %}
-                                                    <i class="fas fa-play"></i> En cours
+                                                    <i class="fas fa-play"></i> In progress
                                                 {% elif projet.statut == 'termine' %}
-                                                    <i class="fas fa-check"></i> Terminé
+                                                    <i class="fas fa-check"></i> Completed
                                                 {% elif projet.statut == 'suspendu' %}
-                                                    <i class="fas fa-pause"></i> Suspendu
+                                                    <i class="fas fa-pause"></i> Suspended
                                                 {% elif projet.statut == 'annule' %}
-                                                    <i class="fas fa-times"></i> Annulé
+                                                    <i class="fas fa-times"></i> Cancelled
                                                 {% endif %}
                                             </span>
                                         </td>
                                         <td class="cell-dates">
                                             <div class="date-item">
-                                                <small>Début:</small> {{ projet.date_debut|date:"d/m/Y" }}
+                                                <small>Start:</small> {{ projet.date_debut|date:"d/m/Y" }}
                                             </div>
                                             {% if projet.date_fin_prevue %}
                                             <div class="date-item">
-                                                <small>Fin prévue:</small> {{ projet.date_fin_prevue|date:"d/m/Y" }}
+                                                <small>Expected end:</small> {{ projet.date_fin_prevue|date:"d/m/Y" }}
                                             </div>
                                             {% endif %}
                                             {% if projet.date_fin_reelle %}
                                             <div class="date-item">
-                                                <small>Fin réelle:</small> {{ projet.date_fin_reelle|date:"d/m/Y" }}
+                                                <small>Actual end:</small> {{ projet.date_fin_reelle|date:"d/m/Y" }}
                                             </div>
                                             {% endif %}
                                         </td>
@@ -176,24 +176,24 @@
                                                 </span>
                                             {% else %}
                                                 <span class="visibility-badge private">
-                                                    <i class="fas fa-eye-slash"></i> Privé
+                                                    <i class="fas fa-eye-slash"></i> Private
                                                 </span>
                                             {% endif %}
                                         </td>
                                         <td class="cell-actions">
                                             {% if projet.est_public %}
-                                                <a href="{% url 'labo:projet_detail' projet.id %}" class="table-action" title="Voir" target="_blank">
+                                                <a href="{% url 'labo:projet_detail' projet.id %}" class="table-action" title="View" target="_blank">
                                                     <i class="fas fa-eye"></i>
                                                 </a>
                                             {% endif %}
-                                            <a href="{% url 'labo:edit_projet' projet.id %}" class="table-action" title="Modifier">
+                                            <a href="{% url 'labo:edit_projet' projet.id %}" class="table-action" title="Edit">
                                                 <i class="fas fa-edit"></i>
                                             </a>
                                             <button class="table-action btn-delete-item" 
                                                 data-id="{{ projet.id }}" 
                                                 data-nom="{{ projet.titre }}"
                                                 data-type="projet"
-                                                title="Supprimer">
+                                                title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -206,10 +206,10 @@
                             <div class="empty-icon">
                                 <i class="fas fa-project-diagram"></i>
                             </div>
-                            <h3>Aucun projet</h3>
-                            <p>Aucun projet n'a encore été créé.</p>
+                            <h3>No projects</h3>
+                            <p>No projects have been created yet.</p>
                             <a href="{% url 'labo:create_projet' %}" class="btn btn-primary">
-                                <i class="fas fa-plus"></i> Créer le premier projet
+                                <i class="fas fa-plus"></i> Create the first project
                             </a>
                         </div>
                     {% endif %}
@@ -223,19 +223,19 @@
 <div id="delete-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Confirmer la suppression</h3>
+            <h3>Confirm deletion</h3>
             <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body">
-            <p>Êtes-vous sûr de vouloir supprimer le projet "<span id="item-name"></span>" ?</p>
-            <p class="warning">Cette action est irréversible et supprimera toutes les données associées au projet.</p>
+            <p>Are you sure you want to delete the project "<span id="item-name"></span>"?</p>
+            <p class="warning">This action is irreversible and will delete all data associated with the project.</p>
         </div>
         <div class="modal-footer">
             <form method="post" action="" id="delete-form">
                 {% csrf_token %}
                 <input type="hidden" name="item_id" id="delete_item_id">
-                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
-                <button type="submit" class="btn btn-danger">Supprimer</button>
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
     </div>

@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Gestion des catégories - Beta Lab{% endblock %}
+{% block title %}Category Management - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -9,9 +9,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Gestion des catégories</h1>
+    <h1 class="page-title fade-in">Category Management</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Gérer les catégories d'articles du laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">Manage laboratory article categories</p>
 </div>
 {% endblock %}
 
@@ -22,32 +22,32 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                    <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Catégories d'articles</h2>
+                    <h2>Article Categories</h2>
                     <div class="admin-actions">
                         <a href="{% url 'labo:create_categorie' %}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Ajouter une catégorie
+                            <i class="fas fa-plus"></i> Add a category
                         </a>
                     </div>
                 </div>
@@ -67,9 +67,9 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Nom</th>
+                                <th>Name</th>
                                 <th>Description</th>
-                                <th>Articles associés</th>
+                                <th>Associated articles</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -80,13 +80,13 @@
                                     <td>{{ categorie.description|default:""|truncatechars:100 }}</td>
                                     <td>{{ categorie.article_set.count }}</td>
                                     <td class="cell-actions">
-                                        <a href="{% url 'labo:edit_categorie' categorie.id %}" class="table-action" title="Modifier">
+                                        <a href="{% url 'labo:edit_categorie' categorie.id %}" class="table-action" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button class="table-action btn-delete-categorie" 
                                                 data-id="{{ categorie.id }}" 
                                                 data-nom="{{ categorie.nom }}" 
-                                                title="Supprimer" 
+                                                title="Delete" 
                                                 {% if categorie.article_set.exists %}disabled{% endif %}>
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -94,7 +94,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="4" class="empty-table">Aucune catégorie trouvée.</td>
+                                    <td colspan="4" class="empty-table">No categories found.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -105,19 +105,19 @@
                 <div id="delete-modal" class="modal" style="display: none;">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3>Confirmer la suppression</h3>
+                            <h3>Confirm deletion</h3>
                             <span class="modal-close">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <p>Êtes-vous sûr de vouloir supprimer la catégorie "<span id="categorie-name"></span>" ?</p>
-                            <p class="warning">Cette action est irréversible.</p>
+                            <p>Are you sure you want to delete the category "<span id="categorie-name"></span>"?</p>
+                            <p class="warning">This action is irreversible.</p>
                         </div>
                         <div class="modal-footer">
                             <form method="post" action="{% url 'labo:delete_categorie' %}" id="delete-form">
                                 {% csrf_token %}
                                 <input type="hidden" name="categorie_id" id="delete_categorie_id">
-                                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </div>
                     </div>

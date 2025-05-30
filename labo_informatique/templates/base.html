@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
 <head>
     {% load static %}
     <meta charset="UTF-8">
@@ -32,14 +32,14 @@
                             <span></span>
                         </div>
                        <ul class="nav-menu">                             
-                            <li><a href="{% url 'labo:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Accueil</a></li>  
-                            <li><a href="{% url 'labo:liste_projets' %}" {% if 'projet' in request.path %}class="active"{% endif %}>Projets</a></li>                                                      
-                            <li><a href="{% url 'labo:about' %}" {% if 'about' in request.path %}class="active"{% endif %}>À propos</a></li> 
-                            <li><a href="{% url 'labo:team' %}" {% if 'team' in request.path %}class="active"{% endif %}>Etudiants</a></li>                             
-                            <li><a href="{% url 'labo:responsables' %}" {% if 'responsables' in request.path %}class="active"{% endif %}>Responsables</a></li>                             
+                            <li><a href="{% url 'labo:home' %}" {% if request.path == '/' %}class="active"{% endif %}>Home</a></li>  
+                            <li><a href="{% url 'labo:liste_projets' %}" {% if 'projet' in request.path %}class="active"{% endif %}>Projects</a></li>                                                      
+                            <li><a href="{% url 'labo:about' %}" {% if 'about' in request.path %}class="active"{% endif %}>About</a></li> 
+                            <li><a href="{% url 'labo:team' %}" {% if 'team' in request.path %}class="active"{% endif %}>Students</a></li>                             
+                            <li><a href="{% url 'labo:responsables' %}" {% if 'responsables' in request.path %}class="active"{% endif %}>Managers</a></li>                             
                             <li><a href="{% url 'labo:liste_articles' %}" {% if 'blog' in request.path %}class="active"{% endif %}>Blog</a></li>                             
-                            <li><a href="{% url 'labo:liste_presentations' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Présentations</a></li>                             
-                            <li><a href="{% url 'labo:devenir_membres' %}" {% if 'devenir' in request.path %}class="active"{% endif %}>Devenir</a></li>                             
+                            <li><a href="{% url 'labo:liste_presentations' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Presentations</a></li>                             
+                            <li><a href="{% url 'labo:devenir_membres' %}" {% if 'devenir' in request.path %}class="active"{% endif %}>Become</a></li>                             
                             <li><a href="{% url 'labo:contact' %}" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>                             
                             <li><a href="{% url 'labo:faq' %}" {% if 'faq' in request.path %}class="active"{% endif %}>FAQ</a></li>                         
                         </ul>
@@ -80,25 +80,25 @@
                 <div class="footer-grid">
                     <div class="footer-col">
                         <h4>Beta Lab</h4>
-                        <p>Notre laboratoire est spécialisé dans la recherche en informatique et le développement de solutions innovantes.</p>
+                        <p>Our laboratory specializes in computer science research and the development of innovative solutions.</p>
                     </div>
                     <div class="footer-col">
-                        <h4>Liens rapides</h4>
+                        <h4>Quick Links</h4>
                         <ul>
-                            <li><a href="{% url 'labo:home' %}">Accueil</a></li>
-                            <li><a href="{% url 'labo:about' %}">À propos</a></li>
-                            <li><a href="{% url 'labo:team' %}">Etudiants</a></li>
-                            <li><a href="{% url 'labo:responsables' %}">Responsables</a></li>
+                            <li><a href="{% url 'labo:home' %}">Home</a></li>
+                            <li><a href="{% url 'labo:about' %}">About</a></li>
+                            <li><a href="{% url 'labo:team' %}">Students</a></li>
+                            <li><a href="{% url 'labo:responsables' %}">Managers</a></li>
                             <li><a href="{% url 'labo:liste_articles' %}">Blog</a></li>
-                            <li><a href="{% url 'labo:liste_presentations' %}">Présentations</a></li>
-                            <li><a href="{% url 'labo:devenir_membres' %}">Devenir</a></li>
+                            <li><a href="{% url 'labo:liste_presentations' %}">Presentations</a></li>
+                            <li><a href="{% url 'labo:devenir_membres' %}">Become</a></li>
                             <li><a href="{% url 'labo:contact' %}">Contact</a></li>
                         </ul>
                     </div>
                     <div class="footer-col">
                         <h4>Contact</h4>
                         <ul class="contact-info">
-                            <li><i class="fas fa-map-marker-alt"></i> Campus universitaire, Yaoundé, Cameroun</li>
+                            <li><i class="fas fa-map-marker-alt"></i> University Campus, Yaoundé, Cameroon</li>
                             <li><i class="fas fa-phone"></i> +237 675 75 99 00 / +33 7 49 55 61 71</li>
                             <li><i class="fas fa-envelope"></i> contact@beta-lab.cm</li>
                         </ul>
@@ -108,7 +108,7 @@
         </div>
         <div class="footer-bottom">
             <div class="container">
-                <p>&copy; {% now "Y" %} Beta Lab. Tous droits réservés.</p>
+                <p>&copy; {% now "Y" %} Beta Lab. All rights reserved.</p>
             </div>
         </div>
     </footer>

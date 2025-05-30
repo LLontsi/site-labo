@@ -1,12 +1,12 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Témoignages | Laboratoire Informatique{% endblock %}
+{% block title %}Testimonials | Computer Science Laboratory{% endblock %}
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Témoignages</h1>
+    <h1 class="page-title fade-in">Testimonials</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Ce que disent les partenaires et collaborateurs</p>
+    <p class="page-subtitle fade-in delay-200">What partners and collaborators say</p>
 </div>
 
 {% endblock %}
@@ -32,7 +32,7 @@
             </div>
         </div>
         {% empty %}
-        <p>Aucun témoignage disponible pour le moment.</p>
+        <p>No testimonials available at the moment.</p>
         {% endfor %}
     </div>
 </section>
@@ -41,9 +41,9 @@
 <section class="share-experience-section section bg-light">
     <div class="container">
         <div class="share-card animate-on-scroll">
-            <h2>Partagez votre expérience</h2>
-            <p>Vous avez collaboré avec notre laboratoire ou participé à l'un de nos événements ? Nous serions ravis de connaître votre expérience.</p>
-            <a href="{% url 'core:contact' %}" class="btn btn-primary">Laissez un témoignage</a>
+            <h2>Share your experience</h2>
+            <p>Have you collaborated with our laboratory or participated in one of our events? We would love to hear about your experience.</p>
+            <a href="{% url 'core:contact' %}" class="btn btn-primary">Leave a testimonial</a>
         </div>
     </div>
 </section>

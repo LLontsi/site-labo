@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Supprimer l'historique - Beta Lab{% endblock %}
+{% block title %}Delete History - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/admin.css' %}">
@@ -211,9 +211,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Suppression d'historique</h1>
+    <h1 class="page-title fade-in">History Deletion</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Confirmer la suppression de l'historique de thème</p>
+    <p class="page-subtitle fade-in delay-200">Confirm theme history deletion</p>
 </div>
 {% endblock %}
 
@@ -225,12 +225,12 @@
                 <div class="icon">
                     <i class="fas fa-exclamation-triangle"></i>
                 </div>
-                <h2>Confirmer la suppression</h2>
+                <h2>Confirm Deletion</h2>
             </div>
             
             <div class="delete-content">
                 <p style="text-align: center; font-size: 1.1rem; margin-bottom: 25px;">
-                    Êtes-vous sûr de vouloir supprimer cet historique de thème ?
+                    Are you sure you want to delete this theme history?
                 </p>
                 
                 <div class="historique-info">
@@ -255,17 +255,17 @@
                                 {% if historique.date_fin %}
                                     <span class="date-badge">{{ historique.date_fin|date:"d/m/Y" }}</span>
                                 {% else %}
-                                    <span class="date-badge actuel">Actuel</span>
+                                    <span class="date-badge actuel">Current</span>
                                 {% endif %}
                             </div>
                             <div style="margin-left: auto;">
-                                <i class="fas fa-clock"></i> {{ historique.duree_mois }} mois
+                                <i class="fas fa-clock"></i> {{ historique.duree_mois }} months
                             </div>
                         </div>
                         
                         {% if historique.description %}
                             <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #e9ecef;">
-                                <strong>Description :</strong>
+                                <strong>Description:</strong>
                                 <p style="margin: 5px 0 0; color: #666;">{{ historique.description }}</p>
                             </div>
                         {% endif %}
@@ -273,22 +273,22 @@
                 </div>
                 
                 <div class="warning-box">
-                    <h4><i class="fas fa-exclamation-triangle"></i> Attention</h4>
-                    <p>Cette action est <strong>irréversible</strong>. L'historique de ce thème sera définitivement supprimé et ne pourra pas être récupéré.</p>
+                    <h4><i class="fas fa-exclamation-triangle"></i> Warning</h4>
+                    <p>This action is <strong>irreversible</strong>. This theme history will be permanently deleted and cannot be recovered.</p>
                     {% if historique.est_actuel %}
-                        <p style="margin-top: 10px;"><strong>Note :</strong> Cet historique correspond au thème actuel du membre. Sa suppression laissera le membre sans thème actuel.</p>
+                        <p style="margin-top: 10px;"><strong>Note:</strong> This history corresponds to the member's current theme. Its deletion will leave the member without a current theme.</p>
                     {% endif %}
                 </div>
                 
                 <div class="delete-actions">
                     <form method="post" style="display: inline;">
                         {% csrf_token %}
-                        <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous vraiment sûr ? Cette action ne peut pas être annulée.');">
-                            <i class="fas fa-trash"></i> Oui, supprimer définitivement
+                        <button type="submit" class="btn btn-danger" onclick="return confirm('Are you really sure? This action cannot be undone.');">
+                            <i class="fas fa-trash"></i> Yes, delete permanently
                         </button>
                     </form>
                     <a href="{% url 'labo:gestion_historique_themes' %}" class="btn btn-secondary">
-                        <i class="fas fa-times"></i> Annuler
+                        <i class="fas fa-times"></i> Cancel
                     </a>
                 </div>
             </div>

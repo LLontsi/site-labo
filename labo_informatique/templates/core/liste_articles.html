@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Blog - Laboratoire Beta Lab{% endblock %}
+{% block title %}Blog - Beta Lab Laboratory{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/blog.css" %} ">
@@ -8,9 +8,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Notre Blog</h1>
+    <h1 class="page-title fade-in">Our Blog</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Actualités, recherches et innovations du laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">News, research and innovations from the laboratory</p>
 </div>
 {% endblock %}
 
@@ -20,9 +20,9 @@
         <div class="blog-grid">
             <div class="blog-main">
                 <div class="blog-categories">
-                    <h2>Catégories</h2>
+                    <h2>Categories</h2>
                     <div class="category-buttons">
-                        <a href="{% url 'labo:liste_articles' %}" class="category-btn {% if not category %}active{% endif %}">Tous les articles</a>
+                        <a href="{% url 'labo:liste_articles' %}" class="category-btn {% if not category %}active{% endif %}">All articles</a>
                         {% for cat in categories %}
                         <a href="{% url 'labo:liste_articles_par_categorie' cat.id %}" class="category-btn {% if category.id == cat.id %}active{% endif %}">{{ cat.nom }}</a>
                         {% endfor %}
@@ -45,7 +45,7 @@
                         <div class="article-content">
                             <div class="article-meta">
                                 <span class="article-date">{{ article.date_creation|date:"d F Y" }}</span>
-                                <span class="article-author">Par {{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
+                                <span class="article-author">By {{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
                             </div>
                             <h2 class="article-title">{{ article.titre }}</h2>
                             <div class="article-categories">
@@ -56,7 +56,7 @@
                             <div class="article-excerpt">
                                 {{ article.contenu|truncatewords:30|striptags }}
                             </div>
-                            <a href="{% url 'labo:article_detail' article.id %}" class="btn-read-more">Lire l'article</a>
+                            <a href="{% url 'labo:article_detail' article.id %}" class="btn-read-more">Read article</a>
                         </div>
                     </article>
                     {% endfor %}
@@ -65,7 +65,7 @@
                 {% if articles.has_other_pages %}
                 <div class="pagination">
                     {% if articles.has_previous %}
-                        <a href="?page={{ articles.previous_page_number }}" class="pagination-arrow">&laquo; Précédent</a>
+                        <a href="?page={{ articles.previous_page_number }}" class="pagination-arrow">&laquo; Previous</a>
                     {% endif %}
                     
                     {% for num in articles.paginator.page_range %}
@@ -77,21 +77,21 @@
                     {% endfor %}
                     
                     {% if articles.has_next %}
-                        <a href="?page={{ articles.next_page_number }}" class="pagination-arrow">Suivant &raquo;</a>
+                        <a href="?page={{ articles.next_page_number }}" class="pagination-arrow">Next &raquo;</a>
                     {% endif %}
                 </div>
                 {% endif %}
                 
                 {% else %}
                 <div class="empty-message">
-                    <p>Aucun article n'est disponible pour le moment.</p>
+                    <p>No articles are available at the moment.</p>
                 </div>
                 {% endif %}
             </div>
             
             <div class="blog-sidebar">
                 <div class="sidebar-section recent-posts">
-                    <h3>Articles récents</h3>
+                    <h3>Recent articles</h3>
                     <ul class="recent-list">
                         {% for recent in articles_recents %}
                         <li>
@@ -105,7 +105,7 @@
                 </div>
                 
                 <div class="sidebar-section popular-themes">
-                    <h3>Thèmes populaires</h3>
+                    <h3>Popular themes</h3>
                     <div class="themes-cloud">
                         {% for theme in themes %}
                         <a href="{% url 'labo:liste_articles_par_theme' theme.id %}" class="theme-tag">{{ theme.nom }}</a>
@@ -114,7 +114,7 @@
                 </div>
                 
                 <div class="sidebar-section authors">
-                    <h3>Nos auteurs</h3>
+                    <h3>Our authors</h3>
                     <div class="authors-list">
                         {% for auteur in auteurs %}
                         <a href="{% url 'labo:membre_detail' auteur.id %}" class="author-item">

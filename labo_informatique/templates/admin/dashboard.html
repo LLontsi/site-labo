@@ -11,9 +11,9 @@
 {% block header_content %}
 
     <div class="page-header animated-gradient">
-        <h1 class="page-title fade-in">Panneau d'administration</h1>
+        <h1 class="page-title fade-in">Administration Panel</h1>
         <div class="header-line"></div>
-        <p class="page-subtitle fade-in delay-200">Gérer le contenu et les utilisateurs du laboratoire</p>
+        <p class="page-subtitle fade-in delay-200">Manage laboratory content and users</p>
     </div>
    
 
@@ -26,29 +26,29 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                    <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Tableau de bord</h2>
+                    <h2>Dashboard</h2>
                 </div>
                 
                 <div class="stats-cards">
@@ -56,11 +56,11 @@
                         <div class="stat-icon"><i class="fas fa-users"></i></div>
                         <div class="stat-numbers">
                             <div class="stat-value">{{ membres_count }}</div>
-                            <div class="stat-label">Membres au total</div>
+                            <div class="stat-label">Total Members</div>
                         </div>
                         <div class="stat-detail">
-                            <span>{{ membres_actifs }} actifs</span>
-                            <span>{{ anciens_membres }} anciens</span>
+                            <span>{{ membres_actifs }} active</span>
+                            <span>{{ anciens_membres }} former</span>
                         </div>
                     </div>
                     
@@ -68,7 +68,7 @@
                         <div class="stat-icon"><i class="fas fa-file-alt"></i></div>
                         <div class="stat-numbers">
                             <div class="stat-value">{{ presentations_count }}</div>
-                            <div class="stat-label">Présentations</div>
+                            <div class="stat-label">Presentations</div>
                         </div>
                     </div>
                     
@@ -79,18 +79,18 @@
                             <div class="stat-label">Articles</div>
                         </div>
                         <div class="stat-detail">
-                            <span>{{ articles_publies }} publiés</span>
+                            <span>{{ articles_publies }} published</span>
                         </div>
                     </div>
                 </div>
                 
                 <div class="activity-section">
-                    <h3>Activités récentes</h3>
+                    <h3>Recent Activities</h3>
                     
                     <div class="activity-grid">
                         <div class="activity-card">
                             <div class="activity-card-header">
-                                <h4>Dernières présentations</h4>
+                                <h4>Latest Presentations</h4>
                             </div>
                             <div class="activity-list">
                                 {% for presentation in last_presentations %}
@@ -106,14 +106,14 @@
                                         <a href="{% url 'labo:presentation_detail' presentation.id %}" class="activity-action"><i class="fas fa-eye"></i></a>
                                     </div>
                                 {% empty %}
-                                    <div class="empty-activity">Aucune présentation récente.</div>
+                                    <div class="empty-activity">No recent presentations.</div>
                                 {% endfor %}
                             </div>
                         </div>
                         
                         <div class="activity-card">
                             <div class="activity-card-header">
-                                <h4>Derniers articles</h4>
+                                <h4>Latest Articles</h4>
                             </div>
                             <div class="activity-list">
                                 {% for article in last_articles %}
@@ -124,20 +124,20 @@
                                             <div class="activity-meta">
                                                 <span>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
                                                 <span>{{ article.date_creation|date:"d/m/Y" }}</span>
-                                                {% if not article.est_publie %}<span class="activity-status">Brouillon</span>{% endif %}
+                                                {% if not article.est_publie %}<span class="activity-status">Draft</span>{% endif %}
                                             </div>
                                         </div>
                                         <a href="{% url 'labo:article_detail' article.id %}" class="activity-action"><i class="fas fa-eye"></i></a>
                                     </div>
                                 {% empty %}
-                                    <div class="empty-activity">Aucun article récent.</div>
+                                    <div class="empty-activity">No recent articles.</div>
                                 {% endfor %}
                             </div>
                         </div>
                         
                         <div class="activity-card">
                             <div class="activity-card-header">
-                                <h4>Dernières inscriptions</h4>
+                                <h4>Latest Registrations</h4>
                             </div>
                             <div class="activity-list">
                                 {% for membre in last_signups %}
@@ -159,7 +159,7 @@
                                         <a href="{% url 'labo:membre_detail' membre.id %}" class="activity-action"><i class="fas fa-eye"></i></a>
                                     </div>
                                 {% empty %}
-                                    <div class="empty-activity">Aucune inscription récente.</div>
+                                    <div class="empty-activity">No recent registrations.</div>
                                 {% endfor %}
                             </div>
                         </div>

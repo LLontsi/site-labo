@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {% if projet %}Modifier le projet{% else %}Nouveau projet{% endif %} - Beta Lab
+    {% if projet %}Edit Project{% else %}New Project{% endif %} - Beta Lab
 {% endblock %}
 
 {% block extra_css %}
@@ -14,11 +14,11 @@
 {% block header_content %}
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">
-        {% if projet %}Modifier le projet{% else %}Nouveau projet{% endif %}
+        {% if projet %}Edit Project{% else %}New Project{% endif %}
     </h1>
     <div class="header-line"></div>
     <p class="page-subtitle fade-in delay-200">
-        {% if projet %}Modification du projet "{{ projet.titre }}"{% else %}Création d'un nouveau projet{% endif %}
+        {% if projet %}Editing project "{{ projet.titre }}"{% else %}Creating a new project{% endif %}
     </p>
 </div>
 {% endblock %}
@@ -30,31 +30,31 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                      <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>{% if projet %}Modifier le projet{% else %}Nouveau projet{% endif %}</h2>
+                    <h2>{% if projet %}Edit Project{% else %}New Project{% endif %}</h2>
                     <a href="{% url 'labo:gestion_projets' %}" class="btn-back">
-                        <i class="fas fa-arrow-left"></i> Retour à la liste
+                        <i class="fas fa-arrow-left"></i> Back to List
                     </a>
                 </div>
                 
@@ -72,11 +72,11 @@
                     <form method="post" enctype="multipart/form-data" class="projet-form">
                         {% csrf_token %}
                         
-                        <!-- Informations générales -->
+                        <!-- General Information -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-info-circle"></i> Informations générales</h3>
-                                <p>Informations de base du projet</p>
+                                <h3><i class="fas fa-info-circle"></i> General Information</h3>
+                                <p>Basic project information</p>
                             </div>
                             
                             <div class="form-group">
@@ -94,7 +94,7 @@
                             <div class="form-group">
                                 <label for="{{ form.description_courte.id_for_label }}">{{ form.description_courte.label }}</label>
                                 {{ form.description_courte }}
-                                <div class="form-help">Description courte qui apparaîtra dans les listes de projets (max 300 caractères)</div>
+                                <div class="form-help">Short description that will appear in project lists (max 300 characters)</div>
                                 {% if form.description_courte.errors %}
                                     <div class="form-errors">
                                         {% for error in form.description_courte.errors %}
@@ -107,7 +107,7 @@
                             <div class="form-group">
                                 <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
                                 {{ form.description }}
-                                <div class="form-help">Description détaillée du projet</div>
+                                <div class="form-help">Detailed project description</div>
                                 {% if form.description.errors %}
                                     <div class="form-errors">
                                         {% for error in form.description.errors %}
@@ -121,17 +121,17 @@
                                 <label for="{{ form.image_principale.id_for_label }}">{{ form.image_principale.label }}</label>
                                 <div class="file-input-group">
                                     {{ form.image_principale }}
-                                    <div class="form-help">Image représentative du projet (recommandé : 800x400 pixels)</div>
+                                    <div class="form-help">Representative project image (recommended: 800x400 pixels)</div>
                                 </div>
                                 {% if projet and projet.image_principale %}
                                     <div class="current-image">
-                                        <p>Image actuelle :</p>
+                                        <p>Current image:</p>
                                         <img src="{{ projet.image_principale.url }}" alt="{{ projet.titre }}" class="current-image-preview">
                                     </div>
                                 {% endif %}
                                 <div id="image-preview" class="image-preview" style="display: none;">
-                                    <img src="" alt="Aperçu" id="preview-image">
-                                    <p>Nouvel aperçu</p>
+                                    <img src="" alt="Preview" id="preview-image">
+                                    <p>New preview</p>
                                 </div>
                                 {% if form.image_principale.errors %}
                                     <div class="form-errors">
@@ -147,7 +147,7 @@
                         <div class="form-section">
                             <div class="form-section-title">
                                 <h3><i class="fas fa-tags"></i> Classification</h3>
-                                <p>Type et statut du projet</p>
+                                <p>Project type and status</p>
                             </div>
                             
                             <div class="form-row">
@@ -180,8 +180,8 @@
                         <!-- Dates -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-calendar-alt"></i> Planification</h3>
-                                <p>Dates importantes du projet</p>
+                                <h3><i class="fas fa-calendar-alt"></i> Planning</h3>
+                                <p>Important project dates</p>
                             </div>
                             
                             <div class="form-row">
@@ -200,7 +200,7 @@
                                 <div class="form-group form-col">
                                     <label for="{{ form.date_fin_prevue.id_for_label }}">{{ form.date_fin_prevue.label }}</label>
                                     {{ form.date_fin_prevue }}
-                                    <div class="form-help">Optionnel</div>
+                                    <div class="form-help">Optional</div>
                                     {% if form.date_fin_prevue.errors %}
                                         <div class="form-errors">
                                             {% for error in form.date_fin_prevue.errors %}
@@ -214,7 +214,7 @@
                             <div class="form-group" id="date-fin-reelle-group" style="display: none;">
                                 <label for="{{ form.date_fin_reelle.id_for_label }}">{{ form.date_fin_reelle.label }}</label>
                                 {{ form.date_fin_reelle }}
-                                <div class="form-help">Date de fin effective (pour les projets terminés)</div>
+                                <div class="form-help">Actual end date (for completed projects)</div>
                                 {% if form.date_fin_reelle.errors %}
                                     <div class="form-errors">
                                         {% for error in form.date_fin_reelle.errors %}
@@ -225,17 +225,17 @@
                             </div>
                         </div>
                         
-                        <!-- Équipe -->
+                        <!-- Team -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-users"></i> Équipe</h3>
-                                <p>Membres et collaborateurs du projet</p>
+                                <h3><i class="fas fa-users"></i> Team</h3>
+                                <p>Project members and collaborators</p>
                             </div>
                             
                             <div class="form-group">
                                 <label for="{{ form.responsable.id_for_label }}">{{ form.responsable.label }}</label>
                                 {{ form.responsable }}
-                                <div class="form-help">Chef de projet responsable</div>
+                                <div class="form-help">Responsible project manager</div>
                                 {% if form.responsable.errors %}
                                     <div class="form-errors">
                                         {% for error in form.responsable.errors %}
@@ -250,7 +250,7 @@
                                 <div class="checkbox-grid">
                                     {{ form.participants }}
                                 </div>
-                                <div class="form-help">Sélectionnez les membres participant au projet</div>
+                                <div class="form-help">Select members participating in the project</div>
                                 {% if form.participants.errors %}
                                     <div class="form-errors">
                                         {% for error in form.participants.errors %}
@@ -265,7 +265,7 @@
                                 <div class="checkbox-grid">
                                     {{ form.collaborateurs_externes }}
                                 </div>
-                                <div class="form-help">Collaborateurs externes au laboratoire</div>
+                                <div class="form-help">External laboratory collaborators</div>
                                 {% if form.collaborateurs_externes.errors %}
                                     <div class="form-errors">
                                         {% for error in form.collaborateurs_externes.errors %}
@@ -276,18 +276,18 @@
                             </div>
                         </div>
                         
-                        <!-- Liens et ressources -->
+                        <!-- Links and resources -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-link"></i> Liens et ressources</h3>
-                                <p>Liens utiles vers les ressources du projet</p>
+                                <h3><i class="fas fa-link"></i> Links and Resources</h3>
+                                <p>Useful links to project resources</p>
                             </div>
                             
                             <div class="form-row">
                                 <div class="form-group form-col">
                                     <label for="{{ form.lien_solution.id_for_label }}">{{ form.lien_solution.label }}</label>
                                     {{ form.lien_solution }}
-                                    <div class="form-help">Lien vers la solution/démo</div>
+                                    <div class="form-help">Link to solution/demo</div>
                                     {% if form.lien_solution.errors %}
                                         <div class="form-errors">
                                             {% for error in form.lien_solution.errors %}
@@ -300,7 +300,7 @@
                                 <div class="form-group form-col">
                                     <label for="{{ form.lien_github.id_for_label }}">{{ form.lien_github.label }}</label>
                                     {{ form.lien_github }}
-                                    <div class="form-help">Repository GitHub</div>
+                                    <div class="form-help">GitHub repository</div>
                                     {% if form.lien_github.errors %}
                                         <div class="form-errors">
                                             {% for error in form.lien_github.errors %}
@@ -315,7 +315,7 @@
                                 <div class="form-group form-col">
                                     <label for="{{ form.lien_documentation.id_for_label }}">{{ form.lien_documentation.label }}</label>
                                     {{ form.lien_documentation }}
-                                    <div class="form-help">Documentation technique</div>
+                                    <div class="form-help">Technical documentation</div>
                                     {% if form.lien_documentation.errors %}
                                         <div class="form-errors">
                                             {% for error in form.lien_documentation.errors %}
@@ -328,7 +328,7 @@
                                 <div class="form-group form-col">
                                     <label for="{{ form.lien_publication.id_for_label }}">{{ form.lien_publication.label }}</label>
                                     {{ form.lien_publication }}
-                                    <div class="form-help">Publication scientifique</div>
+                                    <div class="form-help">Scientific publication</div>
                                     {% if form.lien_publication.errors %}
                                         <div class="form-errors">
                                             {% for error in form.lien_publication.errors %}
@@ -340,17 +340,17 @@
                             </div>
                         </div>
                         
-                        <!-- Métadonnées -->
+                        <!-- Metadata -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-code"></i> Métadonnées</h3>
-                                <p>Technologies et mots-clés</p>
+                                <h3><i class="fas fa-code"></i> Metadata</h3>
+                                <p>Technologies and keywords</p>
                             </div>
                             
                             <div class="form-group">
                                 <label for="{{ form.technologies.id_for_label }}">{{ form.technologies.label }}</label>
                                 {{ form.technologies }}
-                                <div class="form-help">Séparez les technologies par des virgules (ex: Python, Django, React, PostgreSQL)</div>
+                                <div class="form-help">Separate technologies with commas (e.g.: Python, Django, React, PostgreSQL)</div>
                                 {% if form.technologies.errors %}
                                     <div class="form-errors">
                                         {% for error in form.technologies.errors %}
@@ -363,7 +363,7 @@
                             <div class="form-group">
                                 <label for="{{ form.mots_cles.id_for_label }}">{{ form.mots_cles.label }}</label>
                                 {{ form.mots_cles }}
-                                <div class="form-help">Séparez les mots-clés par des virgules (ex: IA, Machine Learning, Web, Base de données)</div>
+                                <div class="form-help">Separate keywords with commas (e.g.: AI, Machine Learning, Web, Database)</div>
                                 {% if form.mots_cles.errors %}
                                     <div class="form-errors">
                                         {% for error in form.mots_cles.errors %}
@@ -374,11 +374,11 @@
                             </div>
                         </div>
                         
-                        <!-- Visibilité -->
+                        <!-- Visibility -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-eye"></i> Visibilité</h3>
-                                <p>Paramètres de publication</p>
+                                <h3><i class="fas fa-eye"></i> Visibility</h3>
+                                <p>Publication settings</p>
                             </div>
                             
                             <div class="form-group">
@@ -387,7 +387,7 @@
                                         {{ form.est_public }}
                                         <span>{{ form.est_public.label }}</span>
                                     </label>
-                                    <div class="form-help">Si coché, le projet sera visible sur le site public</div>
+                                    <div class="form-help">If checked, the project will be visible on the public site</div>
                                     {% if form.est_public.errors %}
                                         <div class="form-errors">
                                             {% for error in form.est_public.errors %}
@@ -403,10 +403,10 @@
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
                                 <i class="fas fa-save"></i> 
-                                {% if projet %}Mettre à jour{% else %}Créer le projet{% endif %}
+                                {% if projet %}Update{% else %}Create Project{% endif %}
                             </button>
                             <a href="{% url 'labo:gestion_projets' %}" class="btn btn-secondary">
-                                <i class="fas fa-times"></i> Annuler
+                                <i class="fas fa-times"></i> Cancel
                             </a>
                         </div>
                     </form>
@@ -420,7 +420,7 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Gestion de l'affichage de la date de fin réelle
+    // Management of actual end date display
     const statutSelect = document.getElementById('id_statut');
     const dateFiniReelleGroup = document.getElementById('date-fin-reelle-group');
     
@@ -432,13 +432,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    // Vérifier au chargement de la page
+    // Check on page load
     toggleDateFinReelle();
     
-    // Écouter les changements
+    // Listen for changes
     statutSelect.addEventListener('change', toggleDateFinReelle);
     
-    // Prévisualisation de l'image
+    // Image preview
     const imageInput = document.getElementById('id_image_principale');
     const previewContainer = document.getElementById('image-preview');
     const previewImage = document.getElementById('preview-image');
@@ -473,7 +473,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Styles spécifiques pour le formulaire projet */
+/* Specific styles for project form */
 .projet-form {
     max-width: 1000px;
 }
@@ -601,7 +601,7 @@ document.addEventListener('DOMContentLoaded', function() {
         padding: 20px;
     }
 }
-/* CSS pour améliorer l'apparence des listes déroulantes multiples */
+/* CSS to improve multiple dropdown appearance */
 .form-group select[multiple] {
     min-height: 200px !important;
     border: 2px solid #e9ecef;
@@ -635,7 +635,7 @@ document.addEventListener('DOMContentLoaded', function() {
     background-color: rgba(0, 123, 255, 0.1);
 }
 
-/* Style pour les labels des champs multiples */
+/* Style for multiple field labels */
 .form-group label + select[multiple] + .form-help {
     font-style: italic;
     color: #6c757d;
@@ -648,7 +648,7 @@ document.addEventListener('DOMContentLoaded', function() {
 @media (max-width: 768px) {
     .form-group select[multiple] {
         min-height: 150px !important;
-        font-size: 16px; /* Évite le zoom sur mobile */
+        font-size: 16px; /* Avoids zoom on mobile */
     }
 }
 </style>

@@ -11,7 +11,7 @@
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">{{ title }}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Administration du contenu du site</p>
+    <p class="page-subtitle fade-in delay-200">Website content administration</p>
 </div>
 {% endblock %}
 
@@ -22,22 +22,22 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
@@ -46,9 +46,9 @@
                 <div class="admin-header">
                     <h2>{{ title }}</h2>
                     {% if type_contenu == 'temoignages' %}
-                        <a href="{% url 'labo:create_temoignage' %}" class="btn-action"><i class="fas fa-plus"></i> Ajouter un témoignage</a>
+                        <a href="{% url 'labo:create_temoignage' %}" class="btn-action"><i class="fas fa-plus"></i> Add a testimonial</a>
                     {% elif type_contenu == 'evenements' %}
-                        <a href="{% url 'labo:create_evenement' %}" class="btn-action"><i class="fas fa-plus"></i> Ajouter un événement</a>
+                        <a href="{% url 'labo:create_evenement' %}" class="btn-action"><i class="fas fa-plus"></i> Add an event</a>
                     {% endif %}
                 </div>
                 
@@ -58,7 +58,7 @@
                                     <h2>{{ title }}</h2>
                                     <div class="admin-actions">
                                         <a href="{% url 'labo:articles_en_attente' %}" class="btn-action">
-                                            <i class="fas fa-clock"></i> Articles en attente 
+                                            <i class="fas fa-clock"></i> Pending articles 
                                             <span class="badge">{{ articles_en_attente_count }}</span>
                                         </a>
                                     </div>
@@ -67,11 +67,11 @@
                                 <table class="admin-table">
                                     <thead>
                                         <tr>
-                                            <th>Titre</th>
-                                            <th>Auteur</th>
+                                            <th>Title</th>
+                                            <th>Author</th>
                                             <th>Date</th>
-                                            <th>Catégories</th>
-                                            <th>Statut</th>
+                                            <th>Categories</th>
+                                            <th>Status</th>
                                             <th>Validation</th>
                                             <th>Actions</th>
                                         </tr>
@@ -86,35 +86,35 @@
                                                     {% for categorie in article.categories.all %}
                                                         <span class="status-badge">{{ categorie.nom }}</span>
                                                     {% empty %}
-                                                        <span class="empty-value">Aucune</span>
+                                                        <span class="empty-value">None</span>
                                                     {% endfor %}
                                                 </td>
                                                 <td>
                                                     {% if article.est_publie %}
-                                                        <span class="status-badge published">Publié</span>
+                                                        <span class="status-badge published">Published</span>
                                                     {% else %}
-                                                        <span class="status-badge draft">Brouillon</span>
+                                                        <span class="status-badge draft">Draft</span>
                                                     {% endif %}
                                                 </td>
                                                 <td>
                                                     {% if article.statut_validation == 'en_attente' %}
-                                                        <span class="status-badge warning">En attente</span>
+                                                        <span class="status-badge warning">Pending</span>
                                                     {% elif article.statut_validation == 'valide' %}
-                                                        <span class="status-badge success">Validé</span>
+                                                        <span class="status-badge success">Validated</span>
                                                     {% elif article.statut_validation == 'rejete' %}
-                                                        <span class="status-badge error">Rejeté</span>
+                                                        <span class="status-badge error">Rejected</span>
                                                     {% endif %}
                                                 </td>
                                                 <td class="cell-actions">
                                                     {% if article.est_visible_publiquement %}
-                                                        <a href="{% url 'labo:article_detail' article.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
+                                                        <a href="{% url 'labo:article_detail' article.id %}" class="table-action" title="View"><i class="fas fa-eye"></i></a>
                                                     {% endif %}
                                                     
                                                     {% if article.statut_validation == 'en_attente' %}
                                                         <button class="table-action btn-validate-item" 
                                                             data-id="{{ article.id }}" 
                                                             data-nom="{{ article.titre }}"
-                                                            title="Valider/Rejeter">
+                                                            title="Validate/Reject">
                                                             <i class="fas fa-check-circle"></i>
                                                         </button>
                                                     {% endif %}
@@ -123,14 +123,14 @@
                                                         data-id="{{ article.id }}" 
                                                         data-nom="{{ article.titre }}"
                                                         data-type="article"
-                                                        title="Supprimer">
+                                                        title="Delete">
                                                         <i class="fas fa-trash"></i>
                                                     </button>
                                                 </td>
                                             </tr>
                                         {% empty %}
                                             <tr>
-                                                <td colspan="7" class="empty-table">Aucun article n'a été trouvé.</td>
+                                                <td colspan="7" class="empty-table">No articles found.</td>
                                             </tr>
                                         {% endfor %}
                                     </tbody>
@@ -140,9 +140,9 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Titre</th>
-                                    <th>Auteur</th>
-                                    <th>Thème</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Theme</th>
                                     <th>Type</th>
                                     <th>Date</th>
                                     <th>Actions</th>
@@ -153,15 +153,15 @@
                                     <tr>
                                         <td>{{ presentation.titre }}</td>
                                         <td>{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}</td>
-                                        <td>{% if presentation.theme %}{{ presentation.theme.nom }}{% else %}<span class="empty-value">Non spécifié</span>{% endif %}</td>
+                                        <td>{% if presentation.theme %}{{ presentation.theme.nom }}{% else %}<span class="empty-value">Not specified</span>{% endif %}</td>
                                         <td><span class="status-badge">{{ presentation.type_fichier|upper }}</span></td>
                                         <td>{{ presentation.date_creation|date:"d/m/Y" }}</td>
                                         <td class="cell-actions">
-                                            <a href="{% url 'labo:presentation_detail' presentation.id %}" class="table-action" title="Voir"><i class="fas fa-eye"></i></a>
+                                            <a href="{% url 'labo:presentation_detail' presentation.id %}" class="table-action" title="View"><i class="fas fa-eye"></i></a>
                                             <button class="table-action btn-delete-item" 
                                                 data-id="{{ presentation.id }}" 
                                                 data-nom="{{ presentation.titre }}" 
-                                                title="Supprimer" 
+                                                title="Delete" 
                                                 {% if categorie.article_set.exists %}disabled{% endif %}>
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -169,7 +169,7 @@
                                     </tr>
                                 {% empty %}
                                     <tr>
-                                        <td colspan="6" class="empty-table">Aucune présentation n'a été trouvée.</td>
+                                        <td colspan="6" class="empty-table">No presentations found.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -179,8 +179,8 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Nom</th>
-                                    <th>Rôle</th>
+                                    <th>Name</th>
+                                    <th>Role</th>
                                     <th>Date</th>
                                     <th>Actions</th>
                                 </tr>
@@ -201,13 +201,13 @@
                                         <td>{{ temoignage.role }}</td>
                                         <td>{{ temoignage.date|date:"d/m/Y" }}</td>
                                         <td class="cell-actions">
-                                            <a href="{% url 'labo:edit_temoignage' temoignage.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
-                                            <a href="{% url 'labo:delete_temoignage' temoignage.id %}" class="table-action" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer ce témoignage ?');"><i class="fas fa-trash"></i></a>
+                                            <a href="{% url 'labo:edit_temoignage' temoignage.id %}" class="table-action" title="Edit"><i class="fas fa-edit"></i></a>
+                                            <a href="{% url 'labo:delete_temoignage' temoignage.id %}" class="table-action" title="Delete" onclick="return confirm('Are you sure you want to delete this testimonial?');"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 {% empty %}
                                     <tr>
-                                        <td colspan="4" class="empty-table">Aucun témoignage n'a été trouvé.</td>
+                                        <td colspan="4" class="empty-table">No testimonials found.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -217,10 +217,10 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Titre</th>
+                                    <th>Title</th>
                                     <th>Type</th>
                                     <th>Date</th>
-                                    <th>Lieu</th>
+                                    <th>Location</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -232,13 +232,13 @@
                                         <td>{{ evenement.date_debut|date:"d/m/Y" }}</td>
                                         <td>{{ evenement.lieu }}</td>
                                         <td class="cell-actions">
-                                            <a href="{% url 'labo:edit_evenement' evenement.id %}" class="table-action" title="Modifier"><i class="fas fa-edit"></i></a>
-                                            <a href="{% url 'labo:delete_evenement' evenement.id %}" class="table-action" title="Supprimer" onclick="return confirm('Êtes-vous sûr de vouloir supprimer cet événement ?');"><i class="fas fa-trash"></i></a>
+                                            <a href="{% url 'labo:edit_evenement' evenement.id %}" class="table-action" title="Edit"><i class="fas fa-edit"></i></a>
+                                            <a href="{% url 'labo:delete_evenement' evenement.id %}" class="table-action" title="Delete" onclick="return confirm('Are you sure you want to delete this event?');"><i class="fas fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 {% empty %}
                                     <tr>
-                                        <td colspan="5" class="empty-table">Aucun événement n'a été trouvé.</td>
+                                        <td colspan="5" class="empty-table">No events found.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -253,19 +253,19 @@
 <div id="delete-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Confirmer la suppression</h3>
+            <h3>Confirm deletion</h3>
             <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body">
-            <p>Êtes-vous sûr de vouloir supprimer "<span id="item-name"></span>" ?</p>
-            <p class="warning">Cette action est irréversible.</p>
+            <p>Are you sure you want to delete "<span id="item-name"></span>"?</p>
+            <p class="warning">This action is irreversible.</p>
         </div>
         <div class="modal-footer">
             <form method="post" action="" id="delete-form">
                 {% csrf_token %}
                 <input type="hidden" name="item_id" id="delete_item_id">
-                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
-                <button type="submit" class="btn btn-danger">Supprimer</button>
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
     </div>
@@ -274,23 +274,23 @@
 <div id="validate-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Validation de l'article</h3>
+            <h3>Article validation</h3>
             <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body">
-            <p>Article : "<span id="validate-item-name"></span>"</p>
+            <p>Article: "<span id="validate-item-name"></span>"</p>
             <div class="form-group">
-                <label for="commentaire_validation">Commentaire (optionnel)</label>
-                <textarea id="commentaire_validation" name="commentaire" rows="3" placeholder="Commentaire pour l'auteur..."></textarea>
+                <label for="commentaire_validation">Comment (optional)</label>
+                <textarea id="commentaire_validation" name="commentaire" rows="3" placeholder="Comment for the author..."></textarea>
             </div>
         </div>
         <div class="modal-footer">
             <form method="post" action="" id="validate-form">
                 {% csrf_token %}
                 <input type="hidden" name="commentaire" id="validate_commentaire_input">
-                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
-                <button type="submit" name="action" value="rejeter" class="btn btn-danger">Rejeter</button>
-                <button type="submit" name="action" value="valider" class="btn btn-success">Valider</button>
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" name="action" value="rejeter" class="btn btn-danger">Reject</button>
+                <button type="submit" name="action" value="valider" class="btn btn-success">Validate</button>
             </form>
         </div>
     </div>

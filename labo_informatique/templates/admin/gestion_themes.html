@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Gestion des thèmes - Beta Lab{% endblock %}
+{% block title %}Theme Management - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -9,9 +9,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Gestion des thèmes</h1>
+    <h1 class="page-title fade-in">Theme Management</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Gérer les thèmes de recherche du laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">Manage laboratory research themes</p>
 </div>
 {% endblock %}
 
@@ -22,32 +22,32 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" >Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" >Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Thèmes de recherche</h2>
+                    <h2>Research Themes</h2>
                     <div class="admin-actions">
                         <a href="{% url 'labo:create_theme' %}" class="btn btn-primary">
-                            <i class="fas fa-plus"></i> Ajouter un thème
+                            <i class="fas fa-plus"></i> Add a theme
                         </a>
                     </div>
                 </div>
@@ -67,9 +67,9 @@
                     <table class="admin-table">
                         <thead>
                             <tr>
-                                <th>Nom</th>
+                                <th>Name</th>
                                 <th>Description</th>
-                                <th>Membres associés</th>
+                                <th>Associated members</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -80,13 +80,13 @@
                                     <td>{{ theme.description|truncatechars:100 }}</td>
                                     <td>{{ theme.membre_set.count }}</td>
                                     <td class="cell-actions">
-                                        <a href="{% url 'labo:edit_theme' theme.id %}" class="table-action" title="Modifier">
+                                        <a href="{% url 'labo:edit_theme' theme.id %}" class="table-action" title="Edit">
                                             <i class="fas fa-edit"></i>
                                         </a>
                                         <button class="table-action btn-delete-theme" 
                                                 data-id="{{ theme.id }}" 
                                                 data-nom="{{ theme.nom }}" 
-                                                title="Supprimer" 
+                                                title="Delete" 
                                                 {% if theme.membre_set.count > 0 %}disabled{% endif %}>
                                             <i class="fas fa-trash"></i>
                                         </button>
@@ -94,7 +94,7 @@
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="4" class="empty-table">Aucun thème trouvé.</td>
+                                    <td colspan="4" class="empty-table">No themes found.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -105,19 +105,19 @@
                 <div id="delete-modal" class="modal" style="display: none;">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h3>Confirmer la suppression</h3>
+                            <h3>Confirm deletion</h3>
                             <span class="modal-close">&times;</span>
                         </div>
                         <div class="modal-body">
-                            <p>Êtes-vous sûr de vouloir supprimer le thème "<span id="theme-name"></span>" ?</p>
-                            <p class="warning">Cette action est irréversible.</p>
+                            <p>Are you sure you want to delete the theme "<span id="theme-name"></span>"?</p>
+                            <p class="warning">This action is irreversible.</p>
                         </div>
                         <div class="modal-footer">
                             <form method="post" action="{% url 'labo:delete_theme' %}" id="delete-form">
                                 {% csrf_token %}
                                 <input type="hidden" name="theme_id" id="delete_theme_id">
-                                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
-                                <button type="submit" class="btn btn-danger">Supprimer</button>
+                                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                                <button type="submit" class="btn btn-danger">Delete</button>
                             </form>
                         </div>
                     </div>

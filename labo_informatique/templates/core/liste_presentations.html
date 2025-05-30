@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Présentations - Laboratoire Beta Lab{% endblock %}
+{% block title %}Presentations - Beta Lab Laboratory{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/presentations.css" %} ">
@@ -8,9 +8,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Présentations</h1>
+    <h1 class="page-title fade-in">Presentations</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Découvrez les travaux et documents partagés par l'équipe </p>
+    <p class="page-subtitle fade-in delay-200">Discover the work and documents shared by the team</p>
 </div>
 
 {% endblock %}
@@ -18,9 +18,9 @@
 {% block content %}
 <section class="presentations-filters">
     <div class="container">
-        <h2>Filtrer par thème de recherche</h2>
+        <h2>Filter by research theme</h2>
         <div class="filter-buttons">
-            <button class="filter-btn active" data-filter="all">Tous</button>
+            <button class="filter-btn active" data-filter="all">All</button>
             {% for theme in themes %}
                 <button class="filter-btn" data-filter="{{ theme.id }}">{{ theme.nom }}</button>
             {% endfor %}
@@ -65,7 +65,7 @@
                             {% endif %}
                             <span>{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}</span>
                         </div>
-                        <a href="{% url 'labo:presentation_detail' presentation.id %}" class="btn-view">Consulter</a>
+                        <a href="{% url 'labo:presentation_detail' presentation.id %}" class="btn-view">View</a>
                     </div>
                 </div>
                 {% endfor %}
@@ -74,7 +74,7 @@
             {% if presentations.has_other_pages %}
             <div class="pagination">
                 {% if presentations.has_previous %}
-                    <a href="?page={{ presentations.previous_page_number }}" class="pagination-arrow">&laquo; Précédent</a>
+                    <a href="?page={{ presentations.previous_page_number }}" class="pagination-arrow">&laquo; Previous</a>
                 {% endif %}
                 
                 {% for num in presentations.paginator.page_range %}
@@ -86,14 +86,14 @@
                 {% endfor %}
                 
                 {% if presentations.has_next %}
-                    <a href="?page={{ presentations.next_page_number }}" class="pagination-arrow">Suivant &raquo;</a>
+                    <a href="?page={{ presentations.next_page_number }}" class="pagination-arrow">Next &raquo;</a>
                 {% endif %}
             </div>
             {% endif %}
             
         {% else %}
             <div class="empty-message">
-                <p>Aucune présentation n'est disponible pour le moment.</p>
+                <p>No presentations are available at the moment.</p>
             </div>
         {% endif %}
     </div>

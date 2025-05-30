@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}{% if article %}Modifier l'article{% else %}Nouvel article{% endif %} - Beta Lab{% endblock %}
+{% block title %}{% if article %}Edit article{% else %}New article{% endif %} - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/forms.css" %} ">
@@ -9,9 +9,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if article %}Modifier l'article{% else %}Nouvel article{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if article %}Edit article{% else %}New article{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Partagez vos connaissances et actualités avec la communauté</p>
+    <p class="page-subtitle fade-in delay-200">Share your knowledge and news with the community</p>
 </div>
 
 {% endblock %}
@@ -24,11 +24,11 @@
                 {% csrf_token %}
                 
                 <div class="form-section-title">
-                    <h2>Informations générales</h2>
+                    <h2>General information</h2>
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.titre.id_for_label }}">Titre de l'article</label>
+                    <label for="{{ form.titre.id_for_label }}">Article title</label>
                     {{ form.titre }}
                     {% if form.titre.errors %}
                         <div class="form-error">{{ form.titre.errors.0 }}</div>
@@ -36,31 +36,31 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.categories.id_for_label }}">Catégories</label>
+                    <label for="{{ form.categories.id_for_label }}">Categories</label>
                     <div class="categories-select">
                         {{ form.categories }}
                     </div>
                     {% if form.categories.errors %}
                         <div class="form-error">{{ form.categories.errors.0 }}</div>
                     {% endif %}
-                    <div class="form-help">Sélectionnez une ou plusieurs catégories pour votre article.</div>
+                    <div class="form-help">Select one or more categories for your article.</div>
                 </div>
                 
                 <div class="form-section-title">
-                    <h2>Image principale</h2>
+                    <h2>Main image</h2>
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.image_principale.id_for_label }}">Image de couverture</label>
+                    <label for="{{ form.image_principale.id_for_label }}">Cover image</label>
                     <div class="file-input-group">
                         {% if article and article.image_principale %}
                             <div class="current-image">
-                                <img src="{{ article.image_principale.url }}" alt="Image actuelle">
-                                <p>Image actuelle</p>
+                                <img src="{{ article.image_principale.url }}" alt="Current image">
+                                <p>Current image</p>
                             </div>
                         {% endif %}
                         {{ form.image_principale }}
-                        <div class="form-help">Format recommandé : 1200x600 pixels minimum.</div>
+                        <div class="form-help">Recommended format: 1200x600 pixels minimum.</div>
                         {% if form.image_principale.errors %}
                             <div class="form-error">{{ form.image_principale.errors.0 }}</div>
                         {% endif %}
@@ -68,7 +68,7 @@
                 </div>
                 
                 <div class="form-section-title">
-                    <h2>Contenu de l'article</h2>
+                    <h2>Article content</h2>
                 </div>
                 
                 <div class="form-group">
@@ -101,20 +101,20 @@
                 </div>
                 
                 <div class="form-section-title">
-                    <h2>Options de publication</h2>
+                    <h2>Publication options</h2>
                 </div>
                 
                 <div class="form-group form-checkbox-group">
                     <label class="checkbox-label">
                         {{ form.est_publie }}
-                        <span>Publier immédiatement</span>
+                        <span>Publish immediately</span>
                     </label>
-                    <div class="form-help">Si cette option n'est pas cochée, l'article sera enregistré comme brouillon et ne sera pas visible publiquement.</div>
+                    <div class="form-help">If this option is not checked, the article will be saved as a draft and will not be publicly visible.</div>
                 </div>
                 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Enregistrer</button>
-                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Annuler</a>
+                    <button type="submit" class="btn btn-primary">Save</button>
+                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Cancel</a>
                 </div>
             </form>
         </div>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 
 {% block title %}
-{% if categorie %}Modifier la catégorie{% else %}Ajouter une catégorie{% endif %} - Beta Lab
+{% if categorie %}Edit Category{% else %}Add Category{% endif %} - Beta Lab
 {% endblock %}
 
 {% block extra_css %}
@@ -12,9 +12,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if categorie %}Modifier la catégorie{% else %}Ajouter une catégorie{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if categorie %}Edit Category{% else %}Add Category{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">{% if categorie %}{{ categorie.nom }}{% else %}Nouvelle catégorie d'article{% endif %}</p>
+    <p class="page-subtitle fade-in delay-200">{% if categorie %}{{ categorie.nom }}{% else %}New Article Category{% endif %}</p>
 </div>
 {% endblock %}
 
@@ -25,30 +25,30 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>{% if categorie %}Modifier la catégorie{% else %}Ajouter une catégorie{% endif %}</h2>
-                    <a href="{% url 'labo:gestion_categories' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>{% if categorie %}Edit Category{% else %}Add Category{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_categories' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
                 
                 {% if messages %}
@@ -66,21 +66,21 @@
                         {% csrf_token %}
                         
                         <div class="form-group">
-                            <label for="nom">Nom de la catégorie</label>
+                            <label for="nom">Category Name</label>
                             <input type="text" id="nom" name="nom" value="{% if categorie %}{{ categorie.nom }}{% endif %}" required>
                         </div>
                         
                         <div class="form-group">
                             <label for="description">Description</label>
                             <textarea id="description" name="description" rows="6">{% if categorie %}{{ categorie.description }}{% endif %}</textarea>
-                            <div class="form-help">Décrivez la catégorie et le type d'articles qu'elle contiendra.</div>
+                            <div class="form-help">Describe the category and the type of articles it will contain.</div>
                         </div>
                         
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary">
-                                {% if categorie %}Enregistrer les modifications{% else %}Créer la catégorie{% endif %}
+                                {% if categorie %}Save Changes{% else %}Create Category{% endif %}
                             </button>
-                            <a href="{% url 'labo:gestion_categories' %}" class="btn btn-secondary">Annuler</a>
+                            <a href="{% url 'labo:gestion_categories' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>

@@ -1,16 +1,16 @@
 {% extends 'base.html' %}
 
-{% block title %}Modifier mon profil | Laboratoire Informatique{% endblock %}
+{% block title %}Edit my profile | Computer Science Laboratory{% endblock %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Edit son profil</h1>
+    <h1 class="page-title fade-in">Edit profile</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Innovation et recherche en informatique</p>
+    <p class="page-subtitle fade-in delay-200">Innovation and computer science research</p>
 </div>
 
 {% block content %}
 <section class="profile-edit-section section">
     <div class="container">
-        <h1 class="section-title text-center animate-on-scroll">Modifier mon profil</h1>
+        <h1 class="section-title text-center animate-on-scroll">Edit my profile</h1>
         <div class="section-line center"></div>
         
         <div class="profile-edit-container">
@@ -26,12 +26,12 @@
                 </div>
                 <div class="profile-edit-info">
                     <h3>{{ user.get_full_name|default:user.username }}</h3>
-                    <p class="profile-edit-hint">Complétez votre profil pour vous présenter aux autres membres du laboratoire.</p>
+                    <p class="profile-edit-hint">Complete your profile to introduce yourself to other laboratory members.</p>
                     <div class="profile-completion">
                         <div class="completion-bar">
                             <div class="completion-progress"></div>
                         </div>
-                        <span class="completion-text">Complétez votre profil</span>
+                        <span class="completion-text">Complete your profile</span>
                     </div>
                 </div>
             </div>
@@ -42,23 +42,23 @@
                         {% csrf_token %}
                         
                         <div class="form-tabs">
-                            <div class="form-tab active" data-tab="info">Informations principales</div>
-                            <div class="form-tab" data-tab="bio">Biographie</div>
-                            <div class="form-tab" data-tab="social">Réseaux sociaux</div>
+                            <div class="form-tab active" data-tab="info">Main information</div>
+                            <div class="form-tab" data-tab="bio">Biography</div>
+                            <div class="form-tab" data-tab="social">Social networks</div>
                         </div>
                         
                         <!-- Informations principales -->
                         <div class="tab-content active" id="tab-info">
                             <div class="form-group">
                                 <label for="{{ form.photo.id_for_label }}" class="form-label">
-                                    <i class="fas fa-camera"></i> Photo de profil
+                                    <i class="fas fa-camera"></i> Profile picture
                                 </label>
                                 <div class="photo-upload-control">
                                     {{ form.photo }}
                                     <div class="upload-button">
-                                        <i class="fas fa-upload"></i> Choisir une photo
+                                        <i class="fas fa-upload"></i> Choose a photo
                                     </div>
-                                    <div class="file-info">Aucun fichier sélectionné</div>
+                                    <div class="file-info">No file selected</div>
                                 </div>
                                 {% if form.photo.errors %}
                                 <div class="form-error">{{ form.photo.errors }}</div>
@@ -67,7 +67,7 @@
                             
                             <div class="form-group">
                                 <label for="{{ form.titre.id_for_label }}" class="form-label">
-                                    <i class="fas fa-briefcase"></i> Titre / Fonction
+                                    <i class="fas fa-briefcase"></i> Title / Position
                                 </label>
                                 {{ form.titre }}
                                 {% if form.titre.errors %}
@@ -77,7 +77,7 @@
                             
                             <div class="form-group">
                                 <label for="{{ form.theme.id_for_label }}" class="form-label">
-                                    <i class="fas fa-microscope"></i> Thème de recherche
+                                    <i class="fas fa-microscope"></i> Research theme
                                 </label>
                                 {{ form.theme }}
                                 {% if form.theme.errors %}
@@ -90,10 +90,10 @@
                         <div class="tab-content" id="tab-bio">
                             <div class="form-group">
                                 <label for="{{ form.bio.id_for_label }}" class="form-label">
-                                    <i class="fas fa-book"></i> Biographie
+                                    <i class="fas fa-book"></i> Biography
                                 </label>
                                 <div class="bio-help">
-                                    <p>Présentez votre parcours, vos compétences et vos intérêts de recherche.</p>
+                                    <p>Present your background, skills and research interests.</p>
                                 </div>
                                 {{ form.bio }}
                                 {% if form.bio.errors %}
@@ -127,12 +127,12 @@
                         
                         <div class="form-actions">
                             <button type="submit" class="btn btn-primary btn-glow">
-                                <i class="fas fa-save"></i> Enregistrer les modifications
+                                <i class="fas fa-save"></i> Save changes
                             </button>
                             {% if user.profil %}
-                                <a href="{% url 'labo:profil' user.profil.id %}" class="btn btn-outline">Annuler</a>
+                                <a href="{% url 'labo:profil' user.profil.id %}" class="btn btn-outline">Cancel</a>
                             {% else %}
-                                <a href="{% url 'labo:team' %}" class="btn btn-outline">Annuler</a>
+                                <a href="{% url 'labo:team' %}" class="btn btn-outline">Cancel</a>
                             {% endif %}
                         </div>
                     </form>
@@ -195,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 reader.readAsDataURL(this.files[0]);
             } else {
-                fileInfo.textContent = 'Aucun fichier sélectionné';
+                fileInfo.textContent = 'No file selected';
             }
         });
     }
@@ -224,7 +224,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if(progressBar && completionText) {
             const percentage = Math.round((completedFields / fields.length) * 100);
             progressBar.style.width = percentage + '%';
-            completionText.textContent = `Profil complété à ${percentage}%`;
+            completionText.textContent = `Profile ${percentage}% complete`;
             
             // Changer la couleur en fonction du pourcentage
             if(percentage > 70) {

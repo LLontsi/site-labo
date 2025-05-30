@@ -2,7 +2,7 @@
 {% load static %}
 
 {% block title %}
-    {% if historique %}Modifier l'historique{% else %}Nouvel historique{% endif %} - Beta Lab
+    {% if historique %}Edit History{% else %}New History{% endif %} - Beta Lab
 {% endblock %}
 
 {% block extra_css %}
@@ -16,11 +16,11 @@
 {% block header_content %}
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">
-        {% if historique %}Modifier l'historique de thème{% else %}Nouvel historique de thème{% endif %}
+        {% if historique %}Edit Theme History{% else %}New Theme History{% endif %}
     </h1>
     <div class="header-line"></div>
     <p class="page-subtitle fade-in delay-200">
-        {% if membre %}Pour {{ membre.user.first_name }} {{ membre.user.last_name }}{% endif %}
+        {% if membre %}For {{ membre.user.first_name }} {{ membre.user.last_name }}{% endif %}
     </p>
 </div>
 {% endblock %}
@@ -32,10 +32,10 @@
             <div class="form-card">
                 <div class="form-header">
                     <h2>
-                        {% if historique %}Modifier l'historique{% else %}Créer un historique{% endif %}
+                        {% if historique %}Edit History{% else %}Create History{% endif %}
                     </h2>
                     <a href="{% url 'labo:gestion_historique_themes' %}" class="btn-back">
-                        <i class="fas fa-arrow-left"></i> Retour à la liste
+                        <i class="fas fa-arrow-left"></i> Back to List
                     </a>
                 </div>
                 
@@ -52,14 +52,14 @@
                 <form method="post" class="historique-form">
                     {% csrf_token %}
                     
-                    <!-- Dans la section Membre, remplacez par : -->
+                    <!-- In the Member section, replace with: -->
                     <div class="form-section">
                         <div class="form-section-title">
-                            <h3><i class="fas fa-user"></i> Membre</h3>
+                            <h3><i class="fas fa-user"></i> Member</h3>
                         </div>
                         
                         {% if membre and not historique %}
-                            <!-- Affichage du membre pré-sélectionné -->
+                            <!-- Display of pre-selected member -->
                             <div class="membre-preselectionne">
                                 <div class="membre-info-display">
                                     {% if membre.photo %}
@@ -72,10 +72,10 @@
                                         <p>{{ membre.titre }}</p>
                                     </div>
                                 </div>
-                                {{ form.membre }}  <!-- Champ caché -->
+                                {{ form.membre }}  <!-- Hidden field -->
                             </div>
                         {% else %}
-                            <!-- Sélection normale du membre -->
+                            <!-- Normal member selection -->
                             <div class="form-group">
                                 <label for="{{ form.membre.id_for_label }}">{{ form.membre.label }}</label>
                                 {{ form.membre }}
@@ -92,7 +92,7 @@
                     
                     <div class="form-section">
                         <div class="form-section-title">
-                            <h3><i class="fas fa-tag"></i> Thème</h3>
+                            <h3><i class="fas fa-tag"></i> Theme</h3>
                         </div>
                         
                         <div class="form-group">
@@ -111,13 +111,13 @@
                         <div class="info-box" style="background: #fff3cd; border: 1px solid #ffeaa7; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
                             <h4 style="margin: 0 0 10px; color: #856404;"><i class="fas fa-info-circle"></i> Information</h4>
                             <p style="margin: 0; color: #856404;">
-                                Si ce membre a déjà un thème actuel, il sera automatiquement terminé la veille de la nouvelle date de début.
+                                If this member already has a current theme, it will be automatically terminated the day before the new start date.
                             </p>
                         </div>
                     {% endif %}
                     <div class="form-section">
                         <div class="form-section-title">
-                            <h3><i class="fas fa-calendar"></i> Période</h3>
+                            <h3><i class="fas fa-calendar"></i> Period</h3>
                         </div>
                         
                         <div class="form-row">
@@ -168,14 +168,14 @@
                         </div>
                     </div>
                     
-                   <!-- Remplacez la section form-actions par : -->
+                   <!-- Replace the form-actions section with: -->
                     <div class="form-actions">
                         <button type="submit" class="btn btn-primary" id="submit-btn">
                             <i class="fas fa-save"></i>
-                            {% if historique %}Mettre à jour{% else %}Créer l'historique{% endif %}
+                            {% if historique %}Update{% else %}Create History{% endif %}
                         </button>
                         <a href="{% url 'labo:gestion_historique_themes' %}" class="btn btn-secondary" id="cancel-btn">
-                            <i class="fas fa-times"></i> Annuler
+                            <i class="fas fa-times"></i> Cancel
                         </a>
                     </div>
                 </form>
@@ -189,28 +189,28 @@ document.addEventListener('DOMContentLoaded', function() {
     const submitBtn = document.getElementById('submit-btn');
     const form = document.querySelector('form');
     
-    // Debug pour voir si le bouton est cliquable
+    // Debug to see if button is clickable
     submitBtn.addEventListener('click', function(e) {
-        console.log('Bouton cliqué!');
+        console.log('Button clicked!');
         
-        // Vérifier la validité du formulaire
+        // Check form validity
         if (form.checkValidity()) {
-            console.log('Formulaire valide, soumission...');
+            console.log('Form valid, submitting...');
         } else {
-            console.log('Formulaire invalide');
+            console.log('Form invalid');
             e.preventDefault();
             
-            // ✅ IDENTIFIER LES CHAMPS INVALIDES
+            // ✅ IDENTIFY INVALID FIELDS
             const invalidFields = form.querySelectorAll(':invalid');
-            console.log('Champs invalides:');
+            console.log('Invalid fields:');
             invalidFields.forEach(field => {
-                console.log('- Champ:', field.name, 'Valeur:', field.value, 'Message:', field.validationMessage);
+                console.log('- Field:', field.name, 'Value:', field.value, 'Message:', field.validationMessage);
                 
-                // Mettre en évidence les champs invalides
+                // Highlight invalid fields
                 field.style.border = '2px solid red';
                 field.style.backgroundColor = '#ffe6e6';
                 
-                // Ajouter un message d'erreur visible
+                // Add visible error message
                 let errorDiv = field.parentNode.querySelector('.validation-error');
                 if (!errorDiv) {
                     errorDiv = document.createElement('div');
@@ -223,7 +223,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 errorDiv.textContent = field.validationMessage;
             });
             
-            // Faire défiler vers le premier champ invalide
+            // Scroll to first invalid field
             if (invalidFields.length > 0) {
                 invalidFields[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
                 invalidFields[0].focus();
@@ -231,7 +231,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // Nettoyer les erreurs quand l'utilisateur corrige
+    // Clear errors when user corrects
     form.addEventListener('input', function(e) {
         if (e.target.checkValidity()) {
             e.target.style.border = '';
@@ -244,7 +244,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    // S'assurer que les boutons sont visibles
+    // Ensure buttons are visible
     submitBtn.style.display = 'inline-flex';
     submitBtn.style.opacity = '1';
     submitBtn.style.visibility = 'visible';

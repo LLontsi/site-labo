@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Gestion des invitations - Beta Lab{% endblock %}
+{% block title %}Invitation Management - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -9,9 +9,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Gestion des invitations</h1>
+    <h1 class="page-title fade-in">Invitation Management</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Inviter de nouveaux membres à rejoindre la plateforme</p>
+    <p class="page-subtitle fade-in delay-200">Invite new members to join the platform</p>
 </div>
 
 {% endblock %}
@@ -23,40 +23,40 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Gestion des invitations</h2>
+                    <h2>Invitation Management</h2>
                 </div>
                 
                 <div class="admin-card">
                     <div class="card-header">
-                        <h3>Envoyer une invitation</h3>
+                        <h3>Send an invitation</h3>
                     </div>
                     <div class="card-content">
                         <form method="post" class="invitation-form">
                             {% csrf_token %}
                             <div class="form-group">
-                                <label for="{{ form.email.id_for_label }}">Adresse email</label>
+                                <label for="{{ form.email.id_for_label }}">Email address</label>
                                 {{ form.email }}
                                 {% if form.email.errors %}
                                     <div class="form-error">{{ form.email.errors.0 }}</div>
@@ -64,16 +64,16 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="{{ form.message.id_for_label }}">Message personnalisé (optionnel)</label>
+                                <label for="{{ form.message.id_for_label }}">Custom message (optional)</label>
                                 {{ form.message }}
                                 {% if form.message.errors %}
                                     <div class="form-error">{{ form.message.errors.0 }}</div>
                                 {% endif %}
-                                <div class="form-help">Ce message sera inclus dans l'email d'invitation.</div>
+                                <div class="form-help">This message will be included in the invitation email.</div>
                             </div>
                             
                             <div class="form-actions">
-                                <button type="submit" class="btn btn-primary">Envoyer l'invitation</button>
+                                <button type="submit" class="btn btn-primary">Send invitation</button>
                             </div>
                         </form>
                     </div>
@@ -81,7 +81,7 @@
                 
                 <div class="admin-card">
                     <div class="card-header">
-                        <h3>Invitations envoyées</h3>
+                        <h3>Sent invitations</h3>
                     </div>
                     <div class="card-content">
                         <div class="admin-table-container">
@@ -89,10 +89,10 @@
                                 <thead>
                                     <tr>
                                         <th>Email</th>
-                                        <th>Date d'envoi</th>
+                                        <th>Send date</th>
                                         <th>Expiration</th>
-                                        <th>Invité par</th>
-                                        <th>Statut</th>
+                                        <th>Invited by</th>
+                                        <th>Status</th>
                                         <th>Actions</th>
                                     </tr>
                                 </thead>
@@ -105,23 +105,23 @@
                                             <td>{{ invitation.inviter.first_name }} {{ invitation.inviter.last_name }}</td>
                                             <td>
                                                 {% if invitation.is_used %}
-                                                    <span class="status-badge used">Utilisée</span>
+                                                    <span class="status-badge used">Used</span>
                                                 {% elif invitation.expires_at < current_time %}
-                                                    <span class="status-badge expired">Expirée</span>
+                                                    <span class="status-badge expired">Expired</span>
                                                 {% else %}
                                                     <span class="status-badge active">Active</span>
                                                 {% endif %}
                                             </td>
                                             <td class="cell-actions">
                                                 {% if not invitation.is_used and invitation.expires_at > current_time %}
-                                                    <a href="{% url 'labo:resend_invitation' invitation.id %}" class="table-action" title="Renvoyer"><i class="fas fa-paper-plane"></i></a>
-                                                    <a href="{% url 'labo:cancel_invitation' invitation.id %}" class="table-action" title="Annuler" onclick="return confirm('Êtes-vous sûr de vouloir annuler cette invitation ?');"><i class="fas fa-trash"></i></a>
+                                                    <a href="{% url 'labo:resend_invitation' invitation.id %}" class="table-action" title="Resend"><i class="fas fa-paper-plane"></i></a>
+                                                    <a href="{% url 'labo:cancel_invitation' invitation.id %}" class="table-action" title="Cancel" onclick="return confirm('Are you sure you want to cancel this invitation?');"><i class="fas fa-trash"></i></a>
                                                 {% endif %}
                                             </td>
                                         </tr>
                                     {% empty %}
                                         <tr>
-                                            <td colspan="6" class="empty-table">Aucune invitation n'a été envoyée.</td>
+                                            <td colspan="6" class="empty-table">No invitations have been sent.</td>
                                         </tr>
                                     {% endfor %}
                                 </tbody>

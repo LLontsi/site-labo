@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Création d'un nouveau membre - Beta Lab{% endblock %}
+{% block title %}Create New Member - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/admin.css' %}">
@@ -9,9 +9,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Création d'un nouveau membre</h1>
+    <h1 class="page-title fade-in">Create New Member</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Ajouter un membre au laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">Add a member to the laboratory</p>
 </div>
 {% endblock %}
 
@@ -22,30 +22,30 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" >Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" >Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Créer un nouveau membre</h2>
-                    <a href="{% url 'labo:gestion_membres' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>Create New Member</h2>
+                    <a href="{% url 'labo:gestion_membres' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
                 
                 {% if messages %}
@@ -63,28 +63,28 @@
                         {% csrf_token %}
                         
                         <div class="form-section-title">
-                            <h3>Informations de compte</h3>
-                            <p>Informations de connexion du nouvel utilisateur</p>
+                            <h3>Account Information</h3>
+                            <p>Login information for the new user</p>
                         </div>
                         
                         <div class="form-group">
-                            <label for="username">Nom d'utilisateur</label>
+                            <label for="username">Username</label>
                             <input type="text" id="username" name="username" required>
-                            <div class="form-help">Requis. 150 caractères maximum. Lettres, chiffres et @/./+/-/_ uniquement.</div>
+                            <div class="form-help">Required. 150 characters maximum. Letters, numbers and @/./+/-/_ only.</div>
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Informations personnelles</h3>
+                            <h3>Personal Information</h3>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="first_name">Prénom</label>
+                                <label for="first_name">First Name</label>
                                 <input type="text" id="first_name" name="first_name" required>
                             </div>
                             
                             <div class="form-group form-col">
-                                <label for="last_name">Nom</label>
+                                <label for="last_name">Last Name</label>
                                 <input type="text" id="last_name" name="last_name" required>
                             </div>
                         </div>
@@ -92,22 +92,22 @@
                         <div class="form-group">
                             <label for="email">Email</label>
                             <input type="email" id="email" name="email" required>
-                            <div class="form-help">Un email sera envoyé à cette adresse avec les informations de connexion.</div>
+                            <div class="form-help">An email will be sent to this address with login information.</div>
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Informations professionnelles</h3>
+                            <h3>Professional Information</h3>
                         </div>
                         
                         <div class="form-group">
-                            <label for="titre">Titre / Fonction</label>
+                            <label for="titre">Title / Position</label>
                             <input type="text" id="titre" name="titre" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="theme">Thème de recherche</label>
+                            <label for="theme">Research Theme</label>
                             <select id="theme" name="theme">
-                                <option value="">Aucun thème</option>
+                                <option value="">No theme</option>
                                 {% for theme in themes %}
                                     <option value="{{ theme.id }}">{{ theme.nom }}</option>
                                 {% endfor %}
@@ -115,27 +115,27 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="bio">Biographie</label>
+                            <label for="bio">Biography</label>
                             <textarea id="bio" name="bio" rows="8"></textarea>
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Photo de profil</h3>
+                            <h3>Profile Photo</h3>
                         </div>
                         
                         <div class="form-group">
                             <div class="file-input-group">
                                 <input type="file" id="photo" name="photo" accept="image/*">
-                                <div class="form-help">Format recommandé : image carrée de 300x300 pixels minimum.</div>
+                                <div class="form-help">Recommended format: square image of 300x300 pixels minimum.</div>
                             </div>
                             <div id="photo-preview" class="photo-preview" style="display: none;">
-                                <img src="" alt="Aperçu" id="preview-image">
-                                <p>Aperçu de la photo</p>
+                                <img src="" alt="Preview" id="preview-image">
+                                <p>Photo Preview</p>
                             </div>
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Liens professionnels</h3>
+                            <h3>Professional Links</h3>
                         </div>
                         
                         <div class="form-group">
@@ -149,12 +149,12 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="portfolio">Portfolio / Site web</label>
+                            <label for="portfolio">Portfolio / Website</label>
                             <input type="url" id="portfolio" name="portfolio">
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Statut</h3>
+                            <h3>Status</h3>
                         </div>
                         
                         <div class="form-row">
@@ -162,9 +162,9 @@
                                 <div class="form-checkbox-group">
                                     <label class="checkbox-label">
                                         <input type="checkbox" id="est_responsable" name="est_responsable">
-                                        <span>Membre responsable</span>
+                                        <span>Responsible Member</span>
                                     </label>
-                                    <div class="form-help">Définit si le membre apparaît dans la section "Responsables".</div>
+                                    <div class="form-help">Defines whether the member appears in the "Managers" section.</div>
                                 </div>
                             </div>
                             
@@ -172,38 +172,38 @@
                                 <div class="form-checkbox-group">
                                     <label class="checkbox-label">
                                         <input type="checkbox" id="est_ancien" name="est_ancien" onchange="toggleAncien(this)">
-                                        <span>Ancien membre</span>
+                                        <span>Former Member</span>
                                     </label>
-                                    <div class="form-help">Définit si le membre est un ancien (a quitté le laboratoire).</div>
+                                    <div class="form-help">Defines whether the member is a former member (has left the laboratory).</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Champ pour le statut d'ancien membre -->
+                        <!-- Field for former member status -->
                         <div class="form-group" id="statut_ancien_group" style="display: none;">
-                            <label for="statut_ancien">Statut de l'ancien membre</label>
+                            <label for="statut_ancien">Former Member Status</label>
                             <select id="statut_ancien" name="statut_ancien">
-                                <option value="">Choisir un statut</option>
-                                <option value="parti">A quitté le laboratoire</option>
-                                <option value="assistant">Reste comme assistant à l'encadrement</option>
+                                <option value="">Choose a status</option>
+                                <option value="parti">Has left the laboratory</option>
+                                <option value="assistant">Remains as supervision assistant</option>
                             </select>
-                            <div class="form-help">Précisez si l'ancien membre reste impliqué dans le laboratoire ou s'il est parti.</div>
+                            <div class="form-help">Specify whether the former member remains involved in the laboratory or has left.</div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="date_arrivee">Date d'arrivée</label>
+                                <label for="date_arrivee">Arrival Date</label>
                                 <input type="date" id="date_arrivee" name="date_arrivee" required>
                             </div>
                             
                             <div class="form-group form-col" id="date_depart_group" style="display: none;">
-                                <label for="date_depart">Date de départ</label>
+                                <label for="date_depart">Departure Date</label>
                                 <input type="date" id="date_depart" name="date_depart">
                             </div>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Créer le membre</button>
-                            <a href="{% url 'labo:gestion_membres' %}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Create Member</button>
+                            <a href="{% url 'labo:gestion_membres' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>
@@ -222,7 +222,7 @@
         
         if (checkbox.checked) {
             statutAncienGroup.style.display = 'block';
-            // Écouter les changements du statut d'ancien membre
+            // Listen for former member status changes
             statutAncienSelect.addEventListener('change', function() {
                 if (this.value === 'parti') {
                     dateDepartGroup.style.display = 'block';
@@ -242,7 +242,7 @@
         }
     }
     
-    // Prévisualisation de la photo
+    // Photo preview
     document.addEventListener('DOMContentLoaded', function() {
         const photoInput = document.getElementById('photo');
         const previewContainer = document.getElementById('photo-preview');

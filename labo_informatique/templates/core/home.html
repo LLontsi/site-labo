@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Accueil - Beta Lab{% endblock %}
+{% block title %}Home - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/home.css" %} ">
@@ -10,10 +10,10 @@
 <div class="hero">
     <div class="hero-content">
         <h1 class="hero-title">  Beta Lab</h1>
-        <p class="hero-subtitle"> laboratoire de recherche informatique et innovations technologiques</p>
+        <p class="hero-subtitle"> computer science research laboratory and technological innovations</p>
         <div class="hero-buttons">
-            <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Découvrir nos travaux</a>
-            <a href="{% url 'labo:contact' %}" class="btn btn-secondary">Nous contacter</a>
+            <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Discover our work</a>
+            <a href="{% url 'labo:contact' %}" class="btn btn-secondary">Contact us</a>
         </div>
     </div>
 </div>
@@ -23,7 +23,7 @@
 <!-- Section événements -->
 <section class="events-section">
     <div class="container">
-        <h2 class="section-title">Événements à venir</h2>
+        <h2 class="section-title">Upcoming Events</h2>
         <div class="events-grid">
             {% for evenement in evenements %}
             <div class="event-card">
@@ -43,7 +43,7 @@
             </div>
             {% empty %}
             <div class="empty-message">
-                <p>Aucun événement à venir n'est prévu pour le moment.</p>
+                <p>No upcoming events are planned at the moment.</p>
             </div>
             {% endfor %}
         </div>
@@ -52,56 +52,56 @@
 <!-- Section domaines d'expertise -->
 <section class="domains-section">
     <div class="container">
-        <h2 class="section-title"> Domaines de recherche</h2>
+        <h2 class="section-title"> Research Areas</h2>
         <div class="domains-grid">
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-laptop-code"></i>
                 </div>
-                <h3>Systèmes d'Exploitation</h3>
-                <p>Développement et optimisation de systèmes d'exploitation, gestion des ressources et performance.</p>
+                <h3>Operating Systems</h3>
+                <p>Development and optimization of operating systems, resource management and performance.</p>
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-microchip"></i>
                 </div>
-                <h3>Internet des Objets (IoT)</h3>
-                <p>Conception de solutions connectées, réseaux de capteurs et applications pour objets intelligents.</p>
+                <h3>Internet of Things (IoT)</h3>
+                <p>Design of connected solutions, sensor networks and applications for smart objects.</p>
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-brain"></i>
                 </div>
-                <h3>Intelligence Artificielle</h3>
-                <p>Développement d'algorithmes et modèles avancés pour résoudre des problèmes complexes.</p>
+                <h3>Artificial Intelligence</h3>
+                <p>Development of advanced algorithms and models to solve complex problems.</p>
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-cloud"></i>
                 </div>
                 <h3>Cloud Computing</h3>
-                <p>Conception et optimisation d'infrastructures cloud, virtualisation et services distribués.</p>
+                <p>Design and optimization of cloud infrastructures, virtualization and distributed services.</p>
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-database"></i>
                 </div>
                 <h3>Big Data</h3>
-                <p>Analyse et traitement de grandes quantités de données pour en extraire des informations pertinentes.</p>
+                <p>Analysis and processing of large amounts of data to extract relevant information.</p>
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-network-wired"></i>
                 </div>
-                <h3>Réseaux Informatiques</h3>
-                <p>Optimisation des infrastructures réseau et développement de protocoles de communication.</p>
+                <h3>Computer Networks</h3>
+                <p>Network infrastructure optimization and communication protocol development.</p>
             </div>
             <div class="domain-card">
                 <div class="domain-icon">
                     <i class="fas fa-code-branch"></i>
                 </div>
-                <h3>Systèmes d'Information et Génie Logiciel</h3>
-                <p>Conception, développement et maintenance de systèmes d'information et méthodes d'ingénierie logicielle.</p>
+                <h3>Information Systems and Software Engineering</h3>
+                <p>Design, development and maintenance of information systems and software engineering methods.</p>
             </div>
         </div>
     </div>
@@ -114,9 +114,9 @@
         <div class="section-header">
             <h2 class="section-title">
                 <span class="title-icon"><i class="fas fa-project-diagram"></i></span>
-                Nos Projets Actuels
+                Our Current Projects
             </h2>
-            <p class="section-subtitle">Découvrez nos derniers projets de recherche et développement</p>
+            <p class="section-subtitle">Discover our latest research and development projects</p>
         </div>
         
         <div class="projects-home-grid">
@@ -131,7 +131,7 @@
                             </div>
                         {% endif %}
                         <div class="project-home-status">
-                            <i class="fas fa-play"></i> En cours
+                            <i class="fas fa-play"></i> In Progress
                         </div>
                     </div>
                     
@@ -165,7 +165,7 @@
                         {% endif %}
                         
                         <a href="{% url 'labo:projet_detail' projet.id %}" class="project-home-link">
-                            En savoir plus <i class="fas fa-arrow-right"></i>
+                            Learn more <i class="fas fa-arrow-right"></i>
                         </a>
                     </div>
                 </div>
@@ -174,7 +174,7 @@
         
         <div class="section-action">
             <a href="{% url 'labo:liste_projets' %}" class="btn btn-primary btn-lg">
-                <i class="fas fa-project-diagram"></i> Voir tous nos projets
+                <i class="fas fa-project-diagram"></i> View all our projects
             </a>
         </div>
     </div>
@@ -184,7 +184,7 @@
 <!-- Section actualités récentes -->
 <section class="news-section">
     <div class="container">
-        <h2 class="section-title">Actualités récentes</h2>
+        <h2 class="section-title">Recent News</h2>
         <div class="news-grid">
             {% for article in derniers_articles %}
             <article class="news-card">
@@ -218,17 +218,17 @@
                         {% endif %}
                         <span>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
                     </div>
-                    <a href="{% url 'labo:article_detail' article.id %}" class="btn-read">Lire plus</a>
+                    <a href="{% url 'labo:article_detail' article.id %}" class="btn-read">Read more</a>
                 </div>
             </article>
             {% empty %}
             <div class="empty-message">
-                <p>Aucun article n'est disponible pour le moment.</p>
+                <p>No articles are available at the moment.</p>
             </div>
             {% endfor %}
         </div>
         <div class="section-action">
-            <a href="{% url 'labo:liste_articles' %}" class="btn btn-primary">Voir tous les articles</a>
+            <a href="{% url 'labo:liste_articles' %}" class="btn btn-primary">View all articles</a>
         </div>
     </div>
 </section>
@@ -236,7 +236,7 @@
 <!-- Section témoignages -->
 <section class="testimonials-section">
     <div class="container">
-        <h2 class="section-title">Témoignages</h2>
+        <h2 class="section-title">Testimonials</h2>
         <div class="testimonials-carousel">
             {% for temoignage in temoignages %}
             <div class="testimonial-card">
@@ -258,7 +258,7 @@
             </div>
             {% empty %}
             <div class="empty-message">
-                <p>Aucun témoignage n'est disponible pour le moment.</p>
+                <p>No testimonials are available at the moment.</p>
             </div>
             {% endfor %}
         </div>
@@ -267,7 +267,7 @@
 <!-- Section directeurs -->
 <section class="team-section director-section">
     <div class="container">
-        <h2 class="section-title">Direction du laboratoire</h2>
+        <h2 class="section-title">Laboratory Management</h2>
         <div class="team-grid">
             {% for membre in membres1 %}
                 {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' or membre.user.first_name == 'ALain' or membre.user.last_name == 'TCHANA' or membre.user.first_name == 'Parfait' or membre.user.last_name == 'Bessala' %}
@@ -303,7 +303,7 @@
             {% endfor %}
         </div>
         <div class="section-action">
-            <a href="{% url 'labo:responsables' %}" class="btn btn-primary">Voir tout les responsables du laboratoire</a>
+            <a href="{% url 'labo:responsables' %}" class="btn btn-primary">View all laboratory managers</a>
         </div>
     </div>
 </section>
@@ -311,7 +311,7 @@
 <!-- Section équipe (sans les directeurs) -->
 <section class="team-section">
     <div class="container">
-        <h2 class="section-title"> Etudiants</h2>
+        <h2 class="section-title"> Students</h2>
         <div class="team-grid">
             {% for membre in membres|slice:":3" %}
                 {% if not membre.titre == 'Directeur' and not membre.titre == 'Directrice' and not membre.user.first_name == 'ALain' and not membre.user.last_name == 'TCHANA' and not membre.user.first_name == 'Parfait' and not membre.user.last_name == 'Bessala' %}
@@ -344,12 +344,12 @@
                 {% endif %}
             {% empty %}
                 <div class="empty-message">
-                    <p>Aucun membre n'est disponible pour le moment.</p>
+                    <p>No members are available at the moment.</p>
                 </div>
             {% endfor %}
         </div>
         <div class="section-action">
-            <a href="{% url 'labo:team' %}" class="btn btn-primary">Voir tout les Etudiants</a>
+            <a href="{% url 'labo:team' %}" class="btn btn-primary">View all Students</a>
         </div>
     </div>
 </section>
@@ -360,7 +360,7 @@
         <div class="stats-grid">
             <div class="stat-card">
                 <div class="stat-number" data-count="{{ nb_membres }}">0</div>
-                <div class="stat-label">Chercheurs</div>
+                <div class="stat-label">Researchers</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-count="{{ nb_publications }}">0</div>
@@ -368,11 +368,11 @@
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-count="{{ nb_projets }}">0</div>
-                <div class="stat-label">blogs</div>
+                <div class="stat-label">Blogs</div>
             </div>
             <div class="stat-card">
                 <div class="stat-number" data-count="{{ nb_partenaires }}">0</div>
-                <div class="stat-label">Collaborateurs</div>
+                <div class="stat-label">Collaborators</div>
             </div>
         </div>
     </div>
@@ -382,9 +382,9 @@
 <section class="contact-cta-section">
     <div class="container">
         <div class="contact-cta-content">
-            <h2>Intéressé par nos recherches ?</h2>
-            <p>N'hésitez pas à nous contacter pour en savoir plus sur nos activités ou pour discuter d'une potentielle collaboration.</p>
-            <a href="{% url 'labo:contact' %}" class="btn btn-primary">Contactez-nous</a>
+            <h2>Interested in our research?</h2>
+            <p>Don't hesitate to contact us to learn more about our activities or to discuss a potential collaboration.</p>
+            <a href="{% url 'labo:contact' %}" class="btn btn-primary">Contact us</a>
         </div>
     </div>
 </section>

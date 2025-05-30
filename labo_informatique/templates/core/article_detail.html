@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}{{ article.titre }} - Laboratoire Beta Lab{% endblock %}
+{% block title %}{{ article.titre }} - Beta Lab Laboratory{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/article_detail.css" %} ">
@@ -9,17 +9,17 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Notre Blog</h1>
+    <h1 class="page-title fade-in">Our Blog</h1>
     <div class="header-line"></div>
     
 <div class="page-title">
     <h1>{{ article.titre }}</h1>
     <div class="article-meta">
         <span class="meta-item"><i class="far fa-calendar-alt"></i> {{ article.date_creation|date:"d F Y" }}</span>
-        <span class="meta-item"><i class="far fa-user"></i> Par {{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
+        <span class="meta-item"><i class="far fa-user"></i> By {{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</span>
     </div>
 </div>
-<p class="page-subtitle fade-in delay-200">recherche en informatique et Innovations technologiques</p>
+<p class="page-subtitle fade-in delay-200">computer science research and technological innovations</p>
 
 </div>
 {% endblock %}
@@ -47,7 +47,7 @@
                 
                 <div class="article-footer">
                     <div class="article-share">
-                        <h3>Partager cet article</h3>
+                        <h3>Share this article</h3>
                         <div class="share-buttons">
                             <a href="https://twitter.com/intent/tweet?url={{ request.build_absolute_uri }}&text={{ article.titre }}" target="_blank" class="share-btn twitter">
                                 <i class="fab fa-twitter"></i>
@@ -63,7 +63,7 @@
                 </div>
                 
                 <div class="article-author">
-                    <h3>À propos de l'auteur</h3>
+                    <h3>About the author</h3>
                     <div class="author-card">
                         <div class="author-image">
                             {% if article.auteur.photo %}
@@ -76,14 +76,14 @@
                             <h4>{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}</h4>
                             <p class="author-title">{{ article.auteur.titre }}</p>
                             <p class="author-bio">{{ article.auteur.bio|truncatechars:200 }}</p>
-                            <a href="{% url 'labo:membre_detail' article.auteur.id %}" class="btn-view-profile">Voir le profil</a>
+                            <a href="{% url 'labo:membre_detail' article.auteur.id %}" class="btn-view-profile">View profile</a>
                         </div>
                     </div>
                 </div>
                 
                 {% if related_articles %}
                 <div class="related-articles">
-                    <h3>Articles similaires</h3>
+                    <h3>Similar articles</h3>
                     <div class="related-grid">
                         {% for related in related_articles %}
                         <div class="related-card">
@@ -99,7 +99,7 @@
                             <div class="related-content">
                                 <span class="related-date">{{ related.date_creation|date:"d F Y" }}</span>
                                 <h4>{{ related.titre }}</h4>
-                                <a href="{% url 'labo:article_detail' related.id %}" class="btn-read">Lire l'article</a>
+                                <a href="{% url 'labo:article_detail' related.id %}" class="btn-read">Read article</a>
                             </div>
                         </div>
                         {% endfor %}
@@ -110,7 +110,7 @@
             
             <div class="article-sidebar">
                 <div class="sidebar-section categories">
-                    <h3>Catégories</h3>
+                    <h3>Categories</h3>
                     <ul class="category-list">
                         {% for categorie in categories %}
                         <li>
@@ -123,7 +123,7 @@
                 </div>
                 
                 <div class="sidebar-section recent-posts">
-                    <h3>Articles récents</h3>
+                    <h3>Recent articles</h3>
                     <ul class="recent-list">
                         {% for recent in articles_recents %}
                         <li>
@@ -137,7 +137,7 @@
                 </div>
                 
                 <div class="sidebar-section authors">
-                    <h3>Nos auteurs</h3>
+                    <h3>Our authors</h3>
                     <div class="authors-list">
                         {% for auteur in auteurs %}
                         <a href="{% url 'labo:membre_detail' auteur.id %}" class="author-item">

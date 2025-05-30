@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %} - Beta Lab{% endblock %}
+{% block title %}{% if collaborateur %}Edit Collaborator{% else %}Add Collaborator{% endif %} - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -10,9 +10,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %}</h1>
+    <h1 class="page-title fade-in">{% if collaborateur %}Edit Collaborator{% else %}Add Collaborator{% endif %}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">{% if collaborateur %}{{ collaborateur.prenom }} {{ collaborateur.nom }}{% else %}Nouveau collaborateur externe{% endif %}</p>
+    <p class="page-subtitle fade-in delay-200">{% if collaborateur %}{{ collaborateur.prenom }} {{ collaborateur.nom }}{% else %}New External Collaborator{% endif %}</p>
 </div>
 
 {% endblock %}
@@ -24,30 +24,30 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>{% if collaborateur %}Modifier le collaborateur{% else %}Ajouter un collaborateur{% endif %}</h2>
-                    <a href="{% url 'labo:gestion_collaborateurs' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>{% if collaborateur %}Edit Collaborator{% else %}Add Collaborator{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_collaborateurs' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
                 
                 <div class="form-card">
@@ -55,24 +55,24 @@
                         {% csrf_token %}
                         
                         <div class="form-section-title">
-                            <h3>Informations personnelles</h3>
+                            <h3>Personal Information</h3>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="prenom">Prénom</label>
+                                <label for="prenom">First Name</label>
                                 <input type="text" id="prenom" name="prenom" value="{{ collaborateur.prenom|default:'' }}" required>
                             </div>
                             
                             <div class="form-group form-col">
-                                <label for="nom">Nom</label>
+                                <label for="nom">Last Name</label>
                                 <input type="text" id="nom" name="nom" value="{{ collaborateur.nom|default:'' }}" required>
                             </div>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="titre">Titre / Fonction</label>
+                                <label for="titre">Title / Position</label>
                                 <input type="text" id="titre" name="titre" value="{{ collaborateur.titre|default:'' }}" required>
                             </div>
                             
@@ -83,9 +83,9 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="description">Description de la collaboration</label>
+                            <label for="description">Collaboration Description</label>
                             <textarea id="description" name="description" rows="5" required>{{ collaborateur.description|default:'' }}</textarea>
-                            <div class="form-help">Décrivez la nature de la collaboration avec le laboratoire.</div>
+                            <div class="form-help">Describe the nature of the collaboration with the laboratory.</div>
                         </div>
                         
                         <div class="form-section-title">
@@ -96,19 +96,19 @@
                             <div class="photo-upload">
                                 {% if collaborateur.photo %}
                                     <div class="current-photo">
-                                        <img src="{{ collaborateur.photo.url }}" alt="Photo actuelle">
-                                        <p>Photo actuelle</p>
+                                        <img src="{{ collaborateur.photo.url }}" alt="Current Photo">
+                                        <p>Current Photo</p>
                                     </div>
                                 {% endif %}
                                 <div class="file-input-group">
                                     <input type="file" id="photo" name="photo" accept="image/*">
-                                    <div class="form-help">Format recommandé : image carrée de 300x300 pixels minimum.</div>
+                                    <div class="form-help">Recommended format: square image of 300x300 pixels minimum.</div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Coordonnées</h3>
+                            <h3>Contact Information</h3>
                         </div>
                         
                         <div class="form-group">
@@ -117,14 +117,14 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="lien">Site web / Profil</label>
+                            <label for="lien">Website / Profile</label>
                             <input type="url" id="lien" name="lien" value="{{ collaborateur.lien|default:'' }}">
-                            <div class="form-help">URL du site web personnel ou professionnel.</div>
+                            <div class="form-help">URL of personal or professional website.</div>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                            <a href="{% url 'labo:gestion_collaborateurs' %}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{% url 'labo:gestion_collaborateurs' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>

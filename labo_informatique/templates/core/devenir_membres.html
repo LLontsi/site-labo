@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Devenir des membres - Laboratoire Beta Lab{% endblock %}
+{% block title %}Alumni Career Path - Beta Lab Laboratory{% endblock %}
  {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/devenir.css" %}">
@@ -8,9 +8,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Devenir des membres</h1>
+    <h1 class="page-title fade-in">Alumni Career Path</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Découvrez le parcours des anciens membres après leur départ du laboratoire</p>
+    <p class="page-subtitle fade-in delay-200">Discover the journey of former members after leaving the laboratory</p>
 </div>
 
 {% endblock %}
@@ -20,9 +20,9 @@
     <div class="container">
         <div class="filter-grid">
             <div class="filter-group">
-                <h3>Filtrer par domaine</h3>
+                <h3>Filter by field</h3>
                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="domaine" data-value="all">Tous</button>
+                    <button class="filter-btn active" data-filter="domaine" data-value="all">All</button>
                     {% for domaine in domaines %}
                     <button class="filter-btn" data-filter="domaine" data-value="{{ domaine }}">{{ domaine }}</button>
                     {% endfor %}
@@ -30,9 +30,9 @@
             </div>
             
             <div class="filter-group">
-                <h3>Filtrer par année de départ</h3>
+                <h3>Filter by departure year</h3>
                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="annee" data-value="all">Toutes</button>
+                    <button class="filter-btn active" data-filter="annee" data-value="all">All</button>
                     {% for annee in annees %}
                     <button class="filter-btn" data-filter="annee" data-value="{{ annee }}">{{ annee }}</button>
                     {% endfor %}
@@ -40,11 +40,11 @@
             </div>
             
             <div class="filter-group">
-                <h3>Type de structure</h3>
+                <h3>Type of organization</h3>
                 <div class="filter-buttons">
-                    <button class="filter-btn active" data-filter="structure" data-value="all">Toutes</button>
-                    <button class="filter-btn" data-filter="structure" data-value="academique">Académique</button>
-                    <button class="filter-btn" data-filter="structure" data-value="industrie">Industrie</button>
+                    <button class="filter-btn active" data-filter="structure" data-value="all">All</button>
+                    <button class="filter-btn" data-filter="structure" data-value="academique">Academic</button>
+                    <button class="filter-btn" data-filter="structure" data-value="industrie">Industry</button>
                     <button class="filter-btn" data-filter="structure" data-value="startup">Startup</button>
                 </div>
             </div>
@@ -54,34 +54,34 @@
 
 <section class="devenir-statistics">
     <div class="container">
-        <h2>Statistiques et répartition</h2>
+        <h2>Statistics and distribution</h2>
         <div class="stats-grid">
             <div class="stats-card">
                 <div class="stats-number">{{ nb_membres }}</div>
-                <div class="stats-label">Anciens membres suivis</div>
+                <div class="stats-label">Alumni tracked</div>
             </div>
             
             <div class="stats-card">
                 <div class="stats-number">{{ nb_domaines }}</div>
-                <div class="stats-label">Domaines d'activité</div>
+                <div class="stats-label">Activity fields</div>
             </div>
             
             <div class="stats-card">
                 <div class="stats-number">{{ nb_lieux }}</div>
-                <div class="stats-label">Lieux différents</div>
+                <div class="stats-label">Different locations</div>
             </div>
         </div>
         
         <div class="stats-chart">
-            <h3>Répartition par secteur d'activité</h3>
+            <h3>Distribution by activity sector</h3>
             <div class="chart-wrapper">
                 <!-- Ici, on pourrait intégrer un graphique avec Chart.js -->
                 <div class="placeholder-chart">
                     <div class="chart-segment academique" style="width: {{ pct_academique }}%;">
-                        <span>Académique</span>
+                        <span>Academic</span>
                     </div>
                     <div class="chart-segment industrie" style="width: {{ pct_industrie }}%;">
-                        <span>Industrie</span>
+                        <span>Industry</span>
                     </div>
                     <div class="chart-segment startup" style="width: {{ pct_startup }}%;">
                         <span>Startup</span>
@@ -94,7 +94,7 @@
 
 <section class="devenir-members">
     <div class="container">
-        <h2>Parcours des anciens membres</h2>
+        <h2>Alumni career paths</h2>
         
         {% if devenirs %}
         <div class="members-grid">
@@ -114,7 +114,7 @@
                     <div class="member-identity">
                         <h3>{{ devenir.membre.user.first_name }} {{ devenir.membre.user.last_name }}</h3>
                         <p class="member-dates">
-                            <span>Au laboratoire: {{ devenir.membre.date_arrivee|date:"F Y" }} - {{ devenir.membre.date_depart|date:"F Y" }}</span>
+                            <span>At the laboratory: {{ devenir.membre.date_arrivee|date:"F Y" }} - {{ devenir.membre.date_depart|date:"F Y" }}</span>
                         </p>
                     </div>
                 </div>
@@ -125,7 +125,7 @@
                         <div class="position-meta">
                             <span><i class="fas fa-map-marker-alt"></i> {{ devenir.lieu }}</span>
                             <span><i class="fas fa-briefcase"></i> {{ devenir.domaine }}</span>
-                            <span><i class="far fa-calendar-alt"></i> Depuis {{ devenir.date_debut|date:"F Y" }}</span>
+                            <span><i class="far fa-calendar-alt"></i> Since {{ devenir.date_debut|date:"F Y" }}</span>
                         </div>
                     </div>
                 </div>
@@ -133,7 +133,7 @@
                     <p>{{ devenir.description|truncatechars:200 }}</p>
                 </div>
                 <div class="member-footer">
-                    <a href="{% url 'labo:membre_detail' devenir.membre.id %}" class="btn-profile">Voir le profil complet</a>
+                    <a href="{% url 'labo:membre_detail' devenir.membre.id %}" class="btn-profile">View full profile</a>
                     {% if devenir.lien %}
                     <a href="{{ devenir.lien }}" target="_blank" class="btn-website"><i class="fas fa-external-link-alt"></i></a>
                     {% endif %}
@@ -143,7 +143,7 @@
         </div>
         {% else %}
         <div class="empty-message">
-            <p>Aucune information sur le devenir des anciens membres n'est disponible pour le moment.</p>
+            <p>No information about alumni career paths is available at the moment.</p>
         </div>
         {% endif %}
     </div>

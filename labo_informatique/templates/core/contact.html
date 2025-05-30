@@ -1,14 +1,14 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block title %}Contact |  Beta Lab{% endblock %}
+{% block title %}Contact | Beta Lab{% endblock %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/contact.css" %}">
 {% endblock %}
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Contactez notre laboratoire</h1>
+    <h1 class="page-title fade-in">Contact our laboratory</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">recherche en informatique et Innovations technologiques</p>
+    <p class="page-subtitle fade-in delay-200">computer science research and technological innovations</p>
 </div>
 {% endblock %}
 
@@ -18,14 +18,14 @@
         <div class="contact-grid">
             <!-- Informations de contact -->
             <div class="contact-info animate-on-scroll">
-                <h3>Nos coordonnées</h3>
+                <h3>Our contact information</h3>
                 <div class="contact-item">
                     <div class="contact-icon">
                         <i class="fas fa-map-marker-alt"></i>
                     </div>
                     <div class="contact-text">
-                        <h4>Adresse</h4>
-                        <p>CHU, Fasculté de medecine<br>Yaounde<br>Cameroun</p>
+                        <h4>Address</h4>
+                        <p>CHU, Faculty of Medicine<br>Yaounde<br>Cameroon</p>
                     </div>
                 </div>
                 <div class="contact-item">
@@ -33,7 +33,7 @@
                         <i class="fas fa-phone"></i>
                     </div>
                     <div class="contact-text">
-                        <h4>Téléphone</h4>
+                        <h4>Phone</h4>
                     <p>+237 675 75 99 00 / +33 7 49 55 61 71</p>
                     </div>
                 </div>
@@ -51,8 +51,8 @@
                         <i class="fas fa-clock"></i>
                     </div>
                     <div class="contact-text">
-                        <h4>Horaires</h4>
-                        <p>Lundi - Samedi: 7h - 20h<br> Dimanche: Fermé</p>
+                        <h4>Hours</h4>
+                        <p>Monday - Saturday: 7am - 8pm<br> Sunday: Closed</p>
                     </div>
                 </div>
                 <div class="contact-social">
@@ -65,7 +65,7 @@
             
             <!-- Formulaire de contact -->
             <div class="contact-form animate-on-scroll delay-300">
-                <h3>Envoyez-nous un message</h3>
+                <h3>Send us a message</h3>
                 
                 {% if messages %}
                 <div class="messages">
@@ -80,7 +80,7 @@
                 <form method="post">
                     {% csrf_token %}
                     <div class="form-group">
-                        <label for="{{ form.nom.id_for_label }}" class="form-label">Nom</label>
+                        <label for="{{ form.nom.id_for_label }}" class="form-label">Name</label>
                         {{ form.nom }}
                     </div>
                     <div class="form-group">
@@ -88,14 +88,14 @@
                         {{ form.email }}
                     </div>
                     <div class="form-group">
-                        <label for="{{ form.sujet.id_for_label }}" class="form-label">Sujet</label>
+                        <label for="{{ form.sujet.id_for_label }}" class="form-label">Subject</label>
                         {{ form.sujet }}
                     </div>
                     <div class="form-group">
                         <label for="{{ form.message.id_for_label }}" class="form-label">Message</label>
                         {{ form.message }}
                     </div>
-                    <button type="submit" class="btn btn-primary">Envoyer le message</button>
+                    <button type="submit" class="btn btn-primary">Send message</button>
                 </form>
             </div>
         </div>

@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Projets - Beta Lab{% endblock %}
+{% block title %}Projects - Beta Lab{% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/projets.css' %}">
@@ -9,9 +9,9 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Nos Projets</h1>
+    <h1 class="page-title fade-in">Our Projects</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Découvrez nos projets de recherche et développement</p>
+    <p class="page-subtitle fade-in delay-200">Discover our research and development projects</p>
 </div>
 {% endblock %}
 
@@ -26,7 +26,7 @@
                 </div>
                 <div class="stat-content">
                     <h3>{{ nb_projets_total }}</h3>
-                    <p>Projets total</p>
+                    <p>Total projects</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -35,7 +35,7 @@
                 </div>
                 <div class="stat-content">
                     <h3>{{ nb_projets_en_cours }}</h3>
-                    <p>En cours</p>
+                    <p>In progress</p>
                 </div>
             </div>
             <div class="stat-card">
@@ -44,7 +44,7 @@
                 </div>
                 <div class="stat-content">
                     <h3>{{ nb_projets_termines }}</h3>
-                    <p>Terminés</p>
+                    <p>Completed</p>
                 </div>
             </div>
         </div>
@@ -56,11 +56,11 @@
         <div class="filters-container">
             <!-- Filtre par Statut -->
             <div class="filter-category">
-                <h3 class="filter-title">Filtrer par statut</h3>
+                <h3 class="filter-title">Filter by status</h3>
                 <div class="filter-buttons">
                     <a href="{% url 'labo:liste_projets' %}" 
                        class="filter-btn {% if not statut_filtre %}active{% endif %}">
-                        Tous
+                        All
                     </a>
                     {% for value, label in statuts %}
                         <a href="?statut={{ value }}{% if type_filtre %}&type={{ type_filtre }}{% endif %}" 
@@ -73,11 +73,11 @@
 
             <!-- Filtre par Type -->
             <div class="filter-category">
-                <h3 class="filter-title">Type de projet</h3>
+                <h3 class="filter-title">Project type</h3>
                 <div class="filter-buttons">
                     <a href="{% url 'labo:liste_projets' %}{% if statut_filtre %}?statut={{ statut_filtre }}{% endif %}" 
                        class="filter-btn {% if not type_filtre %}active{% endif %}">
-                        Tous
+                        All
                     </a>
                     {% for value, label in types %}
                         <a href="?type={{ value }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}" 
@@ -91,10 +91,10 @@
             <!-- Indicateur de filtres actifs -->
             {% if statut_filtre or type_filtre %}
             <div class="active-filters">
-                <span class="active-filters-label">Filtres actifs :</span>
+                <span class="active-filters-label">Active filters:</span>
                 {% if statut_filtre %}
                     <span class="active-filter-tag">
-                        Statut: 
+                        Status: 
                         {% for value, label in statuts %}
                             {% if value == statut_filtre %}{{ label }}{% endif %}
                         {% endfor %}
@@ -115,7 +115,7 @@
                     </span>
                 {% endif %}
                 <a href="{% url 'labo:liste_projets' %}" class="clear-all-filters">
-                    <i class="fas fa-trash-alt"></i> Tout effacer
+                    <i class="fas fa-trash-alt"></i> Clear all
                 </a>
             </div>
             {% endif %}
@@ -131,9 +131,9 @@
         <div class="section-header">
             <h2 class="section-title">
                 <span class="title-icon"><i class="fas fa-play-circle"></i></span>
-                Projets en cours
+                Projects in progress
             </h2>
-            <div class="projects-count">{{ projets_en_cours.count }} projet{{ projets_en_cours.count|pluralize }}</div>
+            <div class="projects-count">{{ projets_en_cours.count }} project{{ projets_en_cours.count|pluralize }}</div>
         </div>
         
         <div class="projects-grid">
@@ -148,7 +148,7 @@
                             </div>
                         {% endif %}
                         <div class="project-status status-en-cours">
-                            <i class="fas fa-play"></i> En cours
+                            <i class="fas fa-play"></i> In progress
                         </div>
                     </div>
                     
@@ -163,7 +163,7 @@
                         <div class="project-meta">
                             <div class="project-date">
                                 <i class="fas fa-calendar-alt"></i>
-                                Début : {{ projet.date_debut|date:"M Y" }}
+                                Start: {{ projet.date_debut|date:"M Y" }}
                             </div>
                             <div class="project-responsable">
                                 <i class="fas fa-user"></i>
@@ -184,11 +184,11 @@
                         
                         <div class="project-actions">
                             <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
-                                Voir détails <i class="fas fa-arrow-right"></i>
+                                View details <i class="fas fa-arrow-right"></i>
                             </a>
                             {% if projet.lien_solution %}
                                 <a href="{{ projet.lien_solution }}" target="_blank" class="btn-project-demo">
-                                    <i class="fas fa-external-link-alt"></i> Démo
+                                    <i class="fas fa-external-link-alt"></i> Demo
                                 </a>
                             {% endif %}
                         </div>
@@ -207,9 +207,9 @@
         <div class="section-header">
             <h2 class="section-title">
                 <span class="title-icon"><i class="fas fa-check-circle"></i></span>
-                Projets terminés
+                Completed projects
             </h2>
-            <div class="projects-count">{{ projets_termines.count }} projet{{ projets_termines.count|pluralize }}</div>
+            <div class="projects-count">{{ projets_termines.count }} project{{ projets_termines.count|pluralize }}</div>
         </div>
         
         <div class="projects-grid">
@@ -224,7 +224,7 @@
                             </div>
                         {% endif %}
                         <div class="project-status status-termine">
-                            <i class="fas fa-check"></i> Terminé
+                            <i class="fas fa-check"></i> Completed
                         </div>
                     </div>
                     
@@ -240,9 +240,9 @@
                             <div class="project-date">
                                 <i class="fas fa-calendar-check"></i>
                                 {% if projet.date_fin_reelle %}
-                                    Terminé : {{ projet.date_fin_reelle|date:"M Y" }}
+                                    Completed: {{ projet.date_fin_reelle|date:"M Y" }}
                                 {% else %}
-                                    Début : {{ projet.date_debut|date:"M Y" }}
+                                    Start: {{ projet.date_debut|date:"M Y" }}
                                 {% endif %}
                             </div>
                             <div class="project-responsable">
@@ -264,7 +264,7 @@
                         
                         <div class="project-actions">
                             <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
-                                Voir détails <i class="fas fa-arrow-right"></i>
+                                View details <i class="fas fa-arrow-right"></i>
                             </a>
                             {% if projet.lien_solution %}
                                 <a href="{{ projet.lien_solution }}" target="_blank" class="btn-project-demo">
@@ -287,9 +287,9 @@
         <div class="section-header">
             <h2 class="section-title">
                 <span class="title-icon"><i class="fas fa-pause-circle"></i></span>
-                Autres projets
+                Other projects
             </h2>
-            <div class="projects-count">{{ autres_projets.count }} projet{{ autres_projets.count|pluralize }}</div>
+            <div class="projects-count">{{ autres_projets.count }} project{{ autres_projets.count|pluralize }}</div>
         </div>
         
         <div class="projects-grid">
@@ -305,9 +305,9 @@
                         {% endif %}
                         <div class="project-status status-{{ projet.statut }}">
                             {% if projet.statut == 'suspendu' %}
-                                <i class="fas fa-pause"></i> Suspendu
+                                <i class="fas fa-pause"></i> Suspended
                             {% elif projet.status == 'annule' %}
-                                <i class="fas fa-times"></i> Annulé
+                                <i class="fas fa-times"></i> Cancelled
                             {% else %}
                                 {{ projet.get_statut_display }}
                             {% endif %}
@@ -325,7 +325,7 @@
                         <div class="project-meta">
                             <div class="project-date">
                                 <i class="fas fa-calendar-alt"></i>
-                                Début : {{ projet.date_debut|date:"M Y" }}
+                                Start: {{ projet.date_debut|date:"M Y" }}
                             </div>
                             <div class="project-responsable">
                                 <i class="fas fa-user"></i>
@@ -335,7 +335,7 @@
                         
                         <div class="project-actions">
                             <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
-                                Voir détails <i class="fas fa-arrow-right"></i>
+                                View details <i class="fas fa-arrow-right"></i>
                             </a>
                         </div>
                     </div>
@@ -354,10 +354,10 @@
             <div class="empty-icon">
                 <i class="fas fa-project-diagram"></i>
             </div>
-            <h3>Aucun projet trouvé</h3>
-            <p>Aucun projet ne correspond à vos critères de recherche.</p>
+            <h3>No projects found</h3>
+            <p>No projects match your search criteria.</p>
             <a href="{% url 'labo:liste_projets' %}" class="btn btn-primary">
-                Voir tous les projets
+                View all projects
             </a>
         </div>
     </div>

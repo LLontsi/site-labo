@@ -11,7 +11,7 @@
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">{{ title }}</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">Articles en attente de validation</p>
+    <p class="page-subtitle fade-in delay-200">Articles pending validation</p>
 </div>
 {% endblock %}
 
@@ -22,22 +22,22 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
@@ -46,7 +46,7 @@
                 <div class="admin-header">
                     <h2>{{ title }}</h2>
                     <a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" class="btn-back">
-                        <i class="fas fa-arrow-left"></i> Retour aux articles
+                        <i class="fas fa-arrow-left"></i> Back to Articles
                     </a>
                 </div>
                 
@@ -65,11 +65,11 @@
                         <table class="admin-table">
                             <thead>
                                 <tr>
-                                    <th>Titre</th>
-                                    <th>Auteur</th>
-                                    <th>Date de création</th>
-                                    <th>Catégories</th>
-                                    <th>Aperçu</th>
+                                    <th>Title</th>
+                                    <th>Author</th>
+                                    <th>Creation Date</th>
+                                    <th>Categories</th>
+                                    <th>Preview</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -99,21 +99,21 @@
                                             {% for categorie in article.categories.all %}
                                                 <span class="status-badge">{{ categorie.nom }}</span>
                                             {% empty %}
-                                                <span class="empty-value">Aucune</span>
+                                                <span class="empty-value">None</span>
                                             {% endfor %}
                                         </td>
                                         <td>
                                             {% if article.image_principale %}
                                                 <img src="{{ article.image_principale.url }}" alt="{{ article.titre }}" class="article-preview-image">
                                             {% else %}
-                                                <div class="no-image">Pas d'image</div>
+                                                <div class="no-image">No image</div>
                                             {% endif %}
                                         </td>
                                         <td class="cell-actions">
                                             <button class="table-action btn-validate-item" 
                                                 data-id="{{ article.id }}" 
                                                 data-nom="{{ article.titre }}"
-                                                title="Valider/Rejeter">
+                                                title="Validate/Reject">
                                                 <i class="fas fa-check-circle"></i>
                                             </button>
                                             <button class="table-action btn-preview-article" 
@@ -122,14 +122,14 @@
                                                 data-contenu="{{ article.contenu|striptags }}"
                                                 data-auteur="{{ article.auteur.user.first_name }} {{ article.auteur.user.last_name }}"
                                                 data-date="{{ article.date_creation|date:'d/m/Y à H:i' }}"
-                                                title="Aperçu">
+                                                title="Preview">
                                                 <i class="fas fa-eye"></i>
                                             </button>
                                             <button class="table-action btn-delete-item" 
                                                 data-id="{{ article.id }}" 
                                                 data-nom="{{ article.titre }}"
                                                 data-type="article"
-                                                title="Supprimer">
+                                                title="Delete">
                                                 <i class="fas fa-trash"></i>
                                             </button>
                                         </td>
@@ -142,10 +142,10 @@
                             <div class="empty-icon">
                                 <i class="fas fa-check-circle"></i>
                             </div>
-                            <h3>Aucun article en attente</h3>
-                            <p>Tous les articles ont été traités !</p>
+                            <h3>No pending articles</h3>
+                            <p>All articles have been processed!</p>
                             <a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" class="btn btn-primary">
-                                Voir tous les articles
+                                View all articles
                             </a>
                         </div>
                     {% endif %}
@@ -155,42 +155,42 @@
     </div>
 </section>
 
-<!-- Modal de validation -->
+<!-- Validation modal -->
 <div id="validate-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Validation de l'article</h3>
+            <h3>Article Validation</h3>
             <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body">
-            <p>Article : "<span id="validate-item-name"></span>"</p>
+            <p>Article: "<span id="validate-item-name"></span>"</p>
             <div class="form-group">
-                <label for="commentaire_validation">Commentaire pour l'auteur (optionnel)</label>
-                <textarea id="commentaire_validation" name="commentaire" rows="4" placeholder="Commentaire à envoyer à l'auteur..."></textarea>
-                <div class="form-help">Ce commentaire sera envoyé par email à l'auteur.</div>
+                <label for="commentaire_validation">Comment for author (optional)</label>
+                <textarea id="commentaire_validation" name="commentaire" rows="4" placeholder="Comment to send to author..."></textarea>
+                <div class="form-help">This comment will be sent by email to the author.</div>
             </div>
         </div>
         <div class="modal-footer">
             <form method="post" action="" id="validate-form">
                 {% csrf_token %}
                 <input type="hidden" name="commentaire" id="validate_commentaire_input">
-                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
                 <button type="submit" name="action" value="rejeter" class="btn btn-danger">
-                    <i class="fas fa-times"></i> Rejeter
+                    <i class="fas fa-times"></i> Reject
                 </button>
                 <button type="submit" name="action" value="valider" class="btn btn-success">
-                    <i class="fas fa-check"></i> Valider
+                    <i class="fas fa-check"></i> Validate
                 </button>
             </form>
         </div>
     </div>
 </div>
 
-<!-- Modal d'aperçu -->
+<!-- Preview modal -->
 <div id="preview-modal" class="modal" style="display: none;">
     <div class="modal-content modal-large">
         <div class="modal-header">
-            <h3>Aperçu de l'article</h3>
+            <h3>Article Preview</h3>
             <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body">
@@ -204,28 +204,28 @@
             </div>
         </div>
         <div class="modal-footer">
-            <button type="button" class="btn btn-secondary modal-close-btn">Fermer</button>
+            <button type="button" class="btn btn-secondary modal-close-btn">Close</button>
         </div>
     </div>
 </div>
 
-<!-- Modal de suppression -->
+<!-- Delete modal -->
 <div id="delete-modal" class="modal" style="display: none;">
     <div class="modal-content">
         <div class="modal-header">
-            <h3>Confirmer la suppression</h3>
+            <h3>Confirm Deletion</h3>
             <span class="modal-close">&times;</span>
         </div>
         <div class="modal-body">
-            <p>Êtes-vous sûr de vouloir supprimer l'article "<span id="item-name"></span>" ?</p>
-            <p class="warning">Cette action est irréversible.</p>
+            <p>Are you sure you want to delete the article "<span id="item-name"></span>"?</p>
+            <p class="warning">This action is irreversible.</p>
         </div>
         <div class="modal-footer">
             <form method="post" action="" id="delete-form">
                 {% csrf_token %}
                 <input type="hidden" name="item_id" id="delete_item_id">
-                <button type="button" class="btn btn-secondary modal-close-btn">Annuler</button>
-                <button type="submit" class="btn btn-danger">Supprimer</button>
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" class="btn btn-danger">Delete</button>
             </form>
         </div>
     </div>
@@ -235,7 +235,7 @@
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Variables pour les modals
+    // Variables for modals
     const validateModal = document.getElementById('validate-modal');
     const previewModal = document.getElementById('preview-modal');
     const deleteModal = document.getElementById('delete-modal');
@@ -249,13 +249,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteForm = document.getElementById('delete-form');
     const deleteItemIdInput = document.getElementById('delete_item_id');
     
-    // Boutons
+    // Buttons
     const validateButtons = document.querySelectorAll('.btn-validate-item');
     const previewButtons = document.querySelectorAll('.btn-preview-article');
     const deleteButtons = document.querySelectorAll('.btn-delete-item');
     const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
     
-    // Ouvrir la modal de validation
+    // Open validation modal
     validateButtons.forEach(button => {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
@@ -267,7 +267,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Ouvrir la modal d'aperçu
+    // Open preview modal
     previewButtons.forEach(button => {
         button.addEventListener('click', function() {
             const titre = this.getAttribute('data-titre');
@@ -284,7 +284,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Ouvrir la modal de suppression
+    // Open delete modal
     deleteButtons.forEach(button => {
         button.addEventListener('click', function() {
             const id = this.getAttribute('data-id');
@@ -297,12 +297,12 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Synchroniser le commentaire avant soumission
+    // Synchronize comment before submission
     validateForm.addEventListener('submit', function() {
         commentaireInput.value = commentaireTextarea.value;
     });
     
-    // Fermer les modals
+    // Close modals
     modalCloseButtons.forEach(button => {
         button.addEventListener('click', function() {
             validateModal.style.display = 'none';
@@ -311,7 +311,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     });
     
-    // Fermer les modals en cliquant à l'extérieur
+    // Close modals by clicking outside
     window.addEventListener('click', function(event) {
         if (event.target == validateModal) {
             validateModal.style.display = 'none';
@@ -327,7 +327,7 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <style>
-/* Styles supplémentaires pour cette page */
+/* Additional styles for this page */
 .article-title {
     max-width: 200px;
 }

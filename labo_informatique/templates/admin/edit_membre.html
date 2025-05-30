@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 
-{% block title %}Édition de membre - Beta Lab{% endblock %}
+{% block title %}Member Edition - Beta Lab{% endblock %}
 
 {% block extra_css %}
 {% load static %}
@@ -10,7 +10,7 @@
 
 {% block header_content %}
 <div class="page-header animated-gradient">
-    <h1 class="page-title fade-in">Édition de membre</h1>
+    <h1 class="page-title fade-in">Member Edition</h1>
     <div class="header-line"></div>
     <p class="page-subtitle fade-in delay-200">{{ membre.user.first_name }} {{ membre.user.last_name }}</p>
 </div>
@@ -23,30 +23,30 @@
             <div class="admin-sidebar">
                 <div class="admin-menu">
                     <div class="admin-menu-header">
-                        <h3>Menu d'administration</h3>
+                        <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Tableau de bord</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" >Gestion des membres</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" >Member Management</a></li>
                         <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborateurs</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Catégories d'articles</a></li>
-                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Thèmes de recherche</a></li>
-                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Historiques de thèmes</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active"> Gestion des Projets</a></li>
-                        <li class="menu-divider">Gestion du contenu</li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Présentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Témoignages</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Événements</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
             
             <div class="admin-content">
                 <div class="admin-header">
-                    <h2>Édition de membre</h2>
-                    <a href="{% url 'labo:gestion_membres' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Retour à la liste</a>
+                    <h2>Member Edition</h2>
+                    <a href="{% url 'labo:gestion_membres' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
                 </div>
                 
                 <div class="form-card">
@@ -54,17 +54,17 @@
                         {% csrf_token %}
                         
                         <div class="form-section-title">
-                            <h3>Informations utilisateur</h3>
+                            <h3>User Information</h3>
                         </div>
                         
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="first_name">Prénom</label>
+                                <label for="first_name">First Name</label>
                                 <input type="text" id="first_name" name="first_name" value="{{ membre.user.first_name }}" required>
                             </div>
                             
                             <div class="form-group form-col">
-                                <label for="last_name">Nom</label>
+                                <label for="last_name">Last Name</label>
                                 <input type="text" id="last_name" name="last_name" value="{{ membre.user.last_name }}" required>
                             </div>
                         </div>
@@ -75,18 +75,18 @@
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Informations professionnelles</h3>
+                            <h3>Professional Information</h3>
                         </div>
                         
                         <div class="form-group">
-                            <label for="titre">Titre / Fonction</label>
+                            <label for="titre">Title / Position</label>
                             <input type="text" id="titre" name="titre" value="{{ membre.titre }}" required>
                         </div>
                         
                         <div class="form-group">
-                            <label for="theme">Thème de recherche</label>
+                            <label for="theme">Research Theme</label>
                             <select id="theme" name="theme">
-                                <option value="">Aucun thème</option>
+                                <option value="">No theme</option>
                                 {% for theme in themes %}
                                     <option value="{{ theme.id }}" {% if membre.theme.id == theme.id %}selected{% endif %}>{{ theme.nom }}</option>
                                 {% endfor %}
@@ -94,31 +94,31 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="bio">Biographie</label>
+                            <label for="bio">Biography</label>
                             <textarea id="bio" name="bio" rows="8">{{ membre.bio }}</textarea>
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Photo de profil</h3>
+                            <h3>Profile Photo</h3>
                         </div>
                         
                         <div class="form-group">
                             <div class="photo-upload">
                                 {% if membre.photo %}
                                     <div class="current-photo">
-                                        <img src="{{ membre.photo.url }}" alt="Photo actuelle">
-                                        <p>Photo actuelle</p>
+                                        <img src="{{ membre.photo.url }}" alt="Current Photo">
+                                        <p>Current Photo</p>
                                     </div>
                                 {% endif %}
                                 <div class="file-input-group">
                                     <input type="file" id="photo" name="photo" accept="image/*">
-                                    <div class="form-help">Format recommandé : image carrée de 300x300 pixels minimum.</div>
+                                    <div class="form-help">Recommended format: square image of 300x300 pixels minimum.</div>
                                 </div>
                             </div>
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Liens professionnels</h3>
+                            <h3>Professional Links</h3>
                         </div>
                         
                         <div class="form-group">
@@ -132,12 +132,12 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="portfolio">Portfolio / Site web</label>
+                            <label for="portfolio">Portfolio / Website</label>
                             <input type="url" id="portfolio" name="portfolio" value="{{ membre.portfolio|default:'' }}">
                         </div>
                         
                         <div class="form-section-title">
-                            <h3>Statut</h3>
+                            <h3>Status</h3>
                         </div>
                         
                         <div class="form-row">
@@ -145,9 +145,9 @@
                                 <div class="form-checkbox-group">
                                     <label class="checkbox-label">
                                         <input type="checkbox" id="est_responsable" name="est_responsable" {% if membre.est_responsable %}checked{% endif %}>
-                                        <span>Membre responsable</span>
+                                        <span>Responsible Member</span>
                                     </label>
-                                    <div class="form-help">Définit si le membre apparaît dans la section "Responsables".</div>
+                                    <div class="form-help">Defines whether the member appears in the "Managers" section.</div>
                                 </div>
                             </div>
                             
@@ -155,38 +155,38 @@
                                 <div class="form-checkbox-group">
                                     <label class="checkbox-label">
                                         <input type="checkbox" id="est_ancien" name="est_ancien" {% if membre.est_ancien %}checked{% endif %} onchange="toggleAncien(this)">
-                                        <span>Ancien membre</span>
+                                        <span>Former Member</span>
                                     </label>
-                                    <div class="form-help">Définit si le membre est un ancien (a quitté le laboratoire).</div>
+                                    <div class="form-help">Defines whether the member is a former member (has left the laboratory).</div>
                                 </div>
                             </div>
                         </div>
-                        <!-- Champ pour le statut d'ancien membre -->
+                        <!-- Field for former member status -->
                         <div class="form-group" id="statut_ancien_group" style="display: none;">
-                            <label for="statut_ancien">Statut de l'ancien membre</label>
+                            <label for="statut_ancien">Former Member Status</label>
                             <select id="statut_ancien" name="statut_ancien">
-                                <option value="">Choisir un statut</option>
-                                <option value="parti">A quitté le laboratoire</option>
-                                <option value="assistant">Reste comme assistant à l'encadrement</option>
+                                <option value="">Choose a status</option>
+                                <option value="parti">Has left the laboratory</option>
+                                <option value="assistant">Remains as supervision assistant</option>
                             </select>
-                            <div class="form-help">Précisez si l'ancien membre reste impliqué dans le laboratoire ou s'il est parti.</div>
+                            <div class="form-help">Specify whether the former member remains involved in the laboratory or has left.</div>
                         </div>
 
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="date_arrivee">Date d'arrivée</label>
+                                <label for="date_arrivee">Arrival Date</label>
                                 <input type="date" id="date_arrivee" name="date_arrivee" value="{{ membre.date_arrivee|date:'Y-m-d' }}" required>
                             </div>
                             
                             <div class="form-group form-col" id="date_depart_group" {% if not membre.est_ancien %}style="display: none;"{% endif %}>
-                                <label for="date_depart">Date de départ</label>
+                                <label for="date_depart">Departure Date</label>
                                 <input type="date" id="date_depart" name="date_depart" value="{{ membre.date_depart|date:'Y-m-d'|default:'' }}">
                             </div>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Enregistrer</button>
-                            <a href="{% url 'labo:gestion_membres' %}" class="btn btn-secondary">Annuler</a>
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{% url 'labo:gestion_membres' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
                 </div>
@@ -206,7 +206,7 @@
         
         if (checkbox.checked) {
             statutAncienGroup.style.display = 'block';
-            // Écouter les changements du statut d'ancien membre
+            // Listen for former member status changes
             statutAncienSelect.addEventListener('change', function() {
                 if (this.value === 'parti') {
                     dateDepartGroup.style.display = 'block';
@@ -226,7 +226,7 @@
         }
     }
     
-    // Prévisualisation de la photo
+    // Photo preview
     document.addEventListener('DOMContentLoaded', function() {
         const photoInput = document.getElementById('photo');
         const previewContainer = document.getElementById('photo-preview');
