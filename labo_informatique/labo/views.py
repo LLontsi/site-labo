@@ -127,7 +127,7 @@ def contact(request):
     }
     return render(request, 'core/contact.html', context)
 
-#good
+#good #bon
 def team(request):
    
     """Vue pour afficher tous les membres de l'équipe."""
