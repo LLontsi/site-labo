@@ -1,5 +1,4 @@
 version: '3.8'
-
 services:
   postgres:
     image: postgres:15
@@ -14,6 +13,9 @@ services:
     networks:
       - labo_network
     volumes:
+      # Volume nommé pour persister les données
+      - postgres_data:/var/lib/postgresql/data
+      # Dump uniquement si la DB n'existe pas
       - ./dump_labo_informatique.sql:/docker-entrypoint-initdb.d/dump_labo_informatique.sql
 
   site-labo:
@@ -26,10 +28,14 @@ services:
       - labo_network
     depends_on:
       - postgres
-    stdin_open: true      # équivalent à -it
+    stdin_open: true
     tty: true
-    # command: sh -c "python manage.py makemigrations && python manage.py migrate && gunicorn labo_informatique.wsgi:application --bind 0.0.0.0:8000"
+
 networks:
   labo_network:
     driver: bridge
 
+# Définir le volume nommé
+volumes:
+  postgres_data:
+    driver: local
