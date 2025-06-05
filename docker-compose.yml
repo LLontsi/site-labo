@@ -16,7 +16,7 @@ services:
       # Volume nommé pour persister les données
       - postgres_data:/var/lib/postgresql/data
       # Dump uniquement si la DB n'existe pas
-      - ./dump_labo_informatique.sql:/docker-entrypoint-initdb.d/dump_labo_informatique.sql
+      #- ./dump_labo_informatique.sql:/docker-entrypoint-initdb.d/dump_labo_informatique.sql
 
   site-labo:
     image: lontsi/betalab:latest
