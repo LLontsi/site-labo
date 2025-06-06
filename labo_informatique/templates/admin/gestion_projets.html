@@ -99,9 +99,9 @@
                                 <tr>
                                     <th>Project</th>
                                     <th>Manager</th>
-                                    <th>Type</th>
+                                    <th>Theme</th>
                                     <th>Status</th>
-                                    <th>Dates</th>
+                                    <th>Date</th>
                                     <th>Visibility</th>
                                     <th>Actions</th>
                                 </tr>
@@ -111,16 +111,12 @@
                                     <tr>
                                         <td class="cell-projet">
                                             <div class="projet-info">
-                                                {% if projet.image_principale %}
-                                                    <img src="{{ projet.image_principale.url }}" alt="{{ projet.titre }}" class="projet-thumbnail">
-                                                {% else %}
-                                                    <div class="projet-placeholder">
-                                                        <i class="fas fa-project-diagram"></i>
-                                                    </div>
-                                                {% endif %}
+                                                <div class="projet-placeholder">
+                                                    <i class="fas fa-project-diagram"></i>
+                                                </div>
                                                 <div class="projet-details">
                                                     <h4>{{ projet.titre }}</h4>
-                                                    <p class="projet-description">{{ projet.description_courte|truncatechars:80 }}</p>
+                                                    <p class="projet-description">{{ projet.description|truncatechars:80 }}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -137,8 +133,8 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <span class="type-badge type-{{ projet.type_projet }}">
-                                                {{ projet.get_type_projet_display }}
+                                            <span class="theme-badge theme-{{ projet.theme.id }}">
+                                                {{ projet.theme.nom }}
                                             </span>
                                         </td>
                                         <td>
@@ -158,16 +154,6 @@
                                             <div class="date-item">
                                                 <small>Start:</small> {{ projet.date_debut|date:"d/m/Y" }}
                                             </div>
-                                            {% if projet.date_fin_prevue %}
-                                            <div class="date-item">
-                                                <small>Expected end:</small> {{ projet.date_fin_prevue|date:"d/m/Y" }}
-                                            </div>
-                                            {% endif %}
-                                            {% if projet.date_fin_reelle %}
-                                            <div class="date-item">
-                                                <small>Actual end:</small> {{ projet.date_fin_reelle|date:"d/m/Y" }}
-                                            </div>
-                                            {% endif %}
                                         </td>
                                         <td>
                                             {% if projet.est_public %}

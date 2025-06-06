@@ -54,8 +54,8 @@ def home(request):
     # Récupérer 3 projets récents en cours
     projets_recents = Projet.objects.filter(
         est_public=True, 
-        statut='en_cours'
-    ).select_related('responsable', 'responsable__user').order_by('-date_creation')[:3]
+        statut='en_cours'  # Garder le filtre par statut
+    ).select_related('responsable', 'responsable__user', 'theme').order_by('-date_creation')[:3]
     
     
     context = {
@@ -1662,31 +1662,33 @@ def delete_article(request, article_id):
         return redirect('labo:dashboard')
 
 
-
+# 2. Vue liste_projets - simplifier
 def liste_projets(request):
     """Vue pour afficher la liste des projets."""
+    # REMPLACER TOUT LE CONTENU PAR :
+    
     # Filtres
     statut_filtre = request.GET.get('statut', '')
-    type_filtre = request.GET.get('type', '')
+    theme_filtre = request.GET.get('theme', '')
     
     projets_list = Projet.objects.filter(est_public=True).select_related(
-        'responsable', 'responsable__user'
+        'responsable', 'responsable__user', 'theme'
     ).prefetch_related('participants', 'collaborateurs_externes')
     
     # Appliquer les filtres
     if statut_filtre:
         projets_list = projets_list.filter(statut=statut_filtre)
-    if type_filtre:
-        projets_list = projets_list.filter(type_projet=type_filtre)
+    if theme_filtre:
+        projets_list = projets_list.filter(theme_id=theme_filtre)
     
-    # Séparer projets en cours et terminés
+    # Séparer par statut
     projets_en_cours = projets_list.filter(statut='en_cours')
     projets_termines = projets_list.filter(statut='termine')
     autres_projets = projets_list.exclude(statut__in=['en_cours', 'termine'])
     
     # Récupérer les options de filtre
     statuts = Projet.STATUT_CHOICES
-    types = Projet.TYPE_CHOICES
+    themes = Theme.objects.all()
     
     # Statistiques
     nb_projets_total = projets_list.count()
@@ -1698,33 +1700,33 @@ def liste_projets(request):
         'projets_termines': projets_termines,
         'autres_projets': autres_projets,
         'statuts': statuts,
-        'types': types,
+        'themes': themes,
         'statut_filtre': statut_filtre,
-        'type_filtre': type_filtre,
+        'theme_filtre': theme_filtre,
         'nb_projets_total': nb_projets_total,
         'nb_projets_en_cours': nb_projets_en_cours,
         'nb_projets_termines': nb_projets_termines,
     }
     return render(request, 'core/liste_projets.html', context)
 
-
+# 3. Vue projet_detail - simplifier
 def projet_detail(request, projet_id):
     """Vue pour afficher le détail d'un projet."""
     projet = get_object_or_404(
-        Projet.objects.select_related('responsable', 'responsable__user').prefetch_related(
+        Projet.objects.select_related('responsable', 'responsable__user', 'theme').prefetch_related(
             'participants', 'participants__user', 'collaborateurs_externes'
         ),
         id=projet_id,
         est_public=True
     )
     
-    # Récupérer les projets similaires (même type, excluant celui-ci)
+    # Récupérer les projets similaires (même thème, excluant celui-ci)
     projets_similaires = Projet.objects.filter(
-        type_projet=projet.type_projet,
+        theme=projet.theme,  # MODIFIER : même thème au lieu de même type
         est_public=True
     ).exclude(
         id=projet.id
-    ).select_related('responsable', 'responsable__user')[:3]
+    ).select_related('responsable', 'responsable__user', 'theme')[:3]
     
     context = {
         'projet': projet,

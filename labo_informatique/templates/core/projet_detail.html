@@ -30,7 +30,7 @@
                             <i class="fas fa-times"></i> Cancelled
                         {% endif %}
                     </div>
-                    <div class="project-type-header">{{ projet.get_type_projet_display }}</div>
+                    <div class="project-theme-header">{{ projet.theme.nom }}</div>
                 </div>
             </div>
             
@@ -157,22 +157,6 @@
                     </div>
                     {% endif %}
                 </div>
-                
-                <!-- Technologies -->
-                {% if projet.get_technologies_list %}
-                <div class="content-card">
-                    <h2 class="card-title">
-                        <i class="fas fa-code"></i> Technologies used
-                    </h2>
-                    <div class="technologies-showcase">
-                        {% for tech in projet.get_technologies_list %}
-                            <div class="tech-item">
-                                <span class="tech-badge-large">{{ tech }}</span>
-                            </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
             </div>
             
             <!-- Sidebar -->
@@ -188,29 +172,11 @@
                             <div class="info-value">{{ projet.date_debut|date:"d F Y" }}</div>
                         </div>
                         
-                        {% if projet.date_fin_prevue %}
                         <div class="info-item">
                             <div class="info-label">
-                                <i class="fas fa-calendar-times"></i> Expected end
+                                <i class="fas fa-lightbulb"></i> Research theme
                             </div>
-                            <div class="info-value">{{ projet.date_fin_prevue|date:"d F Y" }}</div>
-                        </div>
-                        {% endif %}
-                        
-                        {% if projet.date_fin_reelle %}
-                        <div class="info-item">
-                            <div class="info-label">
-                                <i class="fas fa-calendar-check"></i> Actual end
-                            </div>
-                            <div class="info-value">{{ projet.date_fin_reelle|date:"d F Y" }}</div>
-                        </div>
-                        {% endif %}
-                        
-                        <div class="info-item">
-                            <div class="info-label">
-                                <i class="fas fa-tag"></i> Type
-                            </div>
-                            <div class="info-value">{{ projet.get_type_projet_display }}</div>
+                            <div class="info-value">{{ projet.theme.nom }}</div>
                         </div>
                         
                         <div class="info-item">
@@ -225,58 +191,6 @@
                         </div>
                     </div>
                 </div>
-                
-                <!-- Liens et ressources -->
-                {% if projet.lien_solution or projet.lien_github or projet.lien_documentation or projet.lien_publication %}
-                <div class="sidebar-card">
-                    <h3 class="sidebar-title">Links and resources</h3>
-                    <div class="links-list">
-                        {% if projet.lien_solution %}
-                        <a href="{{ projet.lien_solution }}" target="_blank" class="resource-link solution">
-                            <i class="fas fa-external-link-alt"></i>
-                            <span>View solution</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                        {% endif %}
-                        
-                        {% if projet.lien_github %}
-                        <a href="{{ projet.lien_github }}" target="_blank" class="resource-link github">
-                            <i class="fab fa-github"></i>
-                            <span>Source code</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                        {% endif %}
-                        
-                        {% if projet.lien_documentation %}
-                        <a href="{{ projet.lien_documentation }}" target="_blank" class="resource-link docs">
-                            <i class="fas fa-book"></i>
-                            <span>Documentation</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                        {% endif %}
-                        
-                        {% if projet.lien_publication %}
-                        <a href="{{ projet.lien_publication }}" target="_blank" class="resource-link publication">
-                            <i class="fas fa-file-alt"></i>
-                            <span>Publication</span>
-                            <i class="fas fa-arrow-right"></i>
-                        </a>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endif %}
-                
-                <!-- Mots-clés -->
-                {% if projet.get_mots_cles_list %}
-                <div class="sidebar-card">
-                    <h3 class="sidebar-title">Keywords</h3>
-                    <div class="keywords-list">
-                        {% for mot_cle in projet.get_mots_cles_list %}
-                            <span class="keyword-tag">{{ mot_cle }}</span>
-                        {% endfor %}
-                    </div>
-                </div>
-                {% endif %}
             </div>
         </div>
     </div>
@@ -288,7 +202,7 @@
     <div class="container">
         <h2 class="section-title">
             <span class="title-icon"><i class="fas fa-project-diagram"></i></span>
-            Similar projects
+            Similar projects (same research theme)
         </h2>
         
         <div class="projects-grid">
@@ -310,10 +224,10 @@
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">{{ projet_similaire.titre }}</h3>
-                            <div class="project-type">{{ projet_similaire.get_type_projet_display }}</div>
+                            <div class="project-theme">{{ projet_similaire.theme.nom }}</div>
                         </div>
                         
-                        <p class="project-description">{{ projet_similaire.description_courte }}</p>
+                        <p class="project-description">{{ projet_similaire.description|truncatechars:120 }}</p>
                         
                         <div class="project-actions">
                             <a href="{% url 'labo:projet_detail' projet_similaire.id %}" class="btn-project-detail">

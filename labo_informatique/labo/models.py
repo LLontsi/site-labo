@@ -284,8 +284,11 @@ class Evenement(models.Model):
         verbose_name_plural = "Événements"
         
         
+# MODÈLE PROJET SIMPLIFIÉ
+
 class Projet(models.Model):
     """Projets du laboratoire."""
+    
     STATUT_CHOICES = [
         ('en_cours', 'En cours'),
         ('termine', 'Terminé'),
@@ -293,108 +296,50 @@ class Projet(models.Model):
         ('annule', 'Annulé'),
     ]
     
-    TYPE_CHOICES = [
-        ('recherche', 'Recherche'),
-        ('developpement', 'Développement'),
-        ('formation', 'Formation'),
-        ('collaboration', 'Collaboration'),
-        ('innovation', 'Innovation'),
-    ]
-    
     titre = models.CharField(max_length=200)
     description = models.TextField()
-    description_courte = models.CharField(
-        max_length=300, 
-        help_text="Description courte pour les listes"
-    )
-    image_principale = models.ImageField(
-        upload_to='projets/images/', 
-        blank=True, 
-        null=True
+    
+    # Thématique de recherche (NOUVEAU)
+    theme = models.ForeignKey(
+        Theme,
+        on_delete=models.CASCADE,
+        help_text="Thématique de recherche associée"
     )
     
-    # Dates
+    # Date (CONSERVÉ)
     date_debut = models.DateField()
-    date_fin_prevue = models.DateField(blank=True, null=True)
-    date_fin_reelle = models.DateField(blank=True, null=True)
     
-    # Statut et type
+    # Statut (CONSERVÉ)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_cours')
-    type_projet = models.CharField(max_length=20, choices=TYPE_CHOICES, default='recherche')
     
-    # Participants
+    # Participants (CONSERVÉ)
     responsable = models.ForeignKey(
-        Membre, 
-        on_delete=models.CASCADE, 
+        Membre,
+        on_delete=models.CASCADE,
         related_name='projets_responsable'
     )
     participants = models.ManyToManyField(
-        Membre, 
-        blank=True, 
+        Membre,
+        blank=True,
         related_name='projets_participant'
     )
+    
+    # Collaboration (CONSERVÉ)
     collaborateurs_externes = models.ManyToManyField(
-        Collaborateur, 
+        Collaborateur,
         blank=True,
         help_text="Collaborateurs externes au projet"
     )
     
-    # Liens et ressources
-    lien_solution = models.URLField(
-        blank=True, 
-        null=True,
-        help_text="Lien vers la solution/démo"
-    )
-    lien_github = models.URLField(
-        blank=True, 
-        null=True,
-        help_text="Lien vers le repository GitHub"
-    )
-    lien_documentation = models.URLField(
-        blank=True, 
-        null=True,
-        help_text="Lien vers la documentation"
-    )
-    lien_publication = models.URLField(
-        blank=True, 
-        null=True,
-        help_text="Lien vers publication scientifique"
-    )
-    
-    # Métadonnées
-    technologies = models.CharField(
-        max_length=500, 
-        blank=True,
-        help_text="Technologies utilisées (séparées par des virgules)"
-    )
-    mots_cles = models.CharField(
-        max_length=300, 
-        blank=True,
-        help_text="Mots-clés (séparés par des virgules)"
-    )
-    
-    # Gestion
+    # Gestion (CONSERVÉ MINIMUM)
     date_creation = models.DateTimeField(auto_now_add=True)
-    date_modification = models.DateTimeField(auto_now=True)
     est_public = models.BooleanField(
-        default=True, 
+        default=True,
         help_text="Le projet est-il visible publiquement ?"
     )
     
     def __str__(self):
         return self.titre
-    
-    def get_technologies_list(self):
-        """Retourne la liste des technologies"""
-        if self.technologies:
-            return [tech.strip() for tech in self.technologies.split(',')]
-        return []
-    
-    def get_mots_cles_list(self):
-        """Retourne la liste des mots-clés"""
-        if self.mots_cles:
-            return [mot.strip() for mot in self.mots_cles.split(',')]
-        return []
     
     def est_en_cours(self):
         """Retourne True si le projet est en cours"""
@@ -407,9 +352,7 @@ class Projet(models.Model):
     class Meta:
         verbose_name = "Projet"
         verbose_name_plural = "Projets"
-        ordering = ['-date_debut']
-        
-        
+        ordering = ['-date_creation']
 
 class HistoriqueTheme(models.Model):
     """Historique des thèmes de recherche d'un membre."""

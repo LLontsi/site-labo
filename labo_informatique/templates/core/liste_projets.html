@@ -50,6 +50,7 @@
         </div>
     </div>
 </section>
+
 <!-- Section Filtres Moderne -->
 <section class="filters-section-modern">
     <div class="container">
@@ -63,7 +64,7 @@
                         All
                     </a>
                     {% for value, label in statuts %}
-                        <a href="?statut={{ value }}{% if type_filtre %}&type={{ type_filtre }}{% endif %}" 
+                        <a href="?statut={{ value }}{% if theme_filtre %}&theme={{ theme_filtre }}{% endif %}" 
                            class="filter-btn {% if statut_filtre == value %}active{% endif %}">
                             {{ label }}
                         </a>
@@ -71,25 +72,25 @@
                 </div>
             </div>
 
-            <!-- Filtre par Type -->
+            <!-- Filtre par Thème -->
             <div class="filter-category">
-                <h3 class="filter-title">Project type</h3>
+                <h3 class="filter-title">Research theme</h3>
                 <div class="filter-buttons">
                     <a href="{% url 'labo:liste_projets' %}{% if statut_filtre %}?statut={{ statut_filtre }}{% endif %}" 
-                       class="filter-btn {% if not type_filtre %}active{% endif %}">
+                       class="filter-btn {% if not theme_filtre %}active{% endif %}">
                         All
                     </a>
-                    {% for value, label in types %}
-                        <a href="?type={{ value }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}" 
-                           class="filter-btn {% if type_filtre == value %}active{% endif %}">
-                            {{ label }}
+                    {% for theme in themes %}
+                        <a href="?theme={{ theme.id }}{% if statut_filtre %}&statut={{ statut_filtre }}{% endif %}" 
+                           class="filter-btn {% if theme_filtre == theme.id|stringformat:'s' %}active{% endif %}">
+                            {{ theme.nom }}
                         </a>
                     {% endfor %}
                 </div>
             </div>
 
             <!-- Indicateur de filtres actifs -->
-            {% if statut_filtre or type_filtre %}
+            {% if statut_filtre or theme_filtre %}
             <div class="active-filters">
                 <span class="active-filters-label">Active filters:</span>
                 {% if statut_filtre %}
@@ -98,16 +99,16 @@
                         {% for value, label in statuts %}
                             {% if value == statut_filtre %}{{ label }}{% endif %}
                         {% endfor %}
-                        <a href="?{% if type_filtre %}type={{ type_filtre }}{% endif %}" class="remove-filter">
+                        <a href="?{% if theme_filtre %}theme={{ theme_filtre }}{% endif %}" class="remove-filter">
                             <i class="fas fa-times"></i>
                         </a>
                     </span>
                 {% endif %}
-                {% if type_filtre %}
+                {% if theme_filtre %}
                     <span class="active-filter-tag">
-                        Type: 
-                        {% for value, label in types %}
-                            {% if value == type_filtre %}{{ label }}{% endif %}
+                        Theme: 
+                        {% for theme in themes %}
+                            {% if theme.id|stringformat:'s' == theme_filtre %}{{ theme.nom }}{% endif %}
                         {% endfor %}
                         <a href="?{% if statut_filtre %}statut={{ statut_filtre }}{% endif %}" class="remove-filter">
                             <i class="fas fa-times"></i>
@@ -122,7 +123,6 @@
         </div>
     </div>
 </section>
-
 
 <!-- Section Projets en cours -->
 {% if projets_en_cours %}
@@ -155,10 +155,10 @@
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">{{ projet.titre }}</h3>
-                            <div class="project-type">{{ projet.get_type_projet_display }}</div>
+                            <div class="project-theme">{{ projet.theme.nom }}</div>
                         </div>
                         
-                        <p class="project-description">{{ projet.description_courte }}</p>
+                        <p class="project-description">{{ projet.description|truncatechars:120 }}</p>
                         
                         <div class="project-meta">
                             <div class="project-date">
@@ -171,26 +171,10 @@
                             </div>
                         </div>
                         
-                        {% if projet.get_technologies_list %}
-                        <div class="project-technologies">
-                            {% for tech in projet.get_technologies_list|slice:":3" %}
-                                <span class="tech-badge">{{ tech }}</span>
-                            {% endfor %}
-                            {% if projet.get_technologies_list|length > 3 %}
-                                <span class="tech-more">+{{ projet.get_technologies_list|length|add:"-3" }}</span>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        
                         <div class="project-actions">
                             <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
                                 View details <i class="fas fa-arrow-right"></i>
                             </a>
-                            {% if projet.lien_solution %}
-                                <a href="{{ projet.lien_solution }}" target="_blank" class="btn-project-demo">
-                                    <i class="fas fa-external-link-alt"></i> Demo
-                                </a>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -231,19 +215,15 @@
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">{{ projet.titre }}</h3>
-                            <div class="project-type">{{ projet.get_type_projet_display }}</div>
+                            <div class="project-theme">{{ projet.theme.nom }}</div>
                         </div>
                         
-                        <p class="project-description">{{ projet.description_courte }}</p>
+                        <p class="project-description">{{ projet.description|truncatechars:120 }}</p>
                         
                         <div class="project-meta">
                             <div class="project-date">
                                 <i class="fas fa-calendar-check"></i>
-                                {% if projet.date_fin_reelle %}
-                                    Completed: {{ projet.date_fin_reelle|date:"M Y" }}
-                                {% else %}
-                                    Start: {{ projet.date_debut|date:"M Y" }}
-                                {% endif %}
+                                Start: {{ projet.date_debut|date:"M Y" }}
                             </div>
                             <div class="project-responsable">
                                 <i class="fas fa-user"></i>
@@ -251,26 +231,10 @@
                             </div>
                         </div>
                         
-                        {% if projet.get_technologies_list %}
-                        <div class="project-technologies">
-                            {% for tech in projet.get_technologies_list|slice:":3" %}
-                                <span class="tech-badge">{{ tech }}</span>
-                            {% endfor %}
-                            {% if projet.get_technologies_list|length > 3 %}
-                                <span class="tech-more">+{{ projet.get_technologies_list|length|add:"-3" }}</span>
-                            {% endif %}
-                        </div>
-                        {% endif %}
-                        
                         <div class="project-actions">
                             <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-project-detail">
                                 View details <i class="fas fa-arrow-right"></i>
                             </a>
-                            {% if projet.lien_solution %}
-                                <a href="{{ projet.lien_solution }}" target="_blank" class="btn-project-demo">
-                                    <i class="fas fa-external-link-alt"></i> Solution
-                                </a>
-                            {% endif %}
                         </div>
                     </div>
                 </div>
@@ -306,7 +270,7 @@
                         <div class="project-status status-{{ projet.statut }}">
                             {% if projet.statut == 'suspendu' %}
                                 <i class="fas fa-pause"></i> Suspended
-                            {% elif projet.status == 'annule' %}
+                            {% elif projet.statut == 'annule' %}
                                 <i class="fas fa-times"></i> Cancelled
                             {% else %}
                                 {{ projet.get_statut_display }}
@@ -317,10 +281,10 @@
                     <div class="project-content">
                         <div class="project-header">
                             <h3 class="project-title">{{ projet.titre }}</h3>
-                            <div class="project-type">{{ projet.get_type_projet_display }}</div>
+                            <div class="project-theme">{{ projet.theme.nom }}</div>
                         </div>
                         
-                        <p class="project-description">{{ projet.description_courte }}</p>
+                        <p class="project-description">{{ projet.description|truncatechars:120 }}</p>
                         
                         <div class="project-meta">
                             <div class="project-date">

@@ -194,81 +194,46 @@ class MembreForm(forms.ModelForm):
             'github': 'Profil GitHub',
             'portfolio': 'Site web personnel/Portfolio',
         }
+
 class ProjetForm(forms.ModelForm):
-    """Formulaire de création/édition de projet."""
-    
     class Meta:
         model = Projet
         fields = [
-            'titre', 'description', 'description_courte', 'image_principale',
-            'date_debut', 'date_fin_prevue', 'date_fin_reelle',
-            'statut', 'type_projet', 'responsable', 'participants', 'collaborateurs_externes',
-            'lien_solution', 'lien_github', 'lien_documentation', 'lien_publication',
-            'technologies', 'mots_cles', 'est_public'
+            'titre',
+            'description', 
+            'theme',  # NOUVEAU
+            'date_debut',
+            'statut',
+            'responsable',
+            'participants',
+            'collaborateurs_externes',
+            'est_public'
         ]
+        
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 6}),
-            'description_courte': forms.Textarea(attrs={'rows': 3}),
-            'date_debut': forms.DateInput(attrs={'type': 'date'}),
-            'date_fin_prevue': forms.DateInput(attrs={'type': 'date'}),
-            'date_fin_reelle': forms.DateInput(attrs={'type': 'date'}),
+            'titre': forms.TextInput(attrs={'class': 'form-control'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 6}),
+            'theme': forms.Select(attrs={'class': 'form-control'}),  # NOUVEAU
+            'date_debut': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
+            'statut': forms.Select(attrs={'class': 'form-control'}),
+            'responsable': forms.Select(attrs={'class': 'form-control'}),
             'participants': forms.CheckboxSelectMultiple(),
             'collaborateurs_externes': forms.CheckboxSelectMultiple(),
-            'technologies': forms.TextInput(attrs={'placeholder': 'Python, Django, React, etc.'}),
-            'mots_cles': forms.TextInput(attrs={'placeholder': 'IA, Machine Learning, Web, etc.'}),
+            'est_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
-    
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
         
-        # Filtrer les responsables : seuls les membres avec est_responsable=True
-        # Inclure les anciens responsables qui restent comme assistants
-        self.fields['responsable'].queryset = Membre.objects.filter(
-            est_responsable=True
-        ).filter(
-            Q(est_ancien=False) |  # Membres actuels
-            Q(est_ancien=True, statut_ancien='assistant')  # Anciens qui restent assistants
-        ).select_related('user').order_by('user__first_name', 'user__last_name')
-        
-        # Tous les membres peuvent être participants (actuels et anciens assistants)
-        participants_queryset = Membre.objects.filter(
-            Q(est_ancien=False) |  # Membres actuels
-            Q(est_ancien=True, statut_ancien='assistant')  # Anciens qui restent assistants
-        ).select_related('user').order_by('user__first_name', 'user__last_name')
-        
-        self.fields['participants'].queryset = participants_queryset
-        
-        # Améliorer l'affichage des participants dans la liste déroulante
-        self.fields['participants'].widget.choices = [
-            (membre.id, f"{membre.user.first_name} {membre.user.last_name} ({membre.titre})")
-            for membre in participants_queryset
-        ]
-        
-        # Tous les collaborateurs externes
-        collaborateurs_queryset = Collaborateur.objects.all().order_by('prenom', 'nom')
-        self.fields['collaborateurs_externes'].queryset = collaborateurs_queryset
-        
-        # Améliorer l'affichage des collaborateurs externes dans la liste déroulante
-        self.fields['collaborateurs_externes'].widget.choices = [
-            (collab.id, f"{collab.prenom} {collab.nom} ({collab.institution})")
-            for collab in collaborateurs_queryset
-        ]
-        
-        # Personnaliser les labels
-        self.fields['responsable'].label = "Chef de projet"
-        self.fields['responsable'].help_text = "Seuls les membres responsables peuvent être chefs de projet"
-        self.fields['participants'].label = "Participants"
-        self.fields['participants'].help_text = "Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs participants"
-        self.fields['collaborateurs_externes'].label = "Collaborateurs externes"
-        self.fields['collaborateurs_externes'].help_text = "Maintenez Ctrl (ou Cmd sur Mac) pour sélectionner plusieurs collaborateurs"
-        
-        # Style
-        self.fields['responsable'].widget.attrs.update({'class': 'form-control'})
-        
-        # Vérification de disponibilité
-        if not self.fields['responsable'].queryset.exists():
-            self.fields['responsable'].help_text = "⚠️ Aucun membre responsable disponible. Veuillez d'abord désigner des responsables."
-    
+        labels = {
+            'titre': 'Project title',
+            'description': 'Description',
+            'theme': 'Research theme',  # NOUVEAU
+            'date_debut': 'Start date',
+            'statut': 'Status',
+            'responsable': 'Project manager',
+            'participants': 'Participants',
+            'collaborateurs_externes': 'External collaborators',
+            'est_public': 'Public project',
+        }
+
     def clean(self):
         cleaned_data = super().clean()
         

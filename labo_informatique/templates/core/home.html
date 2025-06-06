@@ -50,6 +50,8 @@
     </div>
 </section>
 
+<!-- SOLUTION SIMPLE ET EFFICACE -->
+
 <section class="domains-section">
     <div class="container">
         <h2 class="section-title">Research Areas</h2>
@@ -57,8 +59,22 @@
             {% for theme in themes %}
             <div class="domain-card">
                 <div class="domain-icon">
-                    {% cycle 'fas fa-laptop-code' 'fas fa-microchip' 'fas fa-brain' 'fas fa-cloud' 'fas fa-database' 'fas fa-network-wired' 'fas fa-code-branch' as icon_class %}
-                    <i class="{{ icon_class }}"></i>
+                    <!-- Solution simple basée sur forloop.counter -->
+                    {% if forloop.counter == 1 or forloop.counter == 8 or forloop.counter == 15 %}
+                        <i class="fas fa-laptop-code"></i>
+                    {% elif forloop.counter == 2 or forloop.counter == 9 or forloop.counter == 16 %}
+                        <i class="fas fa-microchip"></i>
+                    {% elif forloop.counter == 3 or forloop.counter == 10 or forloop.counter == 17 %}
+                        <i class="fas fa-brain"></i>
+                    {% elif forloop.counter == 4 or forloop.counter == 11 or forloop.counter == 18 %}
+                        <i class="fas fa-cloud"></i>
+                    {% elif forloop.counter == 5 or forloop.counter == 12 or forloop.counter == 19 %}
+                        <i class="fas fa-database"></i>
+                    {% elif forloop.counter == 6 or forloop.counter == 13 or forloop.counter == 20 %}
+                        <i class="fas fa-network-wired"></i>
+                    {% else %}
+                        <i class="fas fa-code-branch"></i>
+                    {% endif %}
                 </div>
                 <h3>{{ theme.nom }}</h3>
                 <p>{{ theme.description|truncatechars:100 }}</p>
@@ -72,7 +88,6 @@
     </div>
 </section>
 
-<!-- Section à ajouter dans votre template home.html -->
 {% if projets_recents %}
 <section class="projects-home-section">
     <div class="container">
@@ -101,9 +116,10 @@
                     </div>
                     
                     <div class="project-home-content">
-                        <div class="project-home-type">{{ projet.get_type_projet_display }}</div>
+                        <!-- MODIFIER : Afficher le thème au lieu du type -->
+                        <div class="project-home-theme">{{ projet.theme.nom }}</div>
                         <h3 class="project-home-title">{{ projet.titre }}</h3>
-                        <p class="project-home-description">{{ projet.description_courte|truncatechars:120 }}</p>
+                        <p class="project-home-description">{{ projet.description|truncatechars:120 }}</p>
                         
                         <div class="project-home-meta">
                             <div class="project-home-author">
@@ -118,16 +134,7 @@
                             </div>
                         </div>
                         
-                        {% if projet.get_technologies_list %}
-                        <div class="project-home-tech">
-                            {% for tech in projet.get_technologies_list|slice:":2" %}
-                                <span class="tech-tag-small">{{ tech }}</span>
-                            {% endfor %}
-                            {% if projet.get_technologies_list|length > 2 %}
-                                <span class="tech-more-small">+{{ projet.get_technologies_list|length|add:"-2" }}</span>
-                            {% endif %}
-                        </div>
-                        {% endif %}
+                        <!-- SUPPRIMER la section technologies -->
                         
                         <a href="{% url 'labo:projet_detail' projet.id %}" class="project-home-link">
                             Learn more <i class="fas fa-arrow-right"></i>
@@ -145,6 +152,7 @@
     </div>
 </section>
 {% endif %}
+
 {% if derniers_articles%}
 <!-- Section actualités récentes -->
 <section class="news-section">

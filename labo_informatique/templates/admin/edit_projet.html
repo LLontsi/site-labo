@@ -92,19 +92,6 @@
                             </div>
                             
                             <div class="form-group">
-                                <label for="{{ form.description_courte.id_for_label }}">{{ form.description_courte.label }}</label>
-                                {{ form.description_courte }}
-                                <div class="form-help">Short description that will appear in project lists (max 300 characters)</div>
-                                {% if form.description_courte.errors %}
-                                    <div class="form-errors">
-                                        {% for error in form.description_courte.errors %}
-                                            <span class="error">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="form-group">
                                 <label for="{{ form.description.id_for_label }}">{{ form.description.label }}</label>
                                 {{ form.description }}
                                 <div class="form-help">Detailed project description</div>
@@ -116,7 +103,26 @@
                                     </div>
                                 {% endif %}
                             </div>
-                            
+                            <!-- 2. AJOUTER la section thème après la description : -->
+                            <div class="form-section">
+                                <div class="form-section-title">
+                                    <h3><i class="fas fa-lightbulb"></i> Research theme</h3>
+                                    <p>Associated research theme</p>
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="{{ form.theme.id_for_label }}">{{ form.theme.label }}</label>
+                                    {{ form.theme }}
+                                    <div class="form-help">Select the research theme associated with this project</div>
+                                    {% if form.theme.errors %}
+                                        <div class="form-errors">
+                                            {% for error in form.theme.errors %}
+                                                <span class="error">{{ error }}</span>
+                                            {% endfor %}
+                                        </div>
+                                    {% endif %}
+                                </div>
+                            </div>
                             <div class="form-group">
                                 <label for="{{ form.image_principale.id_for_label }}">{{ form.image_principale.label }}</label>
                                 <div class="file-input-group">
@@ -143,81 +149,39 @@
                             </div>
                         </div>
                         
-                        <!-- Classification -->
+                        <!-- 3. MODIFIER la section Classification pour garder seulement le statut : -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-tags"></i> Classification</h3>
-                                <p>Project type and status</p>
+                                <h3><i class="fas fa-tags"></i> Status</h3>
+                                <p>Project status</p>
                             </div>
                             
-                            <div class="form-row">
-                                <div class="form-group form-col">
-                                    <label for="{{ form.type_projet.id_for_label }}">{{ form.type_projet.label }}</label>
-                                    {{ form.type_projet }}
-                                    {% if form.type_projet.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.type_projet.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="form-group form-col">
-                                    <label for="{{ form.statut.id_for_label }}">{{ form.statut.label }}</label>
-                                    {{ form.statut }}
-                                    {% if form.statut.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.statut.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
+                            <div class="form-group">
+                                <label for="{{ form.statut.id_for_label }}">{{ form.statut.label }}</label>
+                                {{ form.statut }}
+                                {% if form.statut.errors %}
+                                    <div class="form-errors">
+                                        {% for error in form.statut.errors %}
+                                            <span class="error">{{ error }}</span>
+                                        {% endfor %}
+                                    </div>
+                                {% endif %}
                             </div>
                         </div>
-                        
-                        <!-- Dates -->
+
+                        <!-- 4. MODIFIER la section Dates pour garder seulement date_debut : -->
                         <div class="form-section">
                             <div class="form-section-title">
-                                <h3><i class="fas fa-calendar-alt"></i> Planning</h3>
-                                <p>Important project dates</p>
+                                <h3><i class="fas fa-calendar-alt"></i> Date</h3>
+                                <p>Project start date</p>
                             </div>
                             
-                            <div class="form-row">
-                                <div class="form-group form-col">
-                                    <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label }}</label>
-                                    {{ form.date_debut }}
-                                    {% if form.date_debut.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.date_debut.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="form-group form-col">
-                                    <label for="{{ form.date_fin_prevue.id_for_label }}">{{ form.date_fin_prevue.label }}</label>
-                                    {{ form.date_fin_prevue }}
-                                    <div class="form-help">Optional</div>
-                                    {% if form.date_fin_prevue.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.date_fin_prevue.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="form-group" id="date-fin-reelle-group" style="display: none;">
-                                <label for="{{ form.date_fin_reelle.id_for_label }}">{{ form.date_fin_reelle.label }}</label>
-                                {{ form.date_fin_reelle }}
-                                <div class="form-help">Actual end date (for completed projects)</div>
-                                {% if form.date_fin_reelle.errors %}
+                            <div class="form-group">
+                                <label for="{{ form.date_debut.id_for_label }}">{{ form.date_debut.label }}</label>
+                                {{ form.date_debut }}
+                                {% if form.date_debut.errors %}
                                     <div class="form-errors">
-                                        {% for error in form.date_fin_reelle.errors %}
+                                        {% for error in form.date_debut.errors %}
                                             <span class="error">{{ error }}</span>
                                         {% endfor %}
                                     </div>
@@ -276,103 +240,6 @@
                             </div>
                         </div>
                         
-                        <!-- Links and resources -->
-                        <div class="form-section">
-                            <div class="form-section-title">
-                                <h3><i class="fas fa-link"></i> Links and Resources</h3>
-                                <p>Useful links to project resources</p>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group form-col">
-                                    <label for="{{ form.lien_solution.id_for_label }}">{{ form.lien_solution.label }}</label>
-                                    {{ form.lien_solution }}
-                                    <div class="form-help">Link to solution/demo</div>
-                                    {% if form.lien_solution.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.lien_solution.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="form-group form-col">
-                                    <label for="{{ form.lien_github.id_for_label }}">{{ form.lien_github.label }}</label>
-                                    {{ form.lien_github }}
-                                    <div class="form-help">GitHub repository</div>
-                                    {% if form.lien_github.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.lien_github.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                            
-                            <div class="form-row">
-                                <div class="form-group form-col">
-                                    <label for="{{ form.lien_documentation.id_for_label }}">{{ form.lien_documentation.label }}</label>
-                                    {{ form.lien_documentation }}
-                                    <div class="form-help">Technical documentation</div>
-                                    {% if form.lien_documentation.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.lien_documentation.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                                
-                                <div class="form-group form-col">
-                                    <label for="{{ form.lien_publication.id_for_label }}">{{ form.lien_publication.label }}</label>
-                                    {{ form.lien_publication }}
-                                    <div class="form-help">Scientific publication</div>
-                                    {% if form.lien_publication.errors %}
-                                        <div class="form-errors">
-                                            {% for error in form.lien_publication.errors %}
-                                                <span class="error">{{ error }}</span>
-                                            {% endfor %}
-                                        </div>
-                                    {% endif %}
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Metadata -->
-                        <div class="form-section">
-                            <div class="form-section-title">
-                                <h3><i class="fas fa-code"></i> Metadata</h3>
-                                <p>Technologies and keywords</p>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="{{ form.technologies.id_for_label }}">{{ form.technologies.label }}</label>
-                                {{ form.technologies }}
-                                <div class="form-help">Separate technologies with commas (e.g.: Python, Django, React, PostgreSQL)</div>
-                                {% if form.technologies.errors %}
-                                    <div class="form-errors">
-                                        {% for error in form.technologies.errors %}
-                                            <span class="error">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="{{ form.mots_cles.id_for_label }}">{{ form.mots_cles.label }}</label>
-                                {{ form.mots_cles }}
-                                <div class="form-help">Separate keywords with commas (e.g.: AI, Machine Learning, Web, Database)</div>
-                                {% if form.mots_cles.errors %}
-                                    <div class="form-errors">
-                                        {% for error in form.mots_cles.errors %}
-                                            <span class="error">{{ error }}</span>
-                                        {% endfor %}
-                                    </div>
-                                {% endif %}
-                            </div>
-                        </div>
                         
                         <!-- Visibility -->
                         <div class="form-section">
