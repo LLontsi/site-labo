@@ -271,8 +271,8 @@ class Evenement(models.Model):
     titre = models.CharField(max_length=200)
     description = models.TextField()
     type_evenement = models.CharField(max_length=20, choices=TYPE_CHOICES)
-    date_debut = models.DateTimeField()
-    date_fin = models.DateTimeField()
+    date_debut = models.DateField()
+    date_fin = models.DateField()
     lieu = models.CharField(max_length=200)
     image = models.ImageField(upload_to='evenements/images/', blank=True, null=True)
     
@@ -313,12 +313,7 @@ class Projet(models.Model):
     # Statut (CONSERVÉ)
     statut = models.CharField(max_length=20, choices=STATUT_CHOICES, default='en_cours')
     
-    # Participants (CONSERVÉ)
-    responsable = models.ForeignKey(
-        Membre,
-        on_delete=models.CASCADE,
-        related_name='projets_responsable'
-    )
+   
     participants = models.ManyToManyField(
         Membre,
         blank=True,

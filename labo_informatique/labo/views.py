@@ -51,11 +51,11 @@ def home(request):
     nb_publications = Presentation.objects.count()
     nb_projets = Article.objects.filter(est_publie=True).count()  # Approximation
     nb_partenaires = Collaborateur.objects.count()
-    # Récupérer 3 projets récents en cours
+    
     projets_recents = Projet.objects.filter(
         est_public=True, 
-        statut='en_cours'  # Garder le filtre par statut
-    ).select_related('responsable', 'responsable__user', 'theme').order_by('-date_creation')[:3]
+        statut='en_cours'
+    ).select_related('theme').prefetch_related('participants').order_by('-date_creation')[:3]
     
     
     context = {
@@ -671,6 +671,57 @@ def create_edit_presentation(request, presentation_id=None):
         'presentation': presentation,
     }
     return render(request, 'membres/edit_presentation.html', context)
+
+@login_required
+def create_edit_presentation1(request, presentation_id=None):
+    """Création/édition d'une présentation."""
+    try:
+        membre = Membre.objects.get(user=request.user)
+    except Membre.DoesNotExist:
+        # messages.error(request, "Vous devez d'abord compléter votre profil.")
+        return redirect('labo:edit_profile')
+    
+    if presentation_id:
+        presentation = get_object_or_404(Presentation, id=presentation_id)
+        # Vérifier que le membre est bien l'auteur
+        if presentation.membre != membre:
+            return HttpResponseForbidden("Vous n'avez pas la permission de modifier cette présentation.")
+    else:
+        presentation = None
+    
+    if request.method == 'POST':
+        form = PresentationForm(request.POST, request.FILES, instance=presentation)
+        formset = ImagePresentationFormSet(request.POST, request.FILES, instance=presentation)
+        
+        if form.is_valid() and formset.is_valid():
+            # D'abord sauvegarder la présentation
+            presentation = form.save(commit=False)
+            presentation.membre = membre
+            presentation.save()
+            form.save_m2m()  # Nécessaire si vous avez des relations ManyToMany
+            
+            # Maintenant lier le formset à la présentation et le sauvegarder
+            formset.instance = presentation
+            formset.save()
+            
+            if presentation_id:
+                # messages.success(request, "La présentation a été mise à jour avec succès !")
+                pass
+            else:
+                # messages.success(request, "La présentation a été créée avec succès !")
+                pass
+            
+            return redirect('labo:gestion_contenu', presentation_id=presentation.id)
+    else:
+        form = PresentationForm(instance=presentation)
+        formset = ImagePresentationFormSet(instance=presentation)
+    
+    context = {
+        'form': form,
+        'formset': formset,
+        'presentation': presentation,
+    }
+    return render(request, 'admin/edit_presentation.html', context)
 @login_required
 def create_edit_article(request, article_id=None):
    """Création/édition d'un article."""
@@ -717,6 +768,52 @@ def create_edit_article(request, article_id=None):
        'article': article,
    }
    return render(request, 'membres/edit_article.html', context)
+
+@login_required
+def create_edit_article1(request, article_id=None):
+    """Création/édition d'un article."""
+    try:
+        membre = Membre.objects.get(user=request.user)
+    except Membre.DoesNotExist:
+        return redirect('labo:edit_profile')
+    
+    if article_id:
+        article = get_object_or_404(Article, id=article_id)
+        # Vérifier que le membre est bien l'auteur
+        if article.auteur != membre:
+            return HttpResponseForbidden("Vous n'avez pas la permission de modifier cet article.")
+    else:
+        article = None
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.auteur = membre
+            article.save()
+            form.save_m2m()
+            
+            if article_id:
+                pass
+            else:
+                pass
+            
+            if article.est_publie:
+                # ✅ CORRIGÉ : Utiliser type_contenu au lieu de article_id
+                return redirect('labo:gestion_contenu', type_contenu='articles')
+            else:
+                article.est_publie = True
+                article.save()  # ✅ AJOUTÉ : Sauvegarder la modification
+                return redirect('labo:dashboard')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+    }
+    return render(request, 'admin/edit_article.html', context)
 
 @login_required
 def create_edit_devenir(request):
@@ -1661,18 +1758,16 @@ def delete_article(request, article_id):
    else:
         return redirect('labo:dashboard')
 
-
-# 2. Vue liste_projets - simplifier
+# 2. Vue liste_projets - corrigée
 def liste_projets(request):
     """Vue pour afficher la liste des projets."""
-    # REMPLACER TOUT LE CONTENU PAR :
     
     # Filtres
     statut_filtre = request.GET.get('statut', '')
     theme_filtre = request.GET.get('theme', '')
     
     projets_list = Projet.objects.filter(est_public=True).select_related(
-        'responsable', 'responsable__user', 'theme'
+        'theme'  # ✅ Supprimé responsable, responsable__user
     ).prefetch_related('participants', 'collaborateurs_externes')
     
     # Appliquer les filtres
@@ -1709,11 +1804,11 @@ def liste_projets(request):
     }
     return render(request, 'core/liste_projets.html', context)
 
-# 3. Vue projet_detail - simplifier
+# 3. Vue projet_detail - corrigée
 def projet_detail(request, projet_id):
     """Vue pour afficher le détail d'un projet."""
     projet = get_object_or_404(
-        Projet.objects.select_related('responsable', 'responsable__user', 'theme').prefetch_related(
+        Projet.objects.select_related('theme').prefetch_related(  # ✅ Supprimé responsable, responsable__user
             'participants', 'participants__user', 'collaborateurs_externes'
         ),
         id=projet_id,
@@ -1722,11 +1817,11 @@ def projet_detail(request, projet_id):
     
     # Récupérer les projets similaires (même thème, excluant celui-ci)
     projets_similaires = Projet.objects.filter(
-        theme=projet.theme,  # MODIFIER : même thème au lieu de même type
+        theme=projet.theme,
         est_public=True
     ).exclude(
         id=projet.id
-    ).select_related('responsable', 'responsable__user', 'theme')[:3]
+    ).select_related('theme').prefetch_related('participants')[:3]  # ✅ Supprimé responsable, responsable__user
     
     context = {
         'projet': projet,
@@ -1734,8 +1829,7 @@ def projet_detail(request, projet_id):
     }
     return render(request, 'core/projet_detail.html', context)
 
-
-# Vues d'administration
+# Vues d'administration - corrigées
 @login_required
 def gestion_projets(request):
     """Gestion des projets pour les administrateurs."""
@@ -1743,8 +1837,8 @@ def gestion_projets(request):
         return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
     
     projets = Projet.objects.select_related(
-        'responsable', 'responsable__user'
-    ).order_by('-date_creation')
+        'theme'  # ✅ Corrigé la ligne cassée
+    ).prefetch_related('participants', 'collaborateurs_externes').order_by('-date_creation')
     
     # Statistiques
     nb_projets = projets.count()
@@ -1758,7 +1852,6 @@ def gestion_projets(request):
         'nb_termines': nb_termines,
     }
     return render(request, 'admin/gestion_projets.html', context)
-
 
 @login_required
 def create_edit_projet(request, projet_id=None):
@@ -1794,7 +1887,6 @@ def create_edit_projet(request, projet_id=None):
     }
     return render(request, 'admin/edit_projet.html', context)
 
-
 @login_required
 def delete_projet(request, projet_id):
     """Suppression d'un projet."""
@@ -1807,7 +1899,6 @@ def delete_projet(request, projet_id):
     
     # messages.success(request, f"Le projet '{titre}' a été supprimé.")
     return redirect('labo:gestion_projets')
-
 
 @login_required
 def gestion_historique_themes(request):

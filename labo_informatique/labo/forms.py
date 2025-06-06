@@ -129,8 +129,8 @@ class EvenementForm(forms.ModelForm):
         fields = ('titre', 'description', 'type_evenement', 'date_debut', 
                  'date_fin', 'lieu', 'image')
         widgets = {
-            'date_debut': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
-            'date_fin': forms.DateTimeInput(attrs={'type': 'datetime-local'}),
+            'date_debut': forms.DateInput(attrs={'type': 'date'}),
+            'date_fin': forms.DateInput(attrs={'type': 'date'}),
             'description': forms.Textarea(attrs={'rows': 5}),
         }
         
@@ -204,7 +204,6 @@ class ProjetForm(forms.ModelForm):
             'theme',  # NOUVEAU
             'date_debut',
             'statut',
-            'responsable',
             'participants',
             'collaborateurs_externes',
             'est_public'
@@ -216,7 +215,6 @@ class ProjetForm(forms.ModelForm):
             'theme': forms.Select(attrs={'class': 'form-control'}),  # NOUVEAU
             'date_debut': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'statut': forms.Select(attrs={'class': 'form-control'}),
-            'responsable': forms.Select(attrs={'class': 'form-control'}),
             'participants': forms.CheckboxSelectMultiple(),
             'collaborateurs_externes': forms.CheckboxSelectMultiple(),
             'est_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),

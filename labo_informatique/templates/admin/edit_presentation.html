@@ -1,0 +1,183 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if presentation %}Edit presentation{% else %}New presentation{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "css/forms.css" %} ">
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">{% if presentation %}Edit presentation{% else %}New presentation{% endif %}</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Share your work and documents with the community</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Administration Menu</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" >Member Management</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>{% if presentation %}Edit Presentation{% else %}Add Presentation{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
+                </div>
+                        
+                <div class="form-card">
+                    <form method="post" enctype="multipart/form-data" class="content-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-section-title">
+                            <h2>General information</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.titre.id_for_label }}">Presentation title</label>
+                            {{ form.titre }}
+                            {% if form.titre.errors %}
+                                <div class="form-error">{{ form.titre.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.description.id_for_label }}">Description</label>
+                            {{ form.description }}
+                            {% if form.description.errors %}
+                                <div class="form-error">{{ form.description.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-help">Briefly describe the content and objective of this presentation.</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.theme.id_for_label }}">Associated theme</label>
+                            {{ form.theme }}
+                            {% if form.theme.errors %}
+                                <div class="form-error">{{ form.theme.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h2>Main file</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.fichier.id_for_label }}">File</label>
+                            <div class="file-input-group">
+                                {% if presentation and presentation.fichier %}
+                                    <div class="current-file">
+                                        <p>Current file: <a href="{{ presentation.fichier.url }}" target="_blank">{{ presentation.fichier.name|default:""|cut:"/media/presentations/"|default:"File" }}</a></p>
+                                    </div>
+                                {% endif %}
+                                {{ form.fichier }}
+                                <div class="form-help">Accepted formats: PDF, PPTX, DOCX, etc.</div>
+                                {% if form.fichier.errors %}
+                                    <div class="form-error">{{ form.fichier.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.type_fichier.id_for_label }}">File type</label>
+                            {{ form.type_fichier }}
+                            {% if form.type_fichier.errors %}
+                                <div class="form-error">{{ form.type_fichier.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h2>Additional images</h2>
+                            <p class="form-subtitle">Add screenshots or illustrations of your presentation</p>
+                        </div>
+                        
+                        {{ formset.management_form }}
+                        <div class="images-formset">
+                            {% for image_form in formset %}
+                                <div class="formset-item{% if image_form.instance.pk %} has-image{% endif %}">
+                                    <div class="formset-header">
+                                        <h3>Image {{ forloop.counter }}</h3>
+                                        {{ image_form.DELETE.label_tag }}
+                                        {{ image_form.DELETE }}
+                                        {{ image_form.id }}
+                                    </div>
+                                    
+                                    <div class="formset-content">
+                                        {% if image_form.instance.pk and image_form.instance.image %}
+                                            <div class="current-image">
+                                                <img src="{{ image_form.instance.image.url }}" alt="Image {{ forloop.counter }}">
+                                            </div>
+                                        {% endif %}
+                                        
+                                        <div class="form-group">
+                                            <label for="{{ image_form.image.id_for_label }}">Image</label>
+                                            {{ image_form.image }}
+                                            {% if image_form.image.errors %}
+                                                <div class="form-error">{{ image_form.image.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                        
+                                        <div class="form-group">
+                                            <label for="{{ image_form.legende.id_for_label }}">Caption</label>
+                                            {{ image_form.legende }}
+                                            {% if image_form.legende.errors %}
+                                                <div class="form-error">{{ image_form.legende.errors.0 }}</div>
+                                            {% endif %}
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Afficher/masquer les éléments du formset quand la case "Supprimer" est cochée
+        document.querySelectorAll('.formset-item input[type="checkbox"]').forEach(function(checkbox) {
+            checkbox.addEventListener('change', function() {
+                const formsetItem = this.closest('.formset-item');
+                if (this.checked) {
+                    formsetItem.classList.add('to-delete');
+                } else {
+                    formsetItem.classList.remove('to-delete');
+                }
+            });
+        });
+    });
+</script>
+{% endblock %}

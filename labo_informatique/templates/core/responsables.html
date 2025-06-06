@@ -12,7 +12,6 @@
     <div class="header-line"></div>
     <p class="page-subtitle fade-in delay-200">Discover the leadership team and research partners</p>
 </div>
-
 {% endblock %}
 
 {% block content %}
@@ -48,27 +47,41 @@
                 </div>
             </div>
             
+            <!-- ✅ REMPLACÉ : Research managers → External Collaborators -->
             <div class="org-level">
-                <div class="org-level-title">Research managers</div>
+                <div class="org-level-title">External Collaborators</div>
                 <div class="org-boxes">
-                    {% for resp in responsables %}
-                        
-                        <div class="org-box">
-                            <div class="org-member-photo">
-                                {% if resp.photo %}
-                                    <img src="{{ resp.photo.url }}" alt="{{ resp.user.first_name }} {{ resp.user.last_name }}">
-                                {% else %}
-                                    <div class="default-avatar">{{ resp.user.first_name|first }}{{ resp.user.last_name|first }}</div>
-                                {% endif %}
-                            </div>
-                            <div class="org-member-info">
-                                <h3>{{ resp.user.first_name }} {{ resp.user.last_name }}</h3>
-                                <p class="org-member-title">{{ resp.titre }}</p>
-                                <p class="org-member-theme">{{ resp.theme.nom }}</p>
-                            </div>
-                            <a href="{% url 'labo:membre_detail' resp.id %}" class="btn-view-profile">View profile</a>
+                    <!-- ✅ CONTENU DES COLLABORATEURS EXTERNES ICI -->
+                    {% for collab in collaborateurs %}
+                    <div class="org-box">
+                        <div class="org-member-photo">
+                            {% if collab.photo %}
+                                <img src="{{ collab.photo.url }}" alt="{{ collab.nom }} {{ collab.prenom }}">
+                            {% else %}
+                                <div class="default-avatar">{{ collab.prenom|first }}{{ collab.nom|first }}</div>
+                            {% endif %}
                         </div>
-                       
+                        <div class="org-member-info">
+                            <h3>{{ collab.prenom }} {{ collab.nom }}</h3>
+                            <p class="org-member-title">{{ collab.titre }}</p>
+                            <p class="org-member-theme">{{ collab.institution }}</p>
+                            {% if collab.description %}
+                                <p class="org-member-desc">{{ collab.description|truncatechars:100 }}</p>
+                            {% endif %}
+                        </div>
+                        <div class="org-member-contact">
+                            {% if collab.email %}
+                                <a href="mailto:{{ collab.email }}" class="contact-link"><i class="fas fa-envelope"></i></a>
+                            {% endif %}
+                            {% if collab.lien %}
+                                <a href="{{ collab.lien }}" target="_blank" class="contact-link"><i class="fas fa-globe"></i></a>
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div class="empty-message">
+                        <p>No external collaborators are registered at the moment.</p>
+                    </div>
                     {% endfor %}
                 </div>
             </div>
@@ -76,43 +89,8 @@
     </div>
 </section>
 
-<section class="collaborateurs-section">
-    <div class="container">
-        <h2>External collaborations</h2>
-        
-        <div class="collaborateurs-grid">
-            {% for collab in collaborateurs %}
-            <div class="collaborateur-card">
-                <div class="collaborateur-photo">
-                    {% if collab.photo %}
-                        <img src="{{ collab.photo.url }}" alt="{{ collab.nom }} {{ collab.prenom }}">
-                    {% else %}
-                        <div class="default-avatar">{{ collab.prenom|first }}{{ collab.nom|first }}</div>
-                    {% endif %}
-                </div>
-                <div class="collaborateur-info">
-                    <h3>{{ collab.prenom }} {{ collab.nom }}</h3>
-                    <p class="collaborateur-title">{{ collab.titre }}</p>
-                    <p class="collaborateur-institution">{{ collab.institution }}</p>
-                    <p class="collaborateur-desc">{{ collab.description|truncatechars:150 }}</p>
-                    <div class="collaborateur-contact">
-                        {% if collab.email %}
-                            <a href="mailto:{{ collab.email }}" class="contact-link"><i class="fas fa-envelope"></i></a>
-                        {% endif %}
-                        {% if collab.lien %}
-                            <a href="{{ collab.lien }}" target="_blank" class="contact-link"><i class="fas fa-globe"></i></a>
-                        {% endif %}
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="empty-message">
-                <p>No collaborators are registered at the moment.</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
+<!-- ✅ SUPPRIMÉ : L'ancienne section collaborateurs-section -->
+
 {% endblock %}
 
 {% block extra_js %}

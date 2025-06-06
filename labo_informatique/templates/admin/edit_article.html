@@ -1,0 +1,175 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}{% if article %}Edit article{% else %}New article{% endif %} - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/admin.css' %}">
+<link rel="stylesheet" href="{% static "css/forms.css" %} ">
+<link rel="stylesheet" href="{% static "css/rich-editor.css" %} ">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">{% if article %}Edit article{% else %}New article{% endif %}</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Share your knowledge and news with the community</p>
+</div>
+
+{% endblock %}
+
+{% block content %}
+<section class="admin-section">
+    <div class="container">
+        <div class="admin-grid">
+            <div class="admin-sidebar">
+                <div class="admin-menu">
+                    <div class="admin-menu-header">
+                        <h3>Administration Menu</h3>
+                    </div>
+                    <ul>
+                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
+                        <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
+                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li class="menu-divider">Content Management</li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="admin-content">
+                <div class="admin-header">
+                    <h2>{% if article %}Edit Article{% else %}Add Article{% endif %}</h2>
+                    <a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" class="btn-back"><i class="fas fa-arrow-left"></i> Back to List</a>
+                </div>
+
+                <div class="form-card">
+                    <form method="post" enctype="multipart/form-data" class="content-form">
+                        {% csrf_token %}
+                        
+                        <div class="form-section-title">
+                            <h2>General information</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.titre.id_for_label }}">Article title</label>
+                            {{ form.titre }}
+                            {% if form.titre.errors %}
+                                <div class="form-error">{{ form.titre.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.categories.id_for_label }}">Categories</label>
+                            <div class="categories-select">
+                                {{ form.categories }}
+                            </div>
+                            {% if form.categories.errors %}
+                                <div class="form-error">{{ form.categories.errors.0 }}</div>
+                            {% endif %}
+                            <div class="form-help">Select one or more categories for your article.</div>
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h2>Main image</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="{{ form.image_principale.id_for_label }}">Cover image</label>
+                            <div class="file-input-group">
+                                {% if article and article.image_principale %}
+                                    <div class="current-image">
+                                        <img src="{{ article.image_principale.url }}" alt="Current image">
+                                        <p>Current image</p>
+                                    </div>
+                                {% endif %}
+                                {{ form.image_principale }}
+                                <div class="form-help">Recommended format: 1200x600 pixels minimum.</div>
+                                {% if form.image_principale.errors %}
+                                    <div class="form-error">{{ form.image_principale.errors.0 }}</div>
+                                {% endif %}
+                            </div>
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h2>Article content</h2>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div class="rich-text-toolbar">
+                                <button type="button" data-command="bold"><i class="fas fa-bold"></i></button>
+                                <button type="button" data-command="italic"><i class="fas fa-italic"></i></button>
+                                <button type="button" data-command="underline"><i class="fas fa-underline"></i></button>
+                                <span class="separator"></span>
+                                <button type="button" data-command="h1">H1</button>
+                                <button type="button" data-command="h2">H2</button>
+                                <button type="button" data-command="h3">H3</button>
+                                <span class="separator"></span>
+                                <button type="button" data-command="justifyLeft"><i class="fas fa-align-left"></i></button>
+                                <button type="button" data-command="justifyCenter"><i class="fas fa-align-center"></i></button>
+                                <button type="button" data-command="justifyRight"><i class="fas fa-align-right"></i></button>
+                                <span class="separator"></span>
+                                <button type="button" data-command="insertUnorderedList"><i class="fas fa-list-ul"></i></button>
+                                <button type="button" data-command="insertOrderedList"><i class="fas fa-list-ol"></i></button>
+                                <span class="separator"></span>
+                                <button type="button" data-command="createLink"><i class="fas fa-link"></i></button>
+                                <button type="button" data-command="insertImage"><i class="fas fa-image"></i></button>
+                            </div>
+                            <div class="rich-text-editor" contenteditable="true">
+                                {% if article %}{{ article.contenu|safe }}{% endif %}
+                            </div>
+                            {{ form.contenu }}
+                            {% if form.contenu.errors %}
+                                <div class="form-error">{{ form.contenu.errors.0 }}</div>
+                            {% endif %}
+                        </div>
+                        
+                        <div class="form-section-title">
+                            <h2>Publication options</h2>
+                        </div>
+                        
+                        <div class="form-group form-checkbox-group">
+                            <label class="checkbox-label">
+                                {{ form.est_publie }}
+                                <span>Publish immediately</span>
+                            </label>
+                            <div class="form-help">If this option is not checked, the article will be saved as a draft and will not be publicly visible.</div>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="submit" class="btn btn-primary">Save</button>
+                            <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Cancel</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>     
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/rich-editor.js" %} "></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const editor = document.querySelector('.rich-text-editor');
+        const hiddenInput = document.getElementById('{{ form.contenu.id_for_label }}');
+        const toolbar = document.querySelector('.rich-text-toolbar');
+        
+        // Initialiser l'éditeur
+        initRichTextEditor(editor, hiddenInput, toolbar);
+        
+        // Soumettre le formulaire
+        document.querySelector('.content-form').addEventListener('submit', function() {
+            hiddenInput.value = editor.innerHTML;
+        });
+    });
+</script>
+{% endblock %}

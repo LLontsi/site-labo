@@ -179,11 +179,15 @@ class EvenementAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_debut'
 
 class ProjetAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'responsable', 'theme', 'statut', 'date_debut', 'est_public')
+    list_display = ('titre', 'theme', 'statut', 'date_debut', 'nb_participants', 'est_public')
     list_filter = ('statut', 'theme', 'est_public', 'date_debut')
-    search_fields = ('titre', 'description', 'responsable__user__first_name', 'responsable__user__last_name')
+    search_fields = ('titre', 'description')
     date_hierarchy = 'date_debut'
     filter_horizontal = ('participants', 'collaborateurs_externes')
+    
+    def nb_participants(self, obj):
+        return obj.participants.count()
+    nb_participants.short_description = "Participants"
     
     fieldsets = (
         ("Informations générales", {
@@ -193,7 +197,7 @@ class ProjetAdmin(admin.ModelAdmin):
             'fields': ('statut', 'date_debut')
         }),
         ("Équipe", {
-            'fields': ('responsable', 'participants', 'collaborateurs_externes')
+            'fields': ('participants', 'collaborateurs_externes')
         }),
         ("Visibilité", {
             'fields': ('est_public',)
@@ -201,9 +205,7 @@ class ProjetAdmin(admin.ModelAdmin):
     )
     
     def get_queryset(self, request):
-        return super().get_queryset(request).select_related(
-            'responsable__user', 'theme'
-        ).prefetch_related('participants', 'collaborateurs_externes')
+        return super().get_queryset(request).select_related('theme').prefetch_related('participants', 'collaborateurs_externes')
 
 # 6. ENREGISTREMENTS (à la fin)
 admin.site.register(Membre, MembreAdmin)

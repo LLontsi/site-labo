@@ -67,33 +67,6 @@
                     </h2>
                     
                     <!-- Responsable -->
-                    <div class="team-section">
-                        <h3 class="team-subtitle">Project manager</h3>
-                        <div class="team-member responsable">
-                            <div class="member-avatar">
-                                {% if projet.responsable.photo %}
-                                    <img src="{{ projet.responsable.photo.url }}" alt="{{ projet.responsable.user.first_name }}">
-                                {% else %}
-                                    <div class="avatar-placeholder">
-                                        {{ projet.responsable.user.first_name|first }}{{ projet.responsable.user.last_name|first }}
-                                    </div>
-                                {% endif %}
-                                <div class="member-role-badge">Project manager</div>
-                            </div>
-                            <div class="member-info">
-                                <h4>{{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}</h4>
-                                <p class="member-title">{{ projet.responsable.titre }}</p>
-                                {% if projet.responsable.theme %}
-                                    <p class="member-theme">{{ projet.responsable.theme.nom }}</p>
-                                {% endif %}
-                                <div class="member-links">
-                                    <a href="{% url 'labo:membre_detail' projet.responsable.id %}" class="member-link">
-                                        <i class="fas fa-user"></i> Profile
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
                     
                     <!-- Participants -->
                     {% if projet.participants.all %}

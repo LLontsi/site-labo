@@ -34,7 +34,7 @@
                 <div class="event-details">
                     <h3>{{ evenement.titre }}</h3>
                     <div class="event-info">
-                        <span class="event-time"><i class="far fa-clock"></i> {{ evenement.date_debut|date:"H:i" }} - {{ evenement.date_fin|date:"H:i" }}</span>
+                        <span class="event-time"><i class="far fa-clock"></i> {{ evenement.date_debut|date }} - {{ evenement.date_fin|date }}</span>
                         <span class="event-location"><i class="fas fa-map-marker-alt"></i> {{ evenement.lieu }}</span>
                     </div>
                     <p class="event-description">{{ evenement.description|truncatechars:120 }}</p>
@@ -87,7 +87,6 @@
         </div>
     </div>
 </section>
-
 {% if projets_recents %}
 <section class="projects-home-section">
     <div class="container">
@@ -116,25 +115,11 @@
                     </div>
                     
                     <div class="project-home-content">
-                        <!-- MODIFIER : Afficher le thème au lieu du type -->
                         <div class="project-home-theme">{{ projet.theme.nom }}</div>
                         <h3 class="project-home-title">{{ projet.titre }}</h3>
                         <p class="project-home-description">{{ projet.description|truncatechars:120 }}</p>
                         
-                        <div class="project-home-meta">
-                            <div class="project-home-author">
-                                {% if projet.responsable.photo %}
-                                    <img src="{{ projet.responsable.photo.url }}" alt="{{ projet.responsable.user.first_name }}" class="author-avatar-small">
-                                {% else %}
-                                    <div class="author-avatar-placeholder">
-                                        {{ projet.responsable.user.first_name|first }}{{ projet.responsable.user.last_name|first }}
-                                    </div>
-                                {% endif %}
-                                <span>{{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}</span>
-                            </div>
-                        </div>
-                        
-                        <!-- SUPPRIMER la section technologies -->
+                        <!-- ✅ SECTION RESPONSABLE SUPPRIMÉE -->
                         
                         <a href="{% url 'labo:projet_detail' projet.id %}" class="project-home-link">
                             Learn more <i class="fas fa-arrow-right"></i>
