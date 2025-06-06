@@ -42,7 +42,7 @@ def home(request):
     
     # Récupérer 3 témoignages aléatoires
     temoignages = Temoignage.objects.all().order_by('?')[:3]
-    
+    themes = Theme.objects.all()
     # Récupérer les événements à venir
     evenements = Evenement.objects.filter(date_debut__gte=timezone.now()).order_by('date_debut')[:3]
     
@@ -62,6 +62,7 @@ def home(request):
         'derniers_articles': derniers_articles,
         'membres1': membres1,
         'membres': membres,
+        'themes': themes,
         'temoignages': temoignages,
         'evenements': evenements,
         'nb_membres': nb_membres,
@@ -119,6 +120,7 @@ def contact(request):
                 return redirect('labo:contact')
             except Exception as e:
                 messages.error(request, f"Erreur lors de l'envoi de l'email: {str(e)}")
+                pass
     else:
         form = ContactForm()
     
@@ -459,10 +461,10 @@ def valider_article(request, article_id):
         
         if action == 'valider':
             article.statut_validation = 'valide'
-            messages.success(request, f"L'article '{article.titre}' a été validé.")
+            # messages.success(request, f"L'article '{article.titre}' a été validé.")
         elif action == 'rejeter':
             article.statut_validation = 'rejete'
-            messages.success(request, f"L'article '{article.titre}' a été rejeté.")
+            # messages.success(request, f"L'article '{article.titre}' a été rejeté.")
         
         article.date_validation = timezone.now()
         article.validateur = request.user
@@ -565,7 +567,7 @@ def dashboard(request):
    try:
        membre = Membre.objects.get(user=request.user)
    except Membre.DoesNotExist:
-       messages.error(request, "Votre profil de membre n'a pas encore été configuré.")
+       # messages.error(request, "Votre profil de membre n'a pas encore été configuré.")
        return redirect('labo:edit_profile')
    
    # Récupérer les présentations du membre
@@ -604,10 +606,10 @@ def edit_profile(request):
                membre.user = request.user
                membre.date_arrivee = timezone.now().date()
                membre.save()
-               messages.success(request, "Votre profil a été créé avec succès !")
+               # messages.success(request, "Votre profil a été créé avec succès !")
            else:
                form.save()
-               messages.success(request, "Votre profil a été mis à jour avec succès !")
+               # messages.success(request, "Votre profil a été mis à jour avec succès !")
            return redirect('labo:dashboard')
    else:
        form = MembreProfileForm(instance=membre)
@@ -625,7 +627,7 @@ def create_edit_presentation(request, presentation_id=None):
     try:
         membre = Membre.objects.get(user=request.user)
     except Membre.DoesNotExist:
-        messages.error(request, "Vous devez d'abord compléter votre profil.")
+        # messages.error(request, "Vous devez d'abord compléter votre profil.")
         return redirect('labo:edit_profile')
     
     if presentation_id:
@@ -652,9 +654,11 @@ def create_edit_presentation(request, presentation_id=None):
             formset.save()
             
             if presentation_id:
-                messages.success(request, "La présentation a été mise à jour avec succès !")
+                # messages.success(request, "La présentation a été mise à jour avec succès !")
+                pass
             else:
-                messages.success(request, "La présentation a été créée avec succès !")
+                # messages.success(request, "La présentation a été créée avec succès !")
+                pass
             
             return redirect('labo:presentation_detail', presentation_id=presentation.id)
     else:
@@ -673,7 +677,7 @@ def create_edit_article(request, article_id=None):
    try:
        membre = Membre.objects.get(user=request.user)
    except Membre.DoesNotExist:
-       messages.error(request, "Vous devez d'abord compléter votre profil.")
+       # messages.error(request, "Vous devez d'abord compléter votre profil.")
        return redirect('labo:edit_profile')
    
    if article_id:
@@ -695,9 +699,11 @@ def create_edit_article(request, article_id=None):
            form.save_m2m()
            
            if article_id:
-               messages.success(request, "L'article a été mis à jour avec succès !")
+               # messages.success(request, "L'article a été mis à jour avec succès !")
+               pass
            else:
-               messages.success(request, "L'article a été créé avec succès !")
+               # messages.success(request, "L'article a été créé avec succès !")
+               pass
            
            if article.est_publie:
                return redirect('labo:article_detail', article_id=article.id)
@@ -718,12 +724,12 @@ def create_edit_devenir(request):
    try:
        membre = Membre.objects.get(user=request.user)
    except Membre.DoesNotExist:
-       messages.error(request, "Vous devez d'abord compléter votre profil.")
+       # messages.error(request, "Vous devez d'abord compléter votre profil.")
        return redirect('labo:edit_profile')
    
    # Vérifier que le membre est bien un ancien
    if not membre.est_ancien:
-       messages.error(request, "Cette section est réservée aux anciens membres.")
+       # messages.error(request, "Cette section est réservée aux anciens membres.")
        return redirect('labo:dashboard')
    
    try:
@@ -739,7 +745,7 @@ def create_edit_devenir(request):
            devenir.membre = membre
            devenir.save()
            
-           messages.success(request, "Votre parcours a été mis à jour avec succès !")
+           # messages.success(request, "Votre parcours a été mis à jour avec succès !")
            return redirect('labo:dashboard')
    else:
        form = DevenirForm(instance=devenir)
@@ -862,7 +868,7 @@ def edit_membre(request, membre_id):
        
        membre.save()
        
-       messages.success(request, "Le membre a été mis à jour avec succès !")
+       # messages.success(request, "Le membre a été mis à jour avec succès !")
        return redirect('labo:gestion_membres')
    
    themes = Theme.objects.all()
@@ -889,7 +895,7 @@ def gestion_invitations(request):
            
            # Vérifier si l'email est déjà utilisé
            if User.objects.filter(email=email).exists():
-               messages.error(request, f"L'email {email} est déjà associé à un utilisateur.")
+               # messages.error(request, f"L'email {email} est déjà associé à un utilisateur.")
                return redirect('labo:gestion_invitations')
            
            # Vérifier si une invitation active existe déjà pour cet email
@@ -941,7 +947,7 @@ def gestion_invitations(request):
                fail_silently=False,
            )
            
-           messages.success(request, f"Une invitation a été envoyée à {email}.")
+           # messages.success(request, f"Une invitation a été envoyée à {email}.")
            return redirect('labo:gestion_invitations')
    else:
        form = InvitationForm()
@@ -992,7 +998,7 @@ def resend_invitation(request, invitation_id):
        fail_silently=False,
    )
    
-   messages.success(request, f"L'invitation a été renvoyée à {invitation.email}.")
+   # messages.success(request, f"L'invitation a été renvoyée à {invitation.email}.")
    return redirect('labo:gestion_invitations')
 
 
@@ -1007,7 +1013,7 @@ def cancel_invitation(request, invitation_id):
    email = invitation.email
    invitation.delete()
    
-   messages.success(request, f"L'invitation pour {email} a été annulée.")
+   # messages.success(request, f"L'invitation pour {email} a été annulée.")
    return redirect('labo:gestion_invitations')
 # views.py
 @login_required
@@ -1020,7 +1026,7 @@ def delete_membres(request, membre_id):
    membre = get_object_or_404(Membre, id=membre_id)
    membre.delete()
    
-   messages.success(request, "Le membre a été supprimée.")
+   # messages.success(request, "Le membre a été supprimée.")
    if request.user.is_staff:
         return redirect('labo:gestion_membres')
    else:
@@ -1045,16 +1051,16 @@ def create_membre(request):
         
         # Validation de base
         if not username or not email or not first_name or not last_name:
-            messages.error(request, "Tous les champs obligatoires doivent être remplis.")
+            # messages.error(request, "Tous les champs obligatoires doivent être remplis.")
             return render(request, 'admin/create_membre.html', {'themes': themes})
         
         # Vérifier si l'utilisateur existe déjà
         if User.objects.filter(username=username).exists():
-            messages.error(request, f"Le nom d'utilisateur '{username}' est déjà utilisé.")
+            # messages.error(request, f"Le nom d'utilisateur '{username}' est déjà utilisé.")
             return render(request, 'admin/create_membre.html', {'themes': themes})
         
         if User.objects.filter(email=email).exists():
-            messages.error(request, f"L'adresse email '{email}' est déjà utilisée.")
+            # messages.error(request, f"L'adresse email '{email}' est déjà utilisée.")
             return render(request, 'admin/create_membre.html', {'themes': themes})
         
         # Créer l'utilisateur
@@ -1125,9 +1131,10 @@ L'équipe Beta Lab
                 [email],
                 fail_silently=False,
             )
-            messages.success(request, f"Le membre {first_name} {last_name} a été créé avec succès. Un email a été envoyé avec les informations de connexion.")
+            # messages.success(request, f"Le membre {first_name} {last_name} a été créé avec succès. Un email a été envoyé avec les informations de connexion.")
         except Exception as e:
-            messages.warning(request, f"Le membre a été créé, mais l'email n'a pas pu être envoyé. Identifiants : {username} / {password}")
+            # messages.warning(request, f"Le membre a été créé, mais l'email n'a pas pu être envoyé. Identifiants : {username} / {password}")
+            pass
         
         return redirect('labo:gestion_membres')
     
@@ -1198,9 +1205,11 @@ def create_edit_collaborateur(request, collaborateur_id=None):
        collaborateur.save()
        
        if collaborateur_id:
-           messages.success(request, "Le collaborateur a été mis à jour avec succès !")
+           # messages.success(request, "Le collaborateur a été mis à jour avec succès !")
+           pass
        else:
-           messages.success(request, "Le collaborateur a été créé avec succès !")
+           # messages.success(request, "Le collaborateur a été créé avec succès !")
+           pass
        
        return redirect('labo:gestion_collaborateurs')
    
@@ -1221,7 +1230,7 @@ def delete_collaborateur(request, collaborateur_id):
    nom = f"{collaborateur.prenom} {collaborateur.nom}"
    collaborateur.delete()
    
-   messages.success(request, f"Le collaborateur {nom} a été supprimé.")
+  # messages.success(request, f"Le collaborateur {nom} a été supprimé.")
    return redirect('labo:gestion_collaborateurs')
 
 
@@ -1256,7 +1265,7 @@ def gestion_contenu(request, type_contenu='articles'):
        items = Evenement.objects.all().order_by('-date_debut')
        title = "Gestion des événements"
    else:
-       messages.error(request, "Type de contenu non reconnu.")
+       # messages.error(request, "Type de contenu non reconnu.")
        return redirect('labo:admin_dashboard')
    
    context = {
@@ -1286,9 +1295,11 @@ def create_edit_temoignage(request, temoignage_id=None):
            form.save()
            
            if temoignage_id:
-               messages.success(request, "Le témoignage a été mis à jour avec succès !")
+               # messages.success(request, "Le témoignage a été mis à jour avec succès !")
+               pass
            else:
-               messages.success(request, "Le témoignage a été créé avec succès !")
+               # messages.success(request, "Le témoignage a été créé avec succès !")
+               pass
            
            return redirect('labo:gestion_contenu', type_contenu='temoignages')
    else:
@@ -1311,7 +1322,7 @@ def delete_temoignage(request, temoignage_id):
    temoignage = get_object_or_404(Temoignage, id=temoignage_id)
    temoignage.delete()
    
-   messages.success(request, "Le témoignage a été supprimé.")
+   # messages.success(request, "Le témoignage a été supprimé.")
    return redirect('labo:gestion_contenu', type_contenu='temoignages')
 
 
@@ -1334,9 +1345,11 @@ def create_edit_evenement(request, evenement_id=None):
            form.save()
            
            if evenement_id:
-               messages.success(request, "L'événement a été mis à jour avec succès !")
+               # messages.success(request, "L'événement a été mis à jour avec succès !")
+               pass
            else:
-               messages.success(request, "L'événement a été créé avec succès !")
+               # messages.success(request, "L'événement a été créé avec succès !")
+               pass
            
            return redirect('labo:gestion_contenu', type_contenu='evenements')
    else:
@@ -1359,7 +1372,7 @@ def delete_evenement(request, evenement_id):
    evenement = get_object_or_404(Evenement, id=evenement_id)
    evenement.delete()
    
-   messages.success(request, "L'événement a été supprimé.")
+   # messages.success(request, "L'événement a été supprimé.")
    return redirect('labo:gestion_contenu', type_contenu='evenements')
 
 
@@ -1388,7 +1401,7 @@ def register_with_invitation(request, token):
            # Connecter l'utilisateur
            login(request, user)
            
-           messages.success(request, "Votre compte a été créé avec succès ! Complétez maintenant votre profil.")
+           # messages.success(request, "Votre compte a été créé avec succès ! Complétez maintenant votre profil.")
            return redirect('labo:edit_profile')
    else:
        form = InvitationRegistrationForm()
@@ -1430,7 +1443,7 @@ def save_theme(request):
         
         # Validation
         if not nom:
-            messages.error(request, "Le nom du thème est obligatoire.")
+            # messages.error(request, "Le nom du thème est obligatoire.")
             return redirect('labo:gestion_themes')
         
         # Vérifier si on modifie ou crée un thème
@@ -1441,17 +1454,19 @@ def save_theme(request):
                 theme.nom = nom
                 theme.description = description
                 theme.save()
-                messages.success(request, f"Le thème '{nom}' a été modifié avec succès.")
+                # messages.success(request, f"Le thème '{nom}' a été modifié avec succès.")
             except Theme.DoesNotExist:
-                messages.error(request, "Le thème que vous essayez de modifier n'existe pas.")
+                # messages.error(request, "Le thème que vous essayez de modifier n'existe pas.")
+                pass
         else:
             # Création d'un nouveau thème
             # Vérifier si un thème avec ce nom existe déjà
             if Theme.objects.filter(nom=nom).exists():
-                messages.error(request, f"Un thème avec le nom '{nom}' existe déjà.")
+                # messages.error(request, f"Un thème avec le nom '{nom}' existe déjà.")
+                pass
             else:
                 Theme.objects.create(nom=nom, description=description)
-                messages.success(request, f"Le thème '{nom}' a été créé avec succès.")
+                # messages.success(request, f"Le thème '{nom}' a été créé avec succès.")
     
     return redirect('labo:gestion_themes')
 
@@ -1471,13 +1486,15 @@ def delete_theme(request):
                 
                 # Vérifier si des membres sont associés à ce thème
                 if theme.membre_set.count() > 0:
-                    messages.error(request, f"Impossible de supprimer le thème '{theme.nom}' car des membres y sont associés.")
+                    # messages.error(request, f"Impossible de supprimer le thème '{theme.nom}' car des membres y sont associés.")
+                    pass
                 else:
                     nom = theme.nom
                     theme.delete()
-                    messages.success(request, f"Le thème '{nom}' a été supprimé avec succès.")
+                    # messages.success(request, f"Le thème '{nom}' a été supprimé avec succès.")
             except Theme.DoesNotExist:
-                messages.error(request, "Le thème que vous essayez de supprimer n'existe pas.")
+                # messages.error(request, "Le thème que vous essayez de supprimer n'existe pas.")
+                pass
     
     return redirect('labo:gestion_themes')
 # views.py
@@ -1499,7 +1516,7 @@ def create_edit_theme(request, theme_id=None):
         
         # Validation
         if not nom:
-            messages.error(request, "Le nom du thème est obligatoire.")
+            # messages.error(request, "Le nom du thème est obligatoire.")
             return render(request, 'admin/edit_theme.html', {'theme': theme})
         
         # Vérifier si on modifie ou crée un thème
@@ -1508,16 +1525,16 @@ def create_edit_theme(request, theme_id=None):
             theme.nom = nom
             theme.description = description
             theme.save()
-            messages.success(request, f"Le thème '{nom}' a été modifié avec succès.")
+            # messages.success(request, f"Le thème '{nom}' a été modifié avec succès.")
         else:
             # Création d'un nouveau thème
             # Vérifier si un thème avec ce nom existe déjà
             if Theme.objects.filter(nom=nom).exists():
-                messages.error(request, f"Un thème avec le nom '{nom}' existe déjà.")
+                # messages.error(request, f"Un thème avec le nom '{nom}' existe déjà.")
                 return render(request, 'admin/edit_theme.html', {'theme': None})
             
             Theme.objects.create(nom=nom, description=description)
-            messages.success(request, f"Le thème '{nom}' a été créé avec succès.")
+            # messages.success(request, f"Le thème '{nom}' a été créé avec succès.")
         
         return redirect('labo:gestion_themes')
     
@@ -1559,7 +1576,7 @@ def create_edit_categorie(request, categorie_id=None):
         
         # Validation
         if not nom:
-            messages.error(request, "Le nom de la catégorie est obligatoire.")
+            # messages.error(request, "Le nom de la catégorie est obligatoire.")
             return render(request, 'admin/edit_categorie.html', {'categorie': categorie})
         
         # Vérifier si on modifie ou crée une catégorie
@@ -1568,16 +1585,16 @@ def create_edit_categorie(request, categorie_id=None):
             categorie.nom = nom
             categorie.description = description
             categorie.save()
-            messages.success(request, f"La catégorie '{nom}' a été modifiée avec succès.")
+            # messages.success(request, f"La catégorie '{nom}' a été modifiée avec succès.")
         else:
             # Création d'une nouvelle catégorie
             # Vérifier si une catégorie avec ce nom existe déjà
             if Categorie.objects.filter(nom=nom).exists():
-                messages.error(request, f"Une catégorie avec le nom '{nom}' existe déjà.")
+                # messages.error(request, f"Une catégorie avec le nom '{nom}' existe déjà.")
                 return render(request, 'admin/edit_categorie.html', {'categorie': None})
             
             Categorie.objects.create(nom=nom, description=description)
-            messages.success(request, f"La catégorie '{nom}' a été créée avec succès.")
+            # messages.success(request, f"La catégorie '{nom}' a été créée avec succès.")
         
         return redirect('labo:gestion_categories')
     
@@ -1600,13 +1617,15 @@ def delete_categorie(request):
                 
                 # Vérifier si des articles sont associés à cette catégorie
                 if categorie.article_set.exists():
-                    messages.error(request, f"Impossible de supprimer la catégorie '{categorie.nom}' car des articles y sont associés.")
+                    # messages.error(request, f"Impossible de supprimer la catégorie '{categorie.nom}' car des articles y sont associés.")
+                    pass
                 else:
                     nom = categorie.nom
                     categorie.delete()
-                    messages.success(request, f"La catégorie '{nom}' a été supprimée avec succès.")
+                    # messages.success(request, f"La catégorie '{nom}' a été supprimée avec succès.")
             except Categorie.DoesNotExist:
-                messages.error(request, "La catégorie que vous essayez de supprimer n'existe pas.")
+                # messages.error(request, "La catégorie que vous essayez de supprimer n'existe pas.")
+                pass
     
     return redirect('labo:gestion_categories')
 
@@ -1620,7 +1639,7 @@ def delete_presentation(request, presentation_id):
    presentation = get_object_or_404(Presentation, id=presentation_id)
    presentation.delete()
    
-   messages.success(request, "La présentation a été supprimée.")
+   # messages.success(request, "La présentation a été supprimée.")
    if request.user.is_staff:
         return redirect('labo:gestion_contenu', type_contenu='presentations')
    else:
@@ -1636,7 +1655,7 @@ def delete_article(request, article_id):
    article = get_object_or_404(Article, id=article_id)
    article.delete()
    
-   messages.success(request, "L'article a été supprimé.")
+   # messages.success(request, "L'article a été supprimé.")
    if request.user.is_staff:
         return redirect('labo:gestion_contenu', type_contenu='articles')
    else:
@@ -1757,9 +1776,11 @@ def create_edit_projet(request, projet_id=None):
             projet = form.save()
             
             if projet_id:
-                messages.success(request, "Le projet a été mis à jour avec succès !")
+                # messages.success(request, "Le projet a été mis à jour avec succès !")
+                pass
             else:
-                messages.success(request, "Le projet a été créé avec succès !")
+                # messages.success(request, "Le projet a été créé avec succès !")
+                pass
             
             return redirect('labo:gestion_projets')
     else:
@@ -1782,7 +1803,7 @@ def delete_projet(request, projet_id):
     titre = projet.titre
     projet.delete()
     
-    messages.success(request, f"Le projet '{titre}' a été supprimé.")
+    # messages.success(request, f"Le projet '{titre}' a été supprimé.")
     return redirect('labo:gestion_projets')
 
 
@@ -1862,19 +1883,22 @@ def create_edit_historique_theme(request, membre_id=None, historique_id=None):
                 print(f"Historique sauvé : {historique}")  # Debug
                 
                 if historique_id:
-                    messages.success(request, "L'historique de thème a été mis à jour avec succès.")
+                    # messages.success(request, "L'historique de thème a été mis à jour avec succès.")
+                    pass
                 else:
-                    messages.success(request, f"Historique de thème créé pour {historique.membre}.")
+                    # messages.success(request, f"Historique de thème créé pour {historique.membre}.")
+                    pass
                 
                 return redirect('labo:gestion_historique_themes')
             except Exception as e:
                 print(f"Erreur lors de la sauvegarde : {e}")  # Debug
-                messages.error(request, f"Erreur lors de la sauvegarde : {e}")
+                # messages.error(request, f"Erreur lors de la sauvegarde : {e}")
         else:
             # Afficher les erreurs
             for field, errors in form.errors.items():
                 for error in errors:
-                    messages.error(request, f"{field}: {error}")
+                    # messages.error(request, f"{field}: {error}")
+                    pass
     else:
         form = HistoriqueThemeForm(instance=historique, membre=membre)
     
@@ -1899,7 +1923,7 @@ def delete_historique_theme(request, historique_id):
         theme_nom = historique.theme.nom
         historique.delete()
         
-        messages.success(request, f"Historique de thème supprimé : {membre_nom} - {theme_nom}")
+        # messages.success(request, f"Historique de thème supprimé : {membre_nom} - {theme_nom}")
         return redirect('labo:gestion_historique_themes')
     
     context = {

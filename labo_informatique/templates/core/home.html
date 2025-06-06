@@ -49,60 +49,25 @@
         </div>
     </div>
 </section>
-<!-- Section domaines d'expertise -->
+
 <section class="domains-section">
     <div class="container">
-        <h2 class="section-title"> Research Areas</h2>
+        <h2 class="section-title">Research Areas</h2>
         <div class="domains-grid">
+            {% for theme in themes %}
             <div class="domain-card">
                 <div class="domain-icon">
-                    <i class="fas fa-laptop-code"></i>
+                    {% cycle 'fas fa-laptop-code' 'fas fa-microchip' 'fas fa-brain' 'fas fa-cloud' 'fas fa-database' 'fas fa-network-wired' 'fas fa-code-branch' as icon_class %}
+                    <i class="{{ icon_class }}"></i>
                 </div>
-                <h3>Operating Systems</h3>
-                <p>Development and optimization of operating systems, resource management and performance.</p>
+                <h3>{{ theme.nom }}</h3>
+                <p>{{ theme.description|truncatechars:100 }}</p>
             </div>
-            <div class="domain-card">
-                <div class="domain-icon">
-                    <i class="fas fa-microchip"></i>
-                </div>
-                <h3>Internet of Things (IoT)</h3>
-                <p>Design of connected solutions, sensor networks and applications for smart objects.</p>
+            {% empty %}
+            <div class="empty-message">
+                <p>No research areas are defined at the moment.</p>
             </div>
-            <div class="domain-card">
-                <div class="domain-icon">
-                    <i class="fas fa-brain"></i>
-                </div>
-                <h3>Artificial Intelligence</h3>
-                <p>Development of advanced algorithms and models to solve complex problems.</p>
-            </div>
-            <div class="domain-card">
-                <div class="domain-icon">
-                    <i class="fas fa-cloud"></i>
-                </div>
-                <h3>Cloud Computing</h3>
-                <p>Design and optimization of cloud infrastructures, virtualization and distributed services.</p>
-            </div>
-            <div class="domain-card">
-                <div class="domain-icon">
-                    <i class="fas fa-database"></i>
-                </div>
-                <h3>Big Data</h3>
-                <p>Analysis and processing of large amounts of data to extract relevant information.</p>
-            </div>
-            <div class="domain-card">
-                <div class="domain-icon">
-                    <i class="fas fa-network-wired"></i>
-                </div>
-                <h3>Computer Networks</h3>
-                <p>Network infrastructure optimization and communication protocol development.</p>
-            </div>
-            <div class="domain-card">
-                <div class="domain-icon">
-                    <i class="fas fa-code-branch"></i>
-                </div>
-                <h3>Information Systems and Software Engineering</h3>
-                <p>Design, development and maintenance of information systems and software engineering methods.</p>
-            </div>
+            {% endfor %}
         </div>
     </div>
 </section>
@@ -233,37 +198,7 @@
     </div>
 </section>
 {% endif %}
-<!-- Section témoignages -->
-<section class="testimonials-section">
-    <div class="container">
-        <h2 class="section-title">Testimonials</h2>
-        <div class="testimonials-carousel">
-            {% for temoignage in temoignages %}
-            <div class="testimonial-card">
-                <div class="testimonial-content">
-                    <i class="fas fa-quote-left quote-icon"></i>
-                    <p>{{ temoignage.contenu }}</p>
-                </div>
-                <div class="testimonial-author">
-                    {% if temoignage.photo %}
-                    <img src="{{ temoignage.photo.url }}" alt="{{ temoignage.nom }}">
-                    {% else %}
-                    <div class="default-avatar">{{ temoignage.nom|first }}</div>
-                    {% endif %}
-                    <div class="author-info">
-                        <h4>{{ temoignage.nom }}</h4>
-                        <p>{{ temoignage.role }}</p>
-                    </div>
-                </div>
-            </div>
-            {% empty %}
-            <div class="empty-message">
-                <p>No testimonials are available at the moment.</p>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-</section>
+
 <!-- Section directeurs -->
 <section class="team-section director-section">
     <div class="container">

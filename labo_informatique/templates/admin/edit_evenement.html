@@ -87,7 +87,7 @@
                         
                         <div class="form-row">
                             <div class="form-group form-col">
-                                <label for="{{ form.date_debut.id_for_label }}">Start Date and Time</label>
+                                <label for="{{ form.date_debut.id_for_label }}">Start Date</label>
                                 {{ form.date_debut }}
                                 {% if form.date_debut.errors %}
                                     <div class="form-error">{{ form.date_debut.errors.0 }}</div>
@@ -95,7 +95,7 @@
                             </div>
                             
                             <div class="form-group form-col">
-                                <label for="{{ form.date_fin.id_for_label }}">End Date and Time</label>
+                                <label for="{{ form.date_fin.id_for_label }}">End Date</label>
                                 {{ form.date_fin }}
                                 {% if form.date_fin.errors %}
                                     <div class="form-error">{{ form.date_fin.errors.0 }}</div>

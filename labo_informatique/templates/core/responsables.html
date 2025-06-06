@@ -25,7 +25,7 @@
                 <div class="org-level-title">Co-directors</div>
                 <div class="org-boxes">
                     {% for resp in responsables %}
-                       {% if resp.titre == 'Directeur' or resp.titre == 'Directrice' or resp.user.first_name == 'Alain' or resp.user.last_name == 'TCHANA' or resp.user.first_name|lower == 'Bessala' or resp.user.last_name == 'Bessala' %}
+                       {% if resp.titre == 'Directeur' or resp.titre == 'Directrice' or resp.user.first_name == 'Alain' or resp.user.last_name == 'TCHANA' or resp.user.first_name|lower == 'Parfait' or resp.user.last_name == 'Bessala' %}
                         <div class="org-box org-box-primary" data-name="{{ resp.user.first_name|lower }} {{ resp.user.last_name|lower }}">
                             <div class="org-member-photo">
                                 {% if resp.photo %}
