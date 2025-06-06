@@ -98,7 +98,6 @@
                             <thead>
                                 <tr>
                                     <th>Project</th>
-                                    <th>Manager</th>
                                     <th>Theme</th>
                                     <th>Status</th>
                                     <th>Date</th>
@@ -120,18 +119,7 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td>
-                                            <div class="responsable-info">
-                                                {% if projet.responsable.photo %}
-                                                    <img src="{{ projet.responsable.photo.url }}" alt="{{ projet.responsable.user.first_name }}" class="responsable-avatar">
-                                                {% else %}
-                                                    <div class="avatar-placeholder-small">
-                                                        {{ projet.responsable.user.first_name|first }}{{ projet.responsable.user.last_name|first }}
-                                                    </div>
-                                                {% endif %}
-                                                <span>{{ projet.responsable.user.first_name }} {{ projet.responsable.user.last_name }}</span>
-                                            </div>
-                                        </td>
+                                       
                                         <td>
                                             <span class="theme-badge theme-{{ projet.theme.id }}">
                                                 {{ projet.theme.nom }}
