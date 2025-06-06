@@ -179,32 +179,31 @@ class EvenementAdmin(admin.ModelAdmin):
     date_hierarchy = 'date_debut'
 
 class ProjetAdmin(admin.ModelAdmin):
-    list_display = ('titre', 'responsable', 'type_projet', 'statut', 'date_debut', 'est_public')
-    list_filter = ('statut', 'type_projet', 'est_public', 'date_debut')
-    search_fields = ('titre', 'description', 'technologies', 'mots_cles')
+    list_display = ('titre', 'responsable', 'theme', 'statut', 'date_debut', 'est_public')
+    list_filter = ('statut', 'theme', 'est_public', 'date_debut')
+    search_fields = ('titre', 'description', 'responsable__user__first_name', 'responsable__user__last_name')
     date_hierarchy = 'date_debut'
     filter_horizontal = ('participants', 'collaborateurs_externes')
     
     fieldsets = (
         ("Informations générales", {
-            'fields': ('titre', 'description', 'description_courte', 'image_principale')
+            'fields': ('titre', 'description', 'theme')
         }),
-        ("Classification", {
-            'fields': ('type_projet', 'statut')
-        }),
-        ("Dates", {
-            'fields': ('date_debut', 'date_fin_prevue', 'date_fin_reelle')
+        ("Statut et date", {
+            'fields': ('statut', 'date_debut')
         }),
         ("Équipe", {
             'fields': ('responsable', 'participants', 'collaborateurs_externes')
         }),
-        ("Liens et ressources", {
-            'fields': ('lien_solution', 'lien_github', 'lien_documentation', 'lien_publication')
-        }),
-        ("Métadonnées", {
-            'fields': ('technologies', 'mots_cles', 'est_public')
+        ("Visibilité", {
+            'fields': ('est_public',)
         }),
     )
+    
+    def get_queryset(self, request):
+        return super().get_queryset(request).select_related(
+            'responsable__user', 'theme'
+        ).prefetch_related('participants', 'collaborateurs_externes')
 
 # 6. ENREGISTREMENTS (à la fin)
 admin.site.register(Membre, MembreAdmin)
