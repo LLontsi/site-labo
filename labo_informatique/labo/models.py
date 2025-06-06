@@ -303,7 +303,8 @@ class Projet(models.Model):
     theme = models.ForeignKey(
         Theme,
         on_delete=models.CASCADE,
-        help_text="Thématique de recherche associée"
+        help_text="Thématique de recherche associée",
+        null=True
     )
     
     # Date (CONSERVÉ)
