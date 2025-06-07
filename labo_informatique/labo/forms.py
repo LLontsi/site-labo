@@ -66,17 +66,50 @@ ImagePresentationFormSet = forms.inlineformset_factory(
     extra=3, can_delete=True
 )
 
-
 class ArticleForm(forms.ModelForm):
     """Formulaire de création/édition d'article."""
     class Meta:
         model = Article
-        fields = ('titre', 'contenu', 'image_principale', 'categories', 'est_publie')
+        # Enlever 'est_publie' des champs visibles
+        fields = ('titre', 'contenu', 'image_principale', 'categories')
         widgets = {
             'contenu': forms.Textarea(attrs={'class': 'rich-text-editor form-control', 'rows': 10}),
             'categories': forms.CheckboxSelectMultiple(attrs={'class': 'categories-checkbox-list'}),
             'titre': forms.TextInput(attrs={'class': 'form-control'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Marquer les champs comme requis
+        self.fields['titre'].required = True
+        self.fields['contenu'].required = True
+        
+        # Gestion des valeurs initiales pour la modification
+        if self.instance and self.instance.pk:
+            # Pré-remplir les champs avec les valeurs existantes
+            self.fields['titre'].initial = self.instance.titre
+            self.fields['contenu'].initial = self.instance.contenu
+            
+            # Pré-sélectionner les catégories
+            self.fields['categories'].initial = self.instance.categories.all()
+    
+    def save(self, commit=True):
+        article = super().save(commit=False)
+        
+        # FORCER est_publie à False par défaut
+        # Sauf si c'est une modification et que l'article était déjà publié
+        if not self.instance.pk:  # Nouvel article
+            article.est_publie = False
+        # Si c'est une modification, garder l'état actuel de est_publie
+        
+        if commit:
+            article.save()
+            # Pour les relations ManyToMany, il faut sauvegarder le formulaire après l'objet
+            self.save_m2m()
+        
+        return article
+
 
 
 class DevenirForm(forms.ModelForm):

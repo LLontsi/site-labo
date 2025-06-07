@@ -73,6 +73,7 @@ urlpatterns = [
         # Validation des articles
     path('gestion/article/valider/<int:article_id>/', views.valider_article, name='valider_article'),
     path('gestion/articles/en-attente/', views.articles_en_attente, name='articles_en_attente'),
+    
     # Pour les présentations
     path('gestion/presentation/delete/<int:presentation_id>/', views.delete_presentation, name='delete_presentation'),
 

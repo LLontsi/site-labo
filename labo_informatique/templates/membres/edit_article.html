@@ -100,21 +100,15 @@
                     {% endif %}
                 </div>
                 
-                <div class="form-section-title">
-                    <h2>Publication options</h2>
-                </div>
-                
-                <div class="form-group form-checkbox-group">
-                    <label class="checkbox-label">
-                        {{ form.est_publie }}
-                        <span>Publish immediately</span>
-                    </label>
-                    <div class="form-help">If this option is not checked, the article will be saved as a draft and will not be publicly visible.</div>
-                </div>
                 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">Save</button>
-                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">Cancel</a>
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i>
+                        {% if article %}Update Article{% else %}Save as Draft{% endif %}
+                    </button>
+                    <a href="{% url 'labo:dashboard' %}" class="btn btn-secondary">
+                        <i class="fas fa-times"></i> Cancel
+                    </a>
                 </div>
             </form>
         </div>
@@ -133,10 +127,81 @@
         // Initialiser l'éditeur
         initRichTextEditor(editor, hiddenInput, toolbar);
         
+        // Gestion de la modification d'article existant
+        {% if article %}
+        console.log('Mode modification - Remplir l\'éditeur');
+        
+        // S'assurer que le titre est rempli
+        const titreInput = document.getElementById('id_titre');
+        if (titreInput && !titreInput.value) {
+            titreInput.value = '{{ article.titre|escapejs }}';
+        }
+        
+        // S'assurer que les catégories sont sélectionnées
+        {% for categorie in article.categories.all %}
+        const catCheckbox = document.querySelector('input[name="categories"][value="{{ categorie.id }}"]');
+        if (catCheckbox) {
+            catCheckbox.checked = true;
+        }
+        {% endfor %}
+        {% endif %}
+        
         // Soumettre le formulaire
         document.querySelector('.content-form').addEventListener('submit', function() {
             hiddenInput.value = editor.innerHTML;
         });
     });
 </script>
+
+<style>
+/* Style pour l'info box */
+.info-section {
+    margin: 30px 0;
+}
+
+.info-box {
+    background: linear-gradient(135deg, #e3f2fd 0%, #f8f9fa 100%);
+    border: 1px solid #2196f3;
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.info-box i {
+    color: #2196f3;
+    font-size: 1.5rem;
+    margin-top: 2px;
+    flex-shrink: 0;
+}
+
+.info-box h4 {
+    color: #1976d2;
+    margin: 0 0 5px 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+}
+
+.info-box p {
+    color: #37474f;
+    margin: 0;
+    font-size: 0.95rem;
+    line-height: 1.4;
+}
+
+/* Amélioration du bouton de sauvegarde */
+.btn-primary {
+    background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%);
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #1976d2 0%, #1565c0 100%);
+    transform: translateY(-1px);
+}
+</style>
 {% endblock %}

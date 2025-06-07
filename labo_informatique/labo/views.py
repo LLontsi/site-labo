@@ -717,52 +717,59 @@ def create_edit_presentation1(request, presentation_id=None):
         'presentation': presentation,
     }
     return render(request, 'admin/edit_presentation.html', context)
+
 @login_required
 def create_edit_article(request, article_id=None):
-   """Création/édition d'un article."""
-   try:
-       membre = Membre.objects.get(user=request.user)
-   except Membre.DoesNotExist:
-       # messages.error(request, "Vous devez d'abord compléter votre profil.")
-       return redirect('labo:edit_profile')
-   
-   if article_id:
-       article = get_object_or_404(Article, id=article_id)
-       # Vérifier que le membre est bien l'auteur
-       if article.auteur != membre:
-           return HttpResponseForbidden("Vous n'avez pas la permission de modifier cet article.")
-   else:
-       article = None
-   
-   if request.method == 'POST':
-       form = ArticleForm(request.POST, request.FILES, instance=article)
-       
-       if form.is_valid():
-           article = form.save(commit=False)
-           article.auteur = membre
-           article.save()
-           # Pour les relations ManyToMany, il faut sauvegarder le formulaire après l'objet
-           form.save_m2m()
-           
-           if article_id:
-               # messages.success(request, "L'article a été mis à jour avec succès !")
-               pass
-           else:
-               # messages.success(request, "L'article a été créé avec succès !")
-               pass
-           
-           if article.est_publie:
-               return redirect('labo:dashboard')
-           else:
-               return redirect('labo:dashboard')
-   else:
-       form = ArticleForm(instance=article)
-   
-   context = {
-       'form': form,
-       'article': article,
-   }
-   return render(request, 'membres/edit_article.html', context)
+    """Création/édition d'un article par les MEMBRES."""
+    try:
+        membre = Membre.objects.get(user=request.user)
+    except Membre.DoesNotExist:
+        # messages.error(request, "Vous devez d'abord compléter votre profil.")
+        return redirect('labo:edit_profile')
+    
+    if article_id:
+        article = get_object_or_404(Article, id=article_id)
+        # Vérifier que le membre est bien l'auteur
+        if article.auteur != membre:
+            return HttpResponseForbidden("Vous n'avez pas la permission de modifier cet article.")
+    else:
+        article = None
+    
+    if request.method == 'POST':
+        form = ArticleForm(request.POST, request.FILES, instance=article)
+        
+        if form.is_valid():
+            article = form.save(commit=False)
+            article.auteur = membre
+            
+            # MEMBRES : Toujours en brouillon et en attente de validation
+            article.est_publie = False
+            article.statut_validation = 'en_attente'
+            
+            article.save()
+            # Pour les relations ManyToMany, il faut sauvegarder le formulaire après l'objet
+            form.save_m2m()
+            
+            if article_id:
+                # messages.success(request, "L'article a été mis à jour et renvoyé pour validation !")
+                pass
+            else:
+                # messages.success(request, "L'article a été créé et envoyé pour validation !")
+                pass
+            
+            if article.est_publie:
+                return redirect('labo:article_detail', article_id=article.id)
+            else:
+                return redirect('labo:dashboard')
+    else:
+        form = ArticleForm(instance=article)
+    
+    context = {
+        'form': form,
+        'article': article,
+        'is_member_view': True,  # Indicateur pour le template
+    }
+    return render(request, 'membres/edit_article.html', context)
 
 @login_required
 def create_edit_article1(request, article_id=None):
@@ -786,27 +793,29 @@ def create_edit_article1(request, article_id=None):
         if form.is_valid():
             article = form.save(commit=False)
             article.auteur = membre
+            
+            # Si c'est un nouvel article, s'assurer qu'il est en brouillon
+            if not article_id:
+                article.est_publie = False
+                article.statut_validation = 'en_attente'
+            
             article.save()
             form.save_m2m()
             
             if article_id:
-                pass
+                messages.success(request, "L'article a été mis à jour avec succès !")
             else:
-                pass
+                messages.success(request, "L'article a été créé en tant que brouillon et envoyé pour validation !")
             
-            if article.est_publie:
-                # ✅ CORRIGÉ : Utiliser type_contenu au lieu de article_id
-                return redirect('labo:gestion_contenu', type_contenu='articles')
-            else:
-                article.est_publie = True
-                article.save()  # ✅ AJOUTÉ : Sauvegarder la modification
-                return redirect('labo:dashboard')
+            # Rediriger vers la gestion du contenu pour les administrateurs
+            return redirect('labo:gestion_contenu', type_contenu='articles')
     else:
         form = ArticleForm(instance=article)
     
     context = {
         'form': form,
         'article': article,
+        'is_edit': article_id is not None,
     }
     return render(request, 'admin/edit_article.html', context)
 

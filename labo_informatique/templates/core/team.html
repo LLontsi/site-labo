@@ -44,9 +44,6 @@
                     <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
                     <p class="member-title">{{ membre.titre }}</p>
                     <p class="member-theme">{% if membre.theme_actuel %}{{ membre.theme_actuel.nom }}{% endif %}</p>
-                    <div class="member-bio">
-                        <p>{{ membre.bio|truncatechars:150 }}</p>
-                    </div>
                     <div class="member-links">
                         {% if membre.linkedin %}
                             <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
