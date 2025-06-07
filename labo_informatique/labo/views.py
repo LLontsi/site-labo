@@ -1021,7 +1021,7 @@ def gestion_invitations(request):
                token = uuid.uuid4().hex
                
                # Date d'expiration (30 jours)
-               expires_at = timezone.now() + datetime.timedelta(days=30)
+               expires_at = timezone.now() + datetime.timedelta(days=7)
                
                # Créer l'invitation
                invitation = Invitation.objects.create(
@@ -1069,6 +1069,7 @@ def gestion_invitations(request):
    context = {
        'form': form,
        'invitations': invitations,
+        'current_time': timezone.now(),  # ← Ajouter cette ligne
    }
    return render(request, 'admin/gestion_invitations.html', context)
 
