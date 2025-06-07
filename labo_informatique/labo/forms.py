@@ -28,7 +28,12 @@ class MembreProfileForm(forms.ModelForm):
         model = Membre
         fields = ('photo', 'titre', 'bio', 'theme', 'linkedin', 'github', 'portfolio')
         widgets = {
-            'bio': forms.Textarea(attrs={'rows': 5}),
+            'bio': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
+            'titre': forms.TextInput(attrs={'class': 'form-control'}),
+            'theme': forms.Select(attrs={'class': 'form-control'}),
+            'linkedin': forms.URLInput(attrs={'class': 'form-control'}),
+            'github': forms.URLInput(attrs={'class': 'form-control'}),
+            'portfolio': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -38,7 +43,10 @@ class PresentationForm(forms.ModelForm):
         model = Presentation
         fields = ('titre', 'description', 'fichier', 'type_fichier', 'theme')
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 5}),
+            'description': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
+            'titre': forms.TextInput(attrs={'class': 'form-control'}),
+            'type_fichier': forms.Select(attrs={'class': 'form-control'}),
+            'theme': forms.Select(attrs={'class': 'form-control'}),
         }
 
 
@@ -47,6 +55,9 @@ class ImagePresentationForm(forms.ModelForm):
     class Meta:
         model = ImagePresentation
         fields = ('image', 'legende')
+        widgets = {
+            'legende': forms.TextInput(attrs={'class': 'form-control'}),
+        }
 
 
 ImagePresentationFormSet = forms.inlineformset_factory(
@@ -62,8 +73,9 @@ class ArticleForm(forms.ModelForm):
         model = Article
         fields = ('titre', 'contenu', 'image_principale', 'categories', 'est_publie')
         widgets = {
-            'contenu': forms.Textarea(attrs={'class': 'rich-text-editor'}),
+            'contenu': forms.Textarea(attrs={'class': 'rich-text-editor form-control', 'rows': 10}),
             'categories': forms.CheckboxSelectMultiple(attrs={'class': 'categories-checkbox-list'}),
+            'titre': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -74,10 +86,24 @@ class DevenirForm(forms.ModelForm):
         fields = ('entreprise', 'poste', 'description', 'realisations', 
                  'date_debut', 'lieu', 'lien', 'domaine', 'type_structure')
         widgets = {
-            'description': forms.Textarea(attrs={'rows': 5}),
-            'realisations': forms.Textarea(attrs={'rows': 5}),
-            'date_debut': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
+            'realisations': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
+            'date_debut': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'entreprise': forms.TextInput(attrs={'class': 'form-control'}),
+            'poste': forms.TextInput(attrs={'class': 'form-control'}),
+            'lieu': forms.TextInput(attrs={'class': 'form-control'}),
+            'lien': forms.URLInput(attrs={'class': 'form-control'}),
+            'domaine': forms.TextInput(attrs={'class': 'form-control'}),
+            'type_structure': forms.Select(attrs={'class': 'form-control'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Formater les dates pour l'affichage dans les inputs HTML5
+        if self.instance and self.instance.pk:
+            if self.instance.date_debut:
+                self.fields['date_debut'].widget.attrs['value'] = self.instance.date_debut.strftime('%Y-%m-%d')
 
 
 # 1. Validation complète dans le formulaire
@@ -117,9 +143,25 @@ class TemoignageForm(forms.ModelForm):
         model = Temoignage
         fields = ('nom', 'role', 'contenu', 'photo', 'date')
         widgets = {
-            'date': forms.DateInput(attrs={'type': 'date'}),
-            'contenu': forms.Textarea(attrs={'rows': 5}),
+            'date': forms.DateInput(attrs={'type': 'date', 'class': 'form-control'}),
+            'contenu': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
+            'nom': forms.TextInput(attrs={'class': 'form-control'}),
+            'role': forms.TextInput(attrs={'class': 'form-control'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # S'assurer que les champs sont requis
+        self.fields['nom'].required = True
+        self.fields['role'].required = True
+        self.fields['contenu'].required = True
+        self.fields['date'].required = True
+        
+        # Formater les dates pour l'affichage dans les inputs HTML5
+        if self.instance and self.instance.pk:
+            if self.instance.date:
+                self.fields['date'].widget.attrs['value'] = self.instance.date.strftime('%Y-%m-%d')
 
 
 class EvenementForm(forms.ModelForm):
@@ -129,11 +171,61 @@ class EvenementForm(forms.ModelForm):
         fields = ('titre', 'description', 'type_evenement', 'date_debut', 
                  'date_fin', 'lieu', 'image')
         widgets = {
-            'date_debut': forms.DateInput(attrs={'type': 'date'}),
-            'date_fin': forms.DateInput(attrs={'type': 'date'}),
-            'description': forms.Textarea(attrs={'rows': 5}),
+            'date_debut': forms.DateInput(
+                attrs={
+                    'type': 'date',
+                    'class': 'form-control'
+                },
+                format='%Y-%m-%d'
+            ),
+            'date_fin': forms.DateInput(
+                attrs={
+                    'type': 'date', 
+                    'class': 'form-control'
+                },
+                format='%Y-%m-%d'
+            ),
+            'description': forms.Textarea(attrs={
+                'rows': 5,
+                'class': 'form-control'
+            }),
+            'titre': forms.TextInput(attrs={'class': 'form-control'}),
+            'type_evenement': forms.Select(attrs={'class': 'form-control'}),
+            'lieu': forms.TextInput(attrs={'class': 'form-control'}),
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         
+        # S'assurer que les champs sont requis
+        self.fields['titre'].required = True
+        self.fields['description'].required = True
+        self.fields['type_evenement'].required = True
+        self.fields['date_debut'].required = True
+        self.fields['date_fin'].required = True
+        self.fields['lieu'].required = True
+        
+        # Formater les dates pour l'affichage dans les inputs HTML5
+        if self.instance and self.instance.pk:
+            if self.instance.date_debut:
+                self.fields['date_debut'].widget.attrs['value'] = self.instance.date_debut.strftime('%Y-%m-%d')
+            if self.instance.date_fin:
+                self.fields['date_fin'].widget.attrs['value'] = self.instance.date_fin.strftime('%Y-%m-%d')
+    
+    def clean(self):
+        """Validation personnalisée."""
+        cleaned_data = super().clean()
+        date_debut = cleaned_data.get('date_debut')
+        date_fin = cleaned_data.get('date_fin')
+        
+        if date_debut and date_fin:
+            if date_debut > date_fin:
+                raise forms.ValidationError(
+                    "La date de début ne peut pas être postérieure à la date de fin."
+                )
+        
+        return cleaned_data
+
 
 class UserCreateForm(forms.ModelForm):
     """Formulaire pour créer un nouvel utilisateur."""
@@ -160,6 +252,8 @@ class UserCreateForm(forms.ModelForm):
                 'unique': 'Ce nom d\'utilisateur est déjà utilisé.',
             },
         }
+
+
 class MembreForm(forms.ModelForm):
     """Formulaire pour créer ou modifier un profil de membre."""
     class Meta:
@@ -194,6 +288,16 @@ class MembreForm(forms.ModelForm):
             'github': 'Profil GitHub',
             'portfolio': 'Site web personnel/Portfolio',
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Formater les dates pour l'affichage dans les inputs HTML5
+        if self.instance and self.instance.pk:
+            if self.instance.date_arrivee:
+                self.fields['date_arrivee'].widget.attrs['value'] = self.instance.date_arrivee.strftime('%Y-%m-%d')
+            if self.instance.date_depart:
+                self.fields['date_depart'].widget.attrs['value'] = self.instance.date_depart.strftime('%Y-%m-%d')
 
 class ProjetForm(forms.ModelForm):
     class Meta:
@@ -201,7 +305,7 @@ class ProjetForm(forms.ModelForm):
         fields = [
             'titre',
             'description', 
-            'theme',  # NOUVEAU
+            'theme',
             'date_debut',
             'statut',
             'participants',
@@ -212,42 +316,53 @@ class ProjetForm(forms.ModelForm):
         widgets = {
             'titre': forms.TextInput(attrs={'class': 'form-control'}),
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 6}),
-            'theme': forms.Select(attrs={'class': 'form-control'}),  # NOUVEAU
+            'theme': forms.Select(attrs={'class': 'form-control'}),
             'date_debut': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}),
             'statut': forms.Select(attrs={'class': 'form-control'}),
-            'participants': forms.CheckboxSelectMultiple(),
-            'collaborateurs_externes': forms.CheckboxSelectMultiple(),
+            'participants': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-list'}),
+            'collaborateurs_externes': forms.CheckboxSelectMultiple(attrs={'class': 'form-check-list'}),
             'est_public': forms.CheckboxInput(attrs={'class': 'form-check-input'}),
         }
         
         labels = {
-            'titre': 'Project title',
+            'titre': 'Titre du projet',
             'description': 'Description',
-            'theme': 'Research theme',  # NOUVEAU
-            'date_debut': 'Start date',
-            'statut': 'Status',
-            'responsable': 'Project manager',
+            'theme': 'Thème de recherche',
+            'date_debut': 'Date de début',
+            'statut': 'Statut',
             'participants': 'Participants',
-            'collaborateurs_externes': 'External collaborators',
-            'est_public': 'Public project',
+            'collaborateurs_externes': 'Collaborateurs externes',
+            'est_public': 'Projet public',
         }
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        
+        # Définir les queryset pour les champs de relation
+        self.fields['theme'].queryset = Theme.objects.all().order_by('nom')
+        self.fields['participants'].queryset = Membre.objects.filter(
+            est_ancien=False
+        ).select_related('user').order_by('user__first_name', 'user__last_name')
+        self.fields['collaborateurs_externes'].queryset = Collaborateur.objects.all().order_by('nom', 'prenom')
+        
+        # CORRECTION CRITIQUE : Ne pas remplir les valeurs dans __init__ mais utiliser la logique Django
+        # Django gère automatiquement les valeurs initiales SAUF pour les cas spéciaux
+        
+        # 1. Pour les champs de date HTML5, forcer le format
+        if self.instance and self.instance.pk and self.instance.date_debut:
+            # Ne pas utiliser widget.attrs['value'], utiliser initial
+            self.initial['date_debut'] = self.instance.date_debut
+            # ET forcer le format dans le widget
+            self.fields['date_debut'].widget.format = '%Y-%m-%d'
+            self.fields['date_debut'].input_formats = ['%Y-%m-%d']
 
     def clean(self):
         cleaned_data = super().clean()
         
-        responsable = cleaned_data.get('responsable')
-        participants = cleaned_data.get('participants')
-        
-        # Vérifier que le responsable a bien le statut de responsable
-        if responsable and not responsable.est_responsable:
-            raise forms.ValidationError(
-                "Le membre sélectionné comme chef de projet doit avoir le statut de responsable."
-            )
-        
-        # Éviter la redondance responsable/participant
-        if responsable and participants and responsable in participants.all():
-            participants = participants.exclude(id=responsable.id)
-            cleaned_data['participants'] = participants
+        # Validation optionnelle
+        titre = cleaned_data.get('titre')
+        if titre and len(titre.strip()) < 3:
+            raise forms.ValidationError("Le titre doit contenir au moins 3 caractères.")
         
         return cleaned_data
     
@@ -256,7 +371,7 @@ class ProjetForm(forms.ModelForm):
         
         if commit:
             projet.save()
-            # Sauvegarder les relations ManyToMany
+            # Important : sauvegarder les relations ManyToMany après l'objet principal
             self.save_m2m()
         
         return projet
@@ -269,16 +384,21 @@ class HistoriqueThemeForm(forms.ModelForm):
         widgets = {
             'date_debut': forms.DateInput(attrs={
                 'type': 'date',
-                'required': True
+                'required': True,
+                'class': 'form-control'
             }),
             'date_fin': forms.DateInput(attrs={
                 'type': 'date',
-                'required': False
+                'required': False,
+                'class': 'form-control'
             }),
             'description': forms.Textarea(attrs={
                 'rows': 4,
-                'required': False
+                'required': False,
+                'class': 'form-control'
             }),
+            'membre': forms.Select(attrs={'class': 'form-control'}),
+            'theme': forms.Select(attrs={'class': 'form-control'}),
         }
     
     def __init__(self, *args, **kwargs):
@@ -300,13 +420,16 @@ class HistoriqueThemeForm(forms.ModelForm):
         
         self.fields['theme'].queryset = Theme.objects.all().order_by('nom')
         
-        for field_name, field in self.fields.items():
-            if not isinstance(field.widget, forms.HiddenInput):
-                field.widget.attrs.update({'class': 'form-control'})
-        
         self.fields['date_debut'].help_text = "Date de début de ce thème de recherche"
         self.fields['date_fin'].help_text = "Laissez vide pour le thème actuel"
         self.fields['description'].help_text = "Description des travaux réalisés dans ce thème"
+        
+        # Formater les dates pour l'affichage dans les inputs HTML5
+        if self.instance and self.instance.pk:
+            if self.instance.date_debut:
+                self.fields['date_debut'].widget.attrs['value'] = self.instance.date_debut.strftime('%Y-%m-%d')
+            if self.instance.date_fin:
+                self.fields['date_fin'].widget.attrs['value'] = self.instance.date_fin.strftime('%Y-%m-%d')
     
     def clean(self):
         cleaned_data = super().clean()

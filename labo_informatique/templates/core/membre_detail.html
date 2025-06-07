@@ -143,7 +143,25 @@
                         </div>
                     {% endif %}
                 </div>
-                
+                <div class="projects-section">
+                    <h2>Projects participation</h2>
+                    {% if projets_participant %}
+                        <div class="projects-list">
+                            {% for projet in projets_participant %}
+                                <div class="project-card">
+                                    <h3>{{ projet.titre }}</h3>
+                                    <p class="project-theme">{{ projet.theme.nom }}</p>
+                                    <p class="project-description">{{ projet.description|truncatechars:120 }}</p>
+                                    <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-view">View project</a>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="empty-section">
+                            <p>No project available.</p>
+                        </div>
+                    {% endif %}
+                </div>
                 <div class="articles-section">
                     <h2>Articles</h2>
                     {% if articles %}

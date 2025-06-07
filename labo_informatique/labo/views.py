@@ -189,15 +189,10 @@ def membre_detail(request, membre_id):
     theme_actuel = membre.get_theme_actuel()
     duree_theme_actuel = membre.get_duree_theme_actuel()
     
-    # Récupérer les projets du membre
-    projets_responsable = membre.projets_responsable.filter(
-        est_public=True
-    ).order_by('-date_debut')[:3]
+   
     
     projets_participant = membre.projets_participant.filter(
         est_public=True
-    ).exclude(
-        id__in=projets_responsable.values_list('id', flat=True)
     ).order_by('-date_debut')[:3]
     
     context = {
@@ -208,7 +203,7 @@ def membre_detail(request, membre_id):
         'historique_themes': historique_themes,
         'theme_actuel': theme_actuel,
         'duree_theme_actuel': duree_theme_actuel,
-        'projets_responsable': projets_responsable,
+        
         'projets_participant': projets_participant,
     }
     
