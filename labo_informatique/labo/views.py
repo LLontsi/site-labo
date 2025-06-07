@@ -752,7 +752,7 @@ def create_edit_article(request, article_id=None):
                pass
            
            if article.est_publie:
-               return redirect('labo:article_detail', article_id=article.id)
+               return redirect('labo:dashboard')
            else:
                return redirect('labo:dashboard')
    else:
