@@ -154,14 +154,34 @@ class Presentation(models.Model):
     membre = models.ForeignKey(Membre, on_delete=models.CASCADE)
     theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True)
     
+    # NOUVEAU CHAMP
+    fichier_public = models.BooleanField(
+        default=False,
+        help_text="Le fichier est-il visible et téléchargeable publiquement ?"
+    )
+    
     def __str__(self):
         return self.titre
+    
+    def peut_voir_fichier(self, user=None):
+        """Détermine si un utilisateur peut voir le fichier."""
+        if self.fichier_public:
+            return True
+        
+        if user and user.is_authenticated:
+            # L'auteur peut toujours voir son fichier
+            if hasattr(user, 'membre') and user.membre == self.membre:
+                return True
+            # Les admins peuvent toujours voir
+            if user.is_staff:
+                return True
+        
+        return False
     
     class Meta:
         verbose_name = "Présentation"
         verbose_name_plural = "Présentations"
-
-
+        
 class ImagePresentation(models.Model):
     """Images associées aux présentations."""
     presentation = models.ForeignKey(Presentation, on_delete=models.CASCADE, related_name='images')

@@ -36,11 +36,11 @@ class MembreProfileForm(forms.ModelForm):
             'portfolio': forms.URLInput(attrs={'class': 'form-control'}),
         }
 
-
 class PresentationForm(forms.ModelForm):
     """Formulaire de création/édition de présentation."""
     class Meta:
         model = Presentation
+        # Pas de fichier_public dans le formulaire
         fields = ('titre', 'description', 'fichier', 'type_fichier', 'theme')
         widgets = {
             'description': forms.Textarea(attrs={'rows': 5, 'class': 'form-control'}),
@@ -48,7 +48,6 @@ class PresentationForm(forms.ModelForm):
             'type_fichier': forms.Select(attrs={'class': 'form-control'}),
             'theme': forms.Select(attrs={'class': 'form-control'}),
         }
-
 
 class ImagePresentationForm(forms.ModelForm):
     """Formulaire pour ajouter des images à une présentation."""

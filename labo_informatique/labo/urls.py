@@ -54,6 +54,8 @@ urlpatterns = [
     path('gestion/contenu/<str:type_contenu>/', views.gestion_contenu, name='gestion_contenu'),
     path('gestion/temoignage/create/', views.create_edit_temoignage, name='create_temoignage'),
     path('gestion/presentation/create/', views.create_edit_presentation1, name='create_presentation1'),
+    # Ajoutez cette ligne après la ligne create_presentation1
+    path('gestion/presentation/edit/<int:presentation_id>/', views.create_edit_presentation1, name='edit_presentation1'),
     path('gestion/article/create/', views.create_edit_article1, name='create_article1'),
     path('gestion/temoignage/edit/<int:temoignage_id>/', views.create_edit_temoignage, name='edit_temoignage'),
     path('gestion/temoignage/delete/<int:temoignage_id>/', views.delete_temoignage, name='delete_temoignage'),
@@ -85,7 +87,8 @@ urlpatterns = [
     # Pages Projets
     path('projets/', views.liste_projets, name='liste_projets'),
     path('projet/<int:projet_id>/', views.projet_detail, name='projet_detail'),
-
+    # Ajoutez cette ligne dans urlpatterns :
+    path('gestion/presentation/valider-fichier/<int:presentation_id>/', views.valider_fichier_presentation, name='valider_fichier_presentation'),
     # Administration des projets
     path('gestion/gestion-projets/', views.gestion_projets, name='gestion_projets'),
     path('gestion/projet/create/', views.create_edit_projet, name='create_projet'),

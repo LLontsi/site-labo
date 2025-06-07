@@ -251,23 +251,24 @@ def presentation_detail(request, presentation_id):
         id=presentation_id
     )
     
-    # Récupérer les images associées à la présentation
+    # Récupérer les images associées
     images = ImagePresentation.objects.filter(presentation=presentation)
     
-    # Récupérer d'autres présentations similaires (même thème, excluant celle-ci)
+    # Récupérer présentations similaires
     related_presentations = Presentation.objects.filter(
         theme=presentation.theme
-    ).exclude(
-        id=presentation.id
-    ).select_related('membre', 'membre__user').order_by('-date_creation')[:3]
+    ).exclude(id=presentation.id).select_related('membre', 'membre__user').order_by('-date_creation')[:3]
+    
+    # Contrôler l'affichage du fichier
+    peut_voir_fichier = presentation.peut_voir_fichier(request.user)
     
     context = {
         'presentation': presentation,
         'images': images,
         'related_presentations': related_presentations,
+        'peut_voir_fichier': peut_voir_fichier,
     }
     return render(request, 'core/presentation_detail.html', context)
-
 
 def liste_articles(request):
     """Vue pour afficher la liste des articles du blog."""
@@ -618,16 +619,14 @@ def edit_profile(request):
 
 @login_required
 def create_edit_presentation(request, presentation_id=None):
-    """Création/édition d'une présentation."""
+    """Création/édition d'une présentation par les MEMBRES."""
     try:
         membre = Membre.objects.get(user=request.user)
     except Membre.DoesNotExist:
-        # messages.error(request, "Vous devez d'abord compléter votre profil.")
         return redirect('labo:edit_profile')
     
     if presentation_id:
         presentation = get_object_or_404(Presentation, id=presentation_id)
-        # Vérifier que le membre est bien l'auteur
         if presentation.membre != membre:
             return HttpResponseForbidden("Vous n'avez pas la permission de modifier cette présentation.")
     else:
@@ -638,22 +637,18 @@ def create_edit_presentation(request, presentation_id=None):
         formset = ImagePresentationFormSet(request.POST, request.FILES, instance=presentation)
         
         if form.is_valid() and formset.is_valid():
-            # D'abord sauvegarder la présentation
             presentation = form.save(commit=False)
             presentation.membre = membre
-            presentation.save()
-            form.save_m2m()  # Nécessaire si vous avez des relations ManyToMany
             
-            # Maintenant lier le formset à la présentation et le sauvegarder
+            # S'assurer que le fichier n'est pas public par défaut
+            if not presentation_id:  # Nouvelle présentation
+                presentation.fichier_public = False
+            
+            presentation.save()
+            form.save_m2m()
+            
             formset.instance = presentation
             formset.save()
-            
-            if presentation_id:
-                # messages.success(request, "La présentation a été mise à jour avec succès !")
-                pass
-            else:
-                # messages.success(request, "La présentation a été créée avec succès !")
-                pass
             
             return redirect('labo:presentation_detail', presentation_id=presentation.id)
     else:
@@ -669,18 +664,17 @@ def create_edit_presentation(request, presentation_id=None):
 
 @login_required
 def create_edit_presentation1(request, presentation_id=None):
-    """Création/édition d'une présentation."""
+    """Création/édition d'une présentation par les ADMINISTRATEURS."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
     try:
         membre = Membre.objects.get(user=request.user)
     except Membre.DoesNotExist:
-        # messages.error(request, "Vous devez d'abord compléter votre profil.")
         return redirect('labo:edit_profile')
     
     if presentation_id:
         presentation = get_object_or_404(Presentation, id=presentation_id)
-        # Vérifier que le membre est bien l'auteur
-        if presentation.membre != membre:
-            return HttpResponseForbidden("Vous n'avez pas la permission de modifier cette présentation.")
     else:
         presentation = None
     
@@ -689,24 +683,16 @@ def create_edit_presentation1(request, presentation_id=None):
         formset = ImagePresentationFormSet(request.POST, request.FILES, instance=presentation)
         
         if form.is_valid() and formset.is_valid():
-            # D'abord sauvegarder la présentation
             presentation = form.save(commit=False)
-            presentation.membre = membre
+            if not presentation.membre_id:
+                presentation.membre = membre
             presentation.save()
-            form.save_m2m()  # Nécessaire si vous avez des relations ManyToMany
+            form.save_m2m()
             
-            # Maintenant lier le formset à la présentation et le sauvegarder
             formset.instance = presentation
             formset.save()
             
-            if presentation_id:
-                # messages.success(request, "La présentation a été mise à jour avec succès !")
-                pass
-            else:
-                # messages.success(request, "La présentation a été créée avec succès !")
-                pass
-            
-            return redirect('labo:gestion_contenu', presentation_id=presentation.id)
+            return redirect('labo:gestion_contenu', type_contenu='presentations')
     else:
         form = PresentationForm(instance=presentation)
         formset = ImagePresentationFormSet(instance=presentation)
@@ -715,8 +701,32 @@ def create_edit_presentation1(request, presentation_id=None):
         'form': form,
         'formset': formset,
         'presentation': presentation,
+        'is_admin_view': True,
     }
     return render(request, 'admin/edit_presentation.html', context)
+
+@login_required
+def valider_fichier_presentation(request, presentation_id):
+    """Valider/rejeter le fichier d'une présentation."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    presentation = get_object_or_404(Presentation, id=presentation_id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'rendre_public':
+            presentation.fichier_public = True
+            presentation.save()
+            # messages.success(request, f"Le fichier de '{presentation.titre}' est maintenant public.")
+            
+        elif action == 'rendre_prive':
+            presentation.fichier_public = False
+            presentation.save()
+            # messages.success(request, f"Le fichier de '{presentation.titre}' est maintenant privé.")
+    
+    return redirect('labo:gestion_contenu', type_contenu='presentations')
 
 @login_required
 def create_edit_article(request, article_id=None):
@@ -1337,45 +1347,50 @@ def delete_collaborateur(request, collaborateur_id):
 
 @login_required
 def gestion_contenu(request, type_contenu='articles'):
-   """Gestion du contenu pour les administrateurs."""
-   # Vérifier que l'utilisateur est bien administrateur
-   if not request.user.is_staff:
-       return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
-   
-   # Gestion des différents types de contenu
-   articles_en_attente_count = 0
-   if type_contenu == 'articles':
-       items = Article.objects.select_related('auteur', 'auteur__user').order_by('-date_creation')
-       title = "Gestion des articles"
-       articles_en_attente_count = Article.objects.filter(statut_validation='en_attente').count()
+    """Gestion du contenu pour les administrateurs."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
     
-       context = {
-            'items': items,
-            'type_contenu': type_contenu,
-            'title': title,
-            'articles_en_attente_count': articles_en_attente_count,
-       }
-       return render(request, 'admin/gestion_contenu.html', context)
-   elif type_contenu == 'presentations':
-       items = Presentation.objects.select_related('membre', 'membre__user', 'theme').order_by('-date_creation')
-       title = "Gestion des présentations"
-   elif type_contenu == 'temoignages':
-       items = Temoignage.objects.all().order_by('-date')
-       title = "Gestion des témoignages"
-   elif type_contenu == 'evenements':
-       items = Evenement.objects.all().order_by('-date_debut')
-       title = "Gestion des événements"
-   else:
-       # messages.error(request, "Type de contenu non reconnu.")
-       return redirect('labo:admin_dashboard')
-   
-   context = {
-       'items': items,
-       'type_contenu': type_contenu,
-       'title': title,
-   }
-   return render(request, 'admin/gestion_contenu.html', context)
-
+    articles_en_attente_count = 0
+    fichiers_non_publics_count = 0
+    
+    if type_contenu == 'articles':
+        items = Article.objects.select_related('auteur', 'auteur__user').order_by('-date_creation')
+        title = "Gestion des articles"
+        articles_en_attente_count = Article.objects.filter(statut_validation='en_attente').count()
+        
+    elif type_contenu == 'presentations':
+        items = Presentation.objects.select_related('membre', 'membre__user', 'theme').order_by('-date_creation')
+        
+        # Filtrage optionnel
+        filter_param = request.GET.get('filter')
+        if filter_param == 'private':
+            items = items.filter(fichier_public=False)
+            title = "Gestion des présentations - Fichiers privés"
+        else:
+            title = "Gestion des présentations"
+            
+        fichiers_non_publics_count = Presentation.objects.filter(fichier_public=False).count()
+        
+    elif type_contenu == 'temoignages':
+        items = Temoignage.objects.all().order_by('-date')
+        title = "Gestion des témoignages"
+        
+    elif type_contenu == 'evenements':
+        items = Evenement.objects.all().order_by('-date_debut')
+        title = "Gestion des événements"
+        
+    else:
+        return redirect('labo:admin_dashboard')
+    
+    context = {
+        'items': items,
+        'type_contenu': type_contenu,
+        'title': title,
+        'articles_en_attente_count': articles_en_attente_count,
+        'fichiers_non_publics_count': fichiers_non_publics_count,
+    }
+    return render(request, 'admin/gestion_contenu.html', context)
 
 @login_required
 def create_edit_temoignage(request, temoignage_id=None):

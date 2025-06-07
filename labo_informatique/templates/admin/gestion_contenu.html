@@ -140,7 +140,16 @@
                                     </tbody>
                                 </table>
                     
-                    {% elif type_contenu == 'presentations' %}
+                   {% elif type_contenu == 'presentations' %}
+    
+                        <div class="admin-header">
+                            <div class="admin-actions">
+                                <a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}?filter=private" class="btn-action">
+                                    <i class="fas fa-eye-slash"></i> Fichiers privés 
+                                    <span class="badge">{{ fichiers_non_publics_count }}</span>
+                                </a>
+                            </div>
+                        </div>
                         
                         <table class="admin-table">
                             <thead>
@@ -149,6 +158,7 @@
                                     <th>Author</th>
                                     <th>Theme</th>
                                     <th>Type</th>
+                                    <th>File Status</th>
                                     <th>Date</th>
                                     <th>Actions</th>
                                 </tr>
@@ -160,21 +170,52 @@
                                         <td>{{ presentation.membre.user.first_name }} {{ presentation.membre.user.last_name }}</td>
                                         <td>{% if presentation.theme %}{{ presentation.theme.nom }}{% else %}<span class="empty-value">Not specified</span>{% endif %}</td>
                                         <td><span class="status-badge">{{ presentation.type_fichier|upper }}</span></td>
+                                        <td>
+                                            {% if presentation.fichier_public %}
+                                                <span class="status-badge success">Public</span>
+                                            {% else %}
+                                                <span class="status-badge warning">Private</span>
+                                            {% endif %}
+                                        </td>
                                         <td>{{ presentation.date_creation|date:"d/m/Y" }}</td>
                                         <td class="cell-actions">
                                             <a href="{% url 'labo:presentation_detail' presentation.id %}" class="table-action" title="View"><i class="fas fa-eye"></i></a>
+                                            
+                                            <!-- Boutons de validation du fichier -->
+                                            {% if not presentation.fichier_public %}
+                                                <button class="table-action btn-validate-file success" 
+                                                    data-id="{{ presentation.id }}" 
+                                                    data-nom="{{ presentation.titre }}"
+                                                    data-action="rendre_public"
+                                                    title="Make file public">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            {% if presentation.fichier_public %}
+                                                <button class="table-action btn-validate-file warning" 
+                                                    data-id="{{ presentation.id }}" 
+                                                    data-nom="{{ presentation.titre }}"
+                                                    data-action="rendre_prive"
+                                                    title="Make file private">
+                                                    <i class="fas fa-lock"></i>
+                                                </button>
+                                            {% endif %}
+                                            
+                                            <a href="{% url 'labo:edit_presentation1' presentation.id %}" class="table-action" title="Edit"><i class="fas fa-edit"></i></a>
+                                            
                                             <button class="table-action btn-delete-item" 
                                                 data-id="{{ presentation.id }}" 
-                                                data-nom="{{ presentation.titre }}" 
-                                                title="Delete" 
-                                                {% if categorie.article_set.exists %}disabled{% endif %}>
-                                            <i class="fas fa-trash"></i>
-                                        </button>
+                                                data-nom="{{ presentation.titre }}"
+                                                data-type="presentation"
+                                                title="Delete">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
                                         </td>
                                     </tr>
                                 {% empty %}
                                     <tr>
-                                        <td colspan="6" class="empty-table">No presentations found.</td>
+                                        <td colspan="7" class="empty-table">No presentations found.</td>
                                     </tr>
                                 {% endfor %}
                             </tbody>
@@ -300,6 +341,31 @@
         </div>
     </div>
 </div>
+<!-- Modal de validation du fichier -->
+<div id="validate-file-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>File validation</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Presentation: "<span id="validate-file-name"></span>"</p>
+            <p id="validation-message"></p>
+            <div class="warning" id="validation-warning" style="display: none;">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span id="warning-text"></span>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="validate-file-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" id="file_action_input">
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" class="btn" id="confirm-file-action">Confirm</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
 {% block extra_js %}
 <script>
@@ -317,6 +383,15 @@ document.addEventListener('DOMContentLoaded', function() {
     const validateButtons = document.querySelectorAll('.btn-validate-item');
     const commentaireTextarea = document.getElementById('commentaire_validation');
     const commentaireInput = document.getElementById('validate_commentaire_input');
+    const validateFileModal = document.getElementById('validate-file-modal');
+    const validateFileNameSpan = document.getElementById('validate-file-name');
+    const validateFileForm = document.getElementById('validate-file-form');
+    const validateFileButtons = document.querySelectorAll('.btn-validate-file');
+    const fileActionInput = document.getElementById('file_action_input');
+    const validationMessage = document.getElementById('validation-message');
+    const validationWarning = document.getElementById('validation-warning');
+    const warningText = document.getElementById('warning-text');
+    const confirmFileActionBtn = document.getElementById('confirm-file-action');
 
     // Ouvrir la modal de suppression
     deleteButtons.forEach(button => {
@@ -376,6 +451,58 @@ document.addEventListener('DOMContentLoaded', function() {
             validateModal.style.display = 'none';
         }
     });
+    // Ouvrir la modal de validation de fichier
+validateFileButtons.forEach(button => {
+    button.addEventListener('click', function() {
+        const id = this.getAttribute('data-id');
+        const nom = this.getAttribute('data-nom');
+        const action = this.getAttribute('data-action');
+        
+        validateFileForm.action = "{% url 'labo:valider_fichier_presentation' 0 %}".replace('0', id);
+        validateFileNameSpan.textContent = nom;
+        fileActionInput.value = action;
+        
+        // Réinitialiser les styles
+        validationWarning.style.display = 'none';
+        confirmFileActionBtn.className = 'btn';
+        
+        if (action === 'rendre_public') {
+            validationMessage.textContent = 'Are you sure you want to make this file public and downloadable by everyone?';
+            confirmFileActionBtn.textContent = 'Make Public';
+            confirmFileActionBtn.classList.add('btn-success');
+        } else if (action === 'rendre_prive') {
+            validationMessage.textContent = 'Are you sure you want to make this file private?';
+            warningText.textContent = 'The file will no longer be visible or downloadable by the public.';
+            validationWarning.style.display = 'block';
+            confirmFileActionBtn.textContent = 'Make Private';
+            confirmFileActionBtn.classList.add('btn-warning');
+        }
+        
+        validateFileModal.style.display = 'block';
+    });
+});
+
+// Fermer les modals (mise à jour pour inclure validateFileModal)
+document.querySelectorAll('.modal-close, .modal-close-btn').forEach(button => {
+    button.addEventListener('click', function() {
+        deleteModal.style.display = 'none';
+        validateModal.style.display = 'none';
+        validateFileModal.style.display = 'none';
+    });
+});
+
+// Fermer les modals en cliquant à l'extérieur (mise à jour)
+window.addEventListener('click', function(event) {
+    if (event.target == deleteModal) {
+        deleteModal.style.display = 'none';
+    }
+    if (event.target == validateModal) {
+        validateModal.style.display = 'none';
+    }
+    if (event.target == validateFileModal) {
+        validateFileModal.style.display = 'none';
+    }
+});
 });
 </script>
 
