@@ -38,7 +38,8 @@
                             <li><a href="{% url 'labo:team' %}" {% if 'team' in request.path %}class="active"{% endif %}>Students</a></li>                             
                             <li><a href="{% url 'labo:responsables' %}" {% if 'responsables' in request.path %}class="active"{% endif %}>Managers</a></li>                             
                             <li><a href="{% url 'labo:liste_articles' %}" {% if 'blog' in request.path %}class="active"{% endif %}>Blog</a></li>                             
-                            <li><a href="{% url 'labo:liste_presentations' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Presentations</a></li>                             
+                            <li><a href="{% url 'labo:liste_presentations' %}" {% if 'presentations' in request.path %}class="active"{% endif %}>Presentations</a></li>     
+                            <li><a href="{% url 'labo:liste_evenements' %}" {% if 'evenements' in request.path %}class="active"{% endif %}>Events</a></li>                          
                             <li><a href="{% url 'labo:devenir_membres' %}" {% if 'devenir' in request.path %}class="active"{% endif %}>Become</a></li>                             
                             <li><a href="{% url 'labo:contact' %}" {% if 'contact' in request.path %}class="active"{% endif %}>Contact</a></li>                             
                             <li><a href="{% url 'labo:faq' %}" {% if 'faq' in request.path %}class="active"{% endif %}>FAQ</a></li>                         

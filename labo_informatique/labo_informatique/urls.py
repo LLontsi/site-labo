@@ -30,3 +30,12 @@ urlpatterns = [
 # Ajouter le support des fichiers media en développement
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    
+# urls.py principal (labo_informatique/urls.py)
+from django.conf.urls import handler404
+from django.shortcuts import render
+
+def custom_404(request, exception):
+    return render(request, '404.html', status=404)
+
+handler404 = custom_404    

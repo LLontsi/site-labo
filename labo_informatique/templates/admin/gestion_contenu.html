@@ -25,19 +25,19 @@
                         <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}" class="active">Dashboard</a></li>
                         <li><a href="{% url 'labo:gestion_membres' %}" class="active">Member Management</a></li>
-                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}" class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}" class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}" class="active">Article Categories</a></li>
                         <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
                         <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
                         <li class="menu-divider">Content Management</li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" {% if type_contenu != 'articles' %}class="active"{% endif %}>Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}" {% if type_contenu != 'presentations' %}class="active"{% endif %}>Presentations</a></li>
+
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" {% if type_contenu != 'evenements' %}class="active"{% endif %}>Events</a></li>
                     </ul>
                 </div>
             </div>

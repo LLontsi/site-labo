@@ -38,13 +38,13 @@ def home(request):
     
     # Récupérer 3 membres aléatoires (non anciens)
     membres1 = Membre.objects.filter(est_responsable=True)
-    membres = Membre.objects.filter(est_ancien=False , est_responsable=False).order_by('?')[:6]
+    membres = Membre.objects.filter(est_ancien=False , est_responsable=False, profil_valide=True).order_by('?')[:6]
     
     # Récupérer 3 témoignages aléatoires
     temoignages = Temoignage.objects.all().order_by('?')[:3]
     themes = Theme.objects.all()
     # Récupérer les événements à venir
-    evenements = Evenement.objects.filter(date_debut__gte=timezone.now()).order_by('date_debut')[:3]
+    evenements = Evenement.objects.order_by('date_debut')[:3]
     
     # Statistiques
     nb_membres = Membre.objects.filter(est_ancien=False,est_responsable=True).count()
@@ -131,24 +131,29 @@ def contact(request):
 
 #good #bon
 def team(request):
-   
     """Vue pour afficher tous les membres de l'équipe."""
-    membres = Membre.objects.filter(est_ancien=False,est_responsable=False ).select_related('user', 'theme').prefetch_related(
+    membres = Membre.objects.filter(
+        est_ancien=False,
+        est_responsable=False,
+        profil_valide=True  # Ajout du filtre pour les profils validés
+    ).select_related('user', 'theme').prefetch_related(
         'historique_themes__theme'
     ).order_by('user__first_name', 'user__last_name')
-     # Récupérer tous les thèmes pour les filtres
+    
+    # Récupérer tous les thèmes pour les filtres
     themes = Theme.objects.all().order_by('nom')
     
-    # ✅ Ajouter le thème actuel à chaque membre
+    # Ajouter le thème actuel à chaque membre
     for membre in membres:
         membre.theme_actuel = membre.get_theme_actuel()
     
     context = {
         'membres': membres,
-        'themes': membre.theme_actuel,
+        'themes': themes,  # Correction ici - utiliser themes au lieu de membre.theme_actuel
     }
     
     return render(request, 'core/team.html', context)
+
 def faq(request):
    
     return render(request, 'core/faq.html')
@@ -220,10 +225,11 @@ def responsables(request):
     }
     return render(request, 'core/responsables.html', context)
 
-
 def liste_presentations(request):
     """Vue pour afficher la liste des présentations."""
-    presentations_list = Presentation.objects.all().select_related('membre', 'theme', 'membre__user').order_by('-date_creation')
+    presentations_list = Presentation.objects.filter(
+        fichier_public=True
+    ).select_related('membre', 'theme', 'membre__user').order_by('-date_creation')
     themes = Theme.objects.all()
     
     # Pagination
@@ -242,7 +248,6 @@ def liste_presentations(request):
         'themes': themes,
     }
     return render(request, 'core/liste_presentations.html', context)
-
 
 def presentation_detail(request, presentation_id):
     """Vue pour afficher le détail d'une présentation."""
@@ -517,44 +522,47 @@ def articles_en_attente(request):
     return render(request, 'admin/articles_en_attente.html', context)
 
 def devenir_membres(request):
-   """Vue pour afficher le parcours des anciens membres."""
-   devenirs = Devenir.objects.select_related('membre', 'membre__user').order_by('-membre__date_depart')
-   
-   # Récupérer tous les domaines uniques
-   domaines = Devenir.objects.values_list('domaine', flat=True).distinct()
-   
-   # Récupérer toutes les années de départ uniques
-   annees = Membre.objects.filter(est_ancien=True).dates('date_depart', 'year')
-   annees = [date.year for date in annees]
-   
-   # Statistiques
-   nb_membres = devenirs.count()
-   nb_domaines = domaines.count()
-   nb_lieux = Devenir.objects.values_list('lieu', flat=True).distinct().count()
-   
-   # Répartition par type de structure
-   total = devenirs.count()
-   nb_academique = devenirs.filter(type_structure='academique').count()
-   nb_industrie = devenirs.filter(type_structure='industrie').count()
-   nb_startup = devenirs.filter(type_structure='startup').count()
-   
-   pct_academique = int((nb_academique / total) * 100) if total > 0 else 0
-   pct_industrie = int((nb_industrie / total) * 100) if total > 0 else 0
-   pct_startup = int((nb_startup / total) * 100) if total > 0 else 0
-   
-   context = {
-       'devenirs': devenirs,
-       'domaines': domaines,
-       'annees': annees,
-       'nb_membres': nb_membres,
-       'nb_domaines': nb_domaines,
-       'nb_lieux': nb_lieux,
-       'pct_academique': pct_academique,
-       'pct_industrie': pct_industrie,
-       'pct_startup': pct_startup,
-   }
-   return render(request, 'core/devenir_membres.html', context)
-
+    """Vue pour afficher le parcours des anciens membres."""
+    devenirs = Devenir.objects.select_related('membre', 'membre__user').order_by('-membre__date_depart')
+    
+    # Récupérer tous les domaines uniques
+    domaines = Devenir.objects.values_list('domaine', flat=True).distinct()
+    
+    # Récupérer toutes les années de départ uniques
+    annees = Membre.objects.filter(est_ancien=True).dates('date_depart', 'year')
+    annees = [date.year for date in annees]
+    
+    # Statistiques
+    nb_membres = devenirs.count()
+    nb_domaines = domaines.count()
+    nb_lieux = Devenir.objects.values_list('lieu', flat=True).distinct().count()
+    
+    # Répartition par type de structure - CORRECTION ICI
+    total = devenirs.count()
+    nb_academique = devenirs.filter(type_structure='academique').count()
+    nb_industrie = devenirs.filter(type_structure='industrie').count()
+    nb_startup = devenirs.filter(type_structure='startup').count()
+    
+    pct_academique = round((nb_academique / total) * 100, 1) if total > 0 else 0
+    pct_industrie = round((nb_industrie / total) * 100, 1) if total > 0 else 0
+    pct_startup = round((nb_startup / total) * 100, 1) if total > 0 else 0
+    
+    context = {
+        'devenirs': devenirs,
+        'domaines': domaines,
+        'annees': annees,
+        'nb_membres': nb_membres,
+        'nb_domaines': nb_domaines,
+        'nb_lieux': nb_lieux,
+        # AJOUT DES VARIABLES MANQUANTES
+        'nb_academique': nb_academique,
+        'nb_industrie': nb_industrie,
+        'nb_startup': nb_startup,
+        'pct_academique': pct_academique,
+        'pct_industrie': pct_industrie,
+        'pct_startup': pct_startup,
+    }
+    return render(request, 'core/devenir_membres.html', context)
 
 # Vues pour les utilisateurs authentifiés
 @login_required
@@ -588,34 +596,39 @@ def dashboard(request):
 
 @login_required
 def edit_profile(request):
-   """Page d'édition du profil pour les membres."""
-   try:
-       membre = Membre.objects.get(user=request.user)
-   except Membre.DoesNotExist:
-       membre = None
-   
-   if request.method == 'POST':
-       form = MembreProfileForm(request.POST, request.FILES, instance=membre)
-       if form.is_valid():
-           if membre is None:
-               membre = form.save(commit=False)
-               membre.user = request.user
-               membre.date_arrivee = timezone.now().date()
-               membre.save()
-               # messages.success(request, "Votre profil a été créé avec succès !")
-           else:
-               form.save()
-               # messages.success(request, "Votre profil a été mis à jour avec succès !")
-           return redirect('labo:dashboard')
-   else:
-       form = MembreProfileForm(instance=membre)
-   
-   context = {
-       'form': form,
-       'is_new': membre is None,
-   }
-   return render(request, 'membres/edit_profil.html', context)
-
+    """Page d'édition du profil pour les membres."""
+    try:
+        membre = Membre.objects.get(user=request.user)
+    except Membre.DoesNotExist:
+        membre = None
+    
+    if request.method == 'POST':
+        form = MembreProfileForm(request.POST, request.FILES, instance=membre)
+        if form.is_valid():
+            if membre is None:
+                membre = form.save(commit=False)
+                membre.user = request.user
+                membre.date_arrivee = timezone.now().date()
+                membre.profil_valide = False  # ← Nouveau profil non validé
+                membre.save()
+                messages.success(request, "Votre profil a été créé et sera visible après validation par un administrateur.")
+            else:
+                # Si le profil est modifié, le remettre en attente de validation
+                membre = form.save(commit=False)
+                membre.profil_valide = False
+                membre.date_validation_profil = None
+                membre.validateur_profil = None
+                membre.save()
+                messages.success(request, "Votre profil a été mis à jour et sera visible après validation par un administrateur.")
+            return redirect('labo:dashboard')
+    else:
+        form = MembreProfileForm(instance=membre)
+    
+    context = {
+        'form': form,
+        'is_new': membre is None,
+    }
+    return render(request, 'membres/edit_profil.html', context)
 
 @login_required
 def create_edit_presentation(request, presentation_id=None):
@@ -902,94 +915,166 @@ def admin_dashboard(request):
    }
    return render(request, 'admin/dashboard.html', context)
 
-
 @login_required
 def gestion_membres(request):
-   """Gestion des membres pour les administrateurs."""
-   # Vérifier que l'utilisateur est bien administrateur
-   if not request.user.is_staff:
-       return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
-   
-   membres = Membre.objects.select_related('user', 'theme').order_by('-date_arrivee')
-   
-   # Filtres
-   est_responsable = request.GET.get('responsable')
-   est_ancien = request.GET.get('ancien')
-   theme_id = request.GET.get('theme')
-   
-   if est_responsable:
-       membres = membres.filter(est_responsable=est_responsable == 'true')
-   
-   if est_ancien:
-       membres = membres.filter(est_ancien=est_ancien == 'true')
-   
-   if theme_id:
-       membres = membres.filter(theme_id=theme_id)
-   
-   # Liste des thèmes pour le filtre
-   themes = Theme.objects.all()
-   
-   context = {
-       'membres': membres,
-       'themes': themes,
-       'est_responsable': est_responsable,
-       'est_ancien': est_ancien,
-       'theme_id': theme_id,
-   }
-   return render(request, 'admin/gestion_membres.html', context)
+    """Gestion des membres pour les administrateurs."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    # CORRECTION : Utiliser prefetch_related pour les thèmes multiples
+    membres = Membre.objects.select_related('user').prefetch_related('themes').order_by('-date_arrivee')
+    
+    # Filtres existants...
+    est_responsable = request.GET.get('responsable')
+    est_ancien = request.GET.get('ancien')
+    theme_id = request.GET.get('theme')
+    validation_profil = request.GET.get('validation')
+    
+    if est_responsable:
+        membres = membres.filter(est_responsable=est_responsable == 'true')
+    
+    if est_ancien:
+        membres = membres.filter(est_ancien=est_ancien == 'true')
+    
+    # CORRECTION : Filtrer par thèmes multiples
+    if theme_id:
+        membres = membres.filter(themes__id=theme_id).distinct()  # themes au lieu de theme_id
+    
+    # Nouveau filtre pour la validation
+    if validation_profil == 'en_attente':
+        membres = membres.filter(profil_valide=False)
+    elif validation_profil == 'valide':
+        membres = membres.filter(profil_valide=True)
+    
+    themes = Theme.objects.all()
+    
+    # Statistiques
+    profils_en_attente = Membre.objects.filter(profil_valide=False).count()
+    
+    context = {
+        'membres': membres,
+        'themes': themes,
+        'est_responsable': est_responsable,
+        'est_ancien': est_ancien,
+        'theme_id': int(theme_id) if theme_id and theme_id.isdigit() else None,  # Conversion pour le template
+        'validation_profil': validation_profil,
+        'profils_en_attente': profils_en_attente,
+    }
+    return render(request, 'admin/gestion_membres.html', context)
 
+@login_required
+def valider_profil_membre(request, membre_id):
+    """Valider le profil d'un membre."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    membre = get_object_or_404(Membre, id=membre_id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'valider':
+            membre.profil_valide = True
+            membre.date_validation_profil = timezone.now()
+            membre.validateur_profil = request.user
+            membre.save()
+            
+            # Envoyer un email au membre
+            try:
+                send_mail(
+                    'Profil validé - Beta Lab',
+                    f'''Bonjour {membre.user.first_name},
+
+Votre profil sur Beta Lab a été validé et est maintenant visible publiquement.
+
+Cordialement,
+L'équipe Beta Lab''',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [membre.user.email],
+                    fail_silently=True,
+                )
+            except:
+                pass
+                
+        elif action == 'rejeter':
+            membre.profil_valide = False
+            membre.date_validation_profil = None
+            membre.validateur_profil = None
+            membre.save()
+            
+            # Envoyer un email au membre
+            try:
+                send_mail(
+                    'Profil à réviser - Beta Lab',
+                    f'''Bonjour {membre.user.first_name},
+
+Votre profil sur Beta Lab nécessite quelques ajustements avant d'être publié.
+
+Veuillez modifier votre profil et le soumettre à nouveau.
+
+Cordialement,
+L'équipe Beta Lab''',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [membre.user.email],
+                    fail_silently=True,
+                )
+            except:
+                pass
+    
+    return redirect('labo:gestion_membres')
 
 @login_required
 def edit_membre(request, membre_id):
-   """Modification d'un membre par un administrateur."""
-   # Vérifier que l'utilisateur est bien administrateur
-   if not request.user.is_staff:
-       return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
-   
-   membre = get_object_or_404(Membre, id=membre_id)
-   user = membre.user
-   
-   if request.method == 'POST':
-       # Mise à jour des champs utilisateur
-       user.first_name = request.POST.get('first_name')
-       user.last_name = request.POST.get('last_name')
-       user.email = request.POST.get('email')
-       user.save()
-       
-       # Mise à jour des champs membre
-       membre.titre = request.POST.get('titre')
-       membre.bio = request.POST.get('bio')
-       
-       theme_id = request.POST.get('theme')
-       membre.theme = Theme.objects.get(id=theme_id) if theme_id else None
-       
-       membre.linkedin = request.POST.get('linkedin')
-       membre.github = request.POST.get('github')
-       membre.portfolio = request.POST.get('portfolio')
-       
-       membre.est_responsable = 'est_responsable' in request.POST
-       membre.est_ancien = 'est_ancien' in request.POST
-       
-       membre.date_arrivee = request.POST.get('date_arrivee')
-       if membre.est_ancien:
-           membre.date_depart = request.POST.get('date_depart')
-       
-       if 'photo' in request.FILES:
-           membre.photo = request.FILES['photo']
-       
-       membre.save()
-       
-       # messages.success(request, "Le membre a été mis à jour avec succès !")
-       return redirect('labo:gestion_membres')
-   
-   themes = Theme.objects.all()
-   
-   context = {
-       'membre': membre,
-       'themes': themes,
-   }
-   return render(request, 'admin/edit_membre.html', context)
-
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    membre = get_object_or_404(Membre, id=membre_id)
+    user = membre.user
+    
+    if request.method == 'POST':
+        # Mise à jour des champs utilisateur
+        user.first_name = request.POST.get('first_name')
+        user.last_name = request.POST.get('last_name')
+        user.email = request.POST.get('email')
+        user.save()
+        
+        # Mise à jour des champs membre
+        membre.titre = request.POST.get('titre')
+        membre.bio = request.POST.get('bio')
+        
+        # Gestion des thèmes multiples
+        themes_ids = request.POST.getlist('themes')  # getlist pour récupérer plusieurs valeurs
+        membre.themes.clear()  # Supprimer tous les thèmes existants
+        for theme_id in themes_ids:
+            if theme_id:
+                theme = Theme.objects.get(id=theme_id)
+                membre.themes.add(theme)
+        
+        # Autres champs...
+        membre.linkedin = request.POST.get('linkedin')
+        membre.github = request.POST.get('github')
+        membre.portfolio = request.POST.get('portfolio')
+        membre.est_responsable = 'est_responsable' in request.POST
+        membre.est_ancien = 'est_ancien' in request.POST
+        membre.date_arrivee = request.POST.get('date_arrivee')
+        
+        if membre.est_ancien:
+            membre.date_depart = request.POST.get('date_depart')
+        
+        if 'photo' in request.FILES:
+            membre.photo = request.FILES['photo']
+        
+        membre.save()
+        
+        return redirect('labo:gestion_membres')
+    
+    themes = Theme.objects.all()
+    
+    context = {
+        'membre': membre,
+        'themes': themes,
+    }
+    return render(request, 'admin/edit_membre.html', context)
 
 @login_required
 def gestion_invitations(request):
@@ -2044,3 +2129,110 @@ def delete_historique_theme(request, historique_id):
     }
     
     return render(request, 'admin/confirm_delete_historique.html', context)
+
+def liste_evenements(request):
+    """Vue pour afficher la liste des événements."""
+    # Séparer les événements futurs et passés
+    maintenant = timezone.now().date()
+    
+    evenements_futurs = Evenement.objects.filter(
+        date_debut__gte=maintenant
+    ).order_by('date_debut')
+    
+    evenements_passes = Evenement.objects.filter(
+        date_fin__lt=maintenant
+    ).order_by('-date_debut')
+    
+    # Filtres optionnels
+    type_filtre = request.GET.get('type', '')
+    if type_filtre:
+        evenements_futurs = evenements_futurs.filter(type_evenement=type_filtre)
+        evenements_passes = evenements_passes.filter(type_evenement=type_filtre)
+    
+    # Types d'événements pour les filtres
+    types_evenements = Evenement.TYPE_CHOICES
+    
+    # Statistiques
+    nb_evenements_total = Evenement.objects.count()
+    nb_evenements_futurs = evenements_futurs.count()
+    nb_evenements_passes = evenements_passes.count()
+    
+    context = {
+        'evenements_futurs': evenements_futurs,
+        'evenements_passes': evenements_passes,
+        'types_evenements': types_evenements,
+        'type_filtre': type_filtre,
+        'nb_evenements_total': nb_evenements_total,
+        'nb_evenements_futurs': nb_evenements_futurs,
+        'nb_evenements_passes': nb_evenements_passes,
+    }
+    return render(request, 'core/liste_evenements.html', context)
+
+def evenement_detail(request, evenement_id):
+    """Vue pour afficher le détail d'un événement."""
+    evenement = get_object_or_404(Evenement, id=evenement_id)
+    
+    # Récupérer des événements similaires (même type, excluant celui-ci)
+    evenements_similaires = Evenement.objects.filter(
+        type_evenement=evenement.type_evenement
+    ).exclude(id=evenement.id).order_by('-date_debut')[:3]
+    
+    context = {
+        'evenement': evenement,
+        'evenements_similaires': evenements_similaires,
+    }
+    return render(request, 'core/evenement_detail.html', context)
+
+@login_required
+def valider_profil_membre(request, membre_id):
+    """Valider le profil d'un membre."""
+    if not request.user.is_staff:
+        return HttpResponseForbidden("Vous n'avez pas les droits administrateur.")
+    
+    membre = get_object_or_404(Membre, id=membre_id)
+    
+    if request.method == 'POST':
+        action = request.POST.get('action')
+        
+        if action == 'valider':
+            membre.profil_valide = True
+            membre.date_validation_profil = timezone.now()
+            membre.validateur_profil = request.user
+            membre.save()
+            
+            # Envoyer un email au membre
+            try:
+                send_mail(
+                    'Profil validé - Beta Lab',
+                    f'''Bonjour {membre.user.first_name},
+
+Votre profil sur Beta Lab a été validé et est maintenant visible publiquement.
+
+Cordialement,
+L'équipe Beta Lab''',
+                    settings.DEFAULT_FROM_EMAIL,
+                    [membre.user.email],
+                    fail_silently=True,
+                )
+            except:
+                pass
+                
+        elif action == 'rejeter':
+            membre.profil_valide = False
+            membre.date_validation_profil = None
+            membre.validateur_profil = None
+            membre.save()
+    
+    return redirect('labo:gestion_membres')
+
+
+def custom_404_view(request, exception=None):
+    return render(request, '404.html', status=404)
+# Dans views.py
+def test_404(request):
+    from django.http import Http404
+    raise Http404("Page de test 404")
+
+def test_404_view(request):
+    from django.http import Http404
+    raise Http404("Test 404")

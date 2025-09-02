@@ -4,6 +4,152 @@
  {% load static %}
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/devenir.css" %}">
+<style>
+/* Styles pour le graphique en camembert */
+.pie-chart-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+}
+
+.pie-chart {
+    width: 250px;
+    height: 250px;
+    border-radius: 50%;
+    position: relative;
+    background: conic-gradient(
+        var(--color-primary) 0deg,
+        var(--color-primary) var(--academic-angle, 120deg),
+        var(--color-secondary) var(--academic-angle, 120deg),
+        var(--color-secondary) var(--industry-angle, 240deg),
+        var(--color-accent) var(--industry-angle, 240deg),
+        var(--color-accent) 360deg
+    );
+    box-shadow: var(--shadow-lg);
+    transition: transform 0.3s ease;
+}
+
+.pie-chart:hover {
+    transform: scale(1.05);
+}
+
+.pie-chart::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 100px;
+    height: 100px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: inset var(--shadow-sm);
+}
+
+.pie-legend {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    min-width: 200px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.legend-item:hover {
+    background-color: rgba(0, 168, 232, 0.1);
+    transform: translateX(5px);
+}
+
+.legend-color {
+    width: 20px;
+    height: 20px;
+    border-radius: 4px;
+    flex-shrink: 0;
+}
+
+.legend-color.academique {
+    background-color: var(--color-primary);
+}
+
+.legend-color.industrie {
+    background-color: var(--color-secondary);
+}
+
+.legend-color.startup {
+    background-color: var(--color-accent);
+}
+
+.legend-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.legend-label {
+    font-weight: 600;
+    color: var(--color-gray-800);
+    font-size: var(--font-size-md);
+}
+
+.legend-value {
+    font-size: var(--font-size-sm);
+    color: var(--color-gray-600);
+    margin-top: 2px;
+}
+
+.chart-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    z-index: 10;
+}
+
+.chart-total {
+    font-size: var(--font-size-xl);
+    font-weight: bold;
+    color: var(--color-primary);
+    line-height: 1;
+}
+
+.chart-total-label {
+    font-size: var(--font-size-xs);
+    color: var(--color-gray-600);
+    margin-top: 4px;
+}
+
+/* Responsive pour le graphique */
+@media (max-width: 768px) {
+    .pie-chart-container {
+        flex-direction: column;
+        gap: 30px;
+    }
+    
+    .pie-chart {
+        width: 200px;
+        height: 200px;
+    }
+    
+    .pie-chart::before {
+        width: 80px;
+        height: 80px;
+    }
+    
+    .chart-total {
+        font-size: var(--font-size-lg);
+    }
+}
+</style>
 {% endblock %}
 
 {% block header_content %}
@@ -75,16 +221,41 @@
         <div class="stats-chart">
             <h3>Distribution by activity sector</h3>
             <div class="chart-wrapper">
-                <!-- Ici, on pourrait intégrer un graphique avec Chart.js -->
-                <div class="placeholder-chart">
-                    <div class="chart-segment academique" style="width: {{ pct_academique }}%;">
-                        <span>Academic</span>
+                <div class="pie-chart-container">
+                    <div class="pie-chart" 
+                         data-academic="{{ pct_academique }}" 
+                         data-industry="{{ pct_industrie }}" 
+                         data-startup="{{ pct_startup }}">
+                        <div class="chart-center-text">
+                            <div class="chart-total">{{ nb_membres }}</div>
+                            <div class="chart-total-label">Alumni</div>
+                        </div>
                     </div>
-                    <div class="chart-segment industrie" style="width: {{ pct_industrie }}%;">
-                        <span>Industry</span>
-                    </div>
-                    <div class="chart-segment startup" style="width: {{ pct_startup }}%;">
-                        <span>Startup</span>
+                    
+                    <div class="pie-legend">
+                        <div class="legend-item" data-sector="academique">
+                            <div class="legend-color academique"></div>
+                            <div class="legend-text">
+                                <div class="legend-label">Academic</div>
+                                <div class="legend-value">{{ devenirs|length }} alumni ({{ pct_academique }}%)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="legend-item" data-sector="industrie">
+                            <div class="legend-color industrie"></div>
+                            <div class="legend-text">
+                                <div class="legend-label">Industry</div>
+                                <div class="legend-value">{{ devenirs|length }} alumni ({{ pct_industrie }}%)</div>
+                            </div>
+                        </div>
+                        
+                        <div class="legend-item" data-sector="startup">
+                            <div class="legend-color startup"></div>
+                            <div class="legend-text">
+                                <div class="legend-label">Startup</div>
+                                <div class="legend-value">{{ devenirs|length }} alumni ({{ pct_startup }}%)</div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -151,5 +322,44 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/devenir.js" %} "></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Configuration du graphique en camembert
+    const pieChart = document.querySelector('.pie-chart');
+    if (pieChart) {
+        const academic = parseFloat(pieChart.dataset.academic) || 0;
+        const industry = parseFloat(pieChart.dataset.industry) || 0;
+        const startup = parseFloat(pieChart.dataset.startup) || 0;
+        
+        // Calculer les angles pour le conic-gradient
+        const academicAngle = (academic / 100) * 360;
+        const industryAngle = ((academic + industry) / 100) * 360;
+        
+        // Appliquer les angles calculés
+        pieChart.style.setProperty('--academic-angle', academicAngle + 'deg');
+        pieChart.style.setProperty('--industry-angle', industryAngle + 'deg');
+        
+        // Interaction avec les éléments de la légende
+        const legendItems = document.querySelectorAll('.legend-item');
+        legendItems.forEach(item => {
+            item.addEventListener('mouseenter', function() {
+                const sector = this.dataset.sector;
+                pieChart.style.filter = 'brightness(0.8)';
+                
+                // Highlight du secteur (effet visuel simple)
+                pieChart.style.transform = 'scale(1.02)';
+            });
+            
+            item.addEventListener('mouseleave', function() {
+                pieChart.style.filter = 'brightness(1)';
+                pieChart.style.transform = 'scale(1)';
+            });
+        });
+    }
+});
+
+// Script original pour les filtres (à conserver)
+{% static "js/devenir.js" %}
+</script>
+<script src="{% static "js/devenir.js" %}"></script>
 {% endblock %}

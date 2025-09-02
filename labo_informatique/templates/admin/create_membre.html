@@ -5,6 +5,99 @@
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'css/admin.css' %}">
 <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+<style>
+.themes-checkbox-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    padding: 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.theme-checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.theme-checkbox-label:hover {
+    background: #f0f9ff;
+    border-color: #00a8e8;
+    transform: translateY(-1px);
+}
+
+.theme-checkbox {
+    display: none;
+}
+
+.theme-checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.theme-checkbox:checked + .theme-checkbox-custom {
+    background: linear-gradient(135deg, #00a8e8, #ff6b6b);
+    border-color: #00a8e8;
+}
+
+.theme-checkbox:checked + .theme-checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.theme-checkbox:checked ~ .theme-name {
+    font-weight: 600;
+    color: #00a8e8;
+}
+
+.theme-name {
+    font-size: 14px;
+    color: #374151;
+    transition: all 0.3s ease;
+}
+
+.themes-preview {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.theme-badge {
+    background: linear-gradient(135deg, #00a8e8, #ff6b6b);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 {% endblock %}
 
 {% block header_content %}
@@ -36,7 +129,7 @@
                         <li class="menu-divider">Content Management</li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
+                       
                         <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
                     </ul>
                 </div>
@@ -105,13 +198,23 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="theme">Research Theme</label>
-                            <select id="theme" name="theme">
-                                <option value="">No theme</option>
+                            <label>Research Themes</label>
+                            <div class="themes-checkbox-container">
                                 {% for theme in themes %}
-                                    <option value="{{ theme.id }}">{{ theme.nom }}</option>
+                                    <label class="theme-checkbox-label">
+                                        <input type="checkbox" 
+                                               name="themes" 
+                                               value="{{ theme.id }}"
+                                               class="theme-checkbox">
+                                        <span class="theme-checkbox-custom"></span>
+                                        <span class="theme-name">{{ theme.nom }}</span>
+                                    </label>
                                 {% endfor %}
-                            </select>
+                            </div>
+                            <div class="form-help">Select one or more research themes for this member.</div>
+                            <div class="themes-preview" id="themes-preview">
+                                <!-- Les thèmes sélectionnés apparaîtront ici -->
+                            </div>
                         </div>
                         
                         <div class="form-group">
@@ -215,35 +318,65 @@
 
 {% block extra_js %}
 <script>
-    function toggleAncien(checkbox) {
-        const dateDepartGroup = document.getElementById('date_depart_group');
-        const statutAncienGroup = document.getElementById('statut_ancien_group');
-        const statutAncienSelect = document.getElementById('statut_ancien');
-        
-        if (checkbox.checked) {
-            statutAncienGroup.style.display = 'block';
-            // Listen for former member status changes
-            statutAncienSelect.addEventListener('change', function() {
-                if (this.value === 'parti') {
-                    dateDepartGroup.style.display = 'block';
-                    document.getElementById('date_depart').required = true;
-                } else if (this.value === 'assistant') {
-                    dateDepartGroup.style.display = 'none';
-                    document.getElementById('date_depart').required = false;
-                    document.getElementById('date_depart').value = '';
-                }
-            });
-        } else {
-            statutAncienGroup.style.display = 'none';
-            dateDepartGroup.style.display = 'none';
-            statutAncienSelect.value = '';
-            document.getElementById('date_depart').required = false;
-            document.getElementById('date_depart').value = '';
-        }
-    }
-    
-    // Photo preview
     document.addEventListener('DOMContentLoaded', function() {
+        // Gestion des thèmes multiples avec checkboxes
+        const themeCheckboxes = document.querySelectorAll('.theme-checkbox');
+        const themesPreview = document.getElementById('themes-preview');
+        
+        if (themeCheckboxes.length > 0 && themesPreview) {
+            function updateThemesPreview() {
+                const checkedBoxes = Array.from(themeCheckboxes).filter(cb => cb.checked);
+                themesPreview.innerHTML = '';
+                
+                checkedBoxes.forEach(checkbox => {
+                    const themeName = checkbox.parentNode.querySelector('.theme-name').textContent;
+                    const badge = document.createElement('span');
+                    badge.className = 'theme-badge';
+                    badge.textContent = themeName.trim();
+                    themesPreview.appendChild(badge);
+                });
+            }
+            
+            // Mettre à jour l'aperçu au chargement
+            updateThemesPreview();
+            
+            // Écouter les changements sur chaque checkbox
+            themeCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateThemesPreview);
+            });
+        }
+
+        function toggleAncien(checkbox) {
+            const dateDepartGroup = document.getElementById('date_depart_group');
+            const statutAncienGroup = document.getElementById('statut_ancien_group');
+            const statutAncienSelect = document.getElementById('statut_ancien');
+            
+            if (checkbox.checked) {
+                statutAncienGroup.style.display = 'block';
+                // Listen for former member status changes
+                statutAncienSelect.addEventListener('change', function() {
+                    if (this.value === 'parti') {
+                        dateDepartGroup.style.display = 'block';
+                        document.getElementById('date_depart').required = true;
+                    } else if (this.value === 'assistant') {
+                        dateDepartGroup.style.display = 'none';
+                        document.getElementById('date_depart').required = false;
+                        document.getElementById('date_depart').value = '';
+                    }
+                });
+            } else {
+                statutAncienGroup.style.display = 'none';
+                dateDepartGroup.style.display = 'none';
+                statutAncienSelect.value = '';
+                document.getElementById('date_depart').required = false;
+                document.getElementById('date_depart').value = '';
+            }
+        }
+        
+        // Associer la fonction toggleAncien globalement
+        window.toggleAncien = toggleAncien;
+        
+        // Photo preview
         const photoInput = document.getElementById('photo');
         const previewContainer = document.getElementById('photo-preview');
         const previewImage = document.getElementById('preview-image');

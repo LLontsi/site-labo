@@ -2,7 +2,7 @@ from django.urls import path
 from . import views
 
 app_name = 'labo'
-
+handler404 = views.custom_404_view
 urlpatterns = [
     # Pages publiques
     path('', views.home, name='home'),
@@ -94,9 +94,12 @@ urlpatterns = [
     path('gestion/projet/create/', views.create_edit_projet, name='create_projet'),
     path('gestion/projet/edit/<int:projet_id>/', views.create_edit_projet, name='edit_projet'),
     path('gestion/projet/delete/<int:projet_id>/', views.delete_projet, name='delete_projet'),
-    
+    path('test404/', views.test_404_view, name='test_404'),
     # Dans urlpatterns, ajoutez ces lignes après vos URLs d'administration existantes :
-
+    #evements
+    path('valider-profil-membre/<int:membre_id>/', views.valider_profil_membre, name='valider_profil_membre'),
+    path('evenements/', views.liste_evenements, name='liste_evenements'),
+    path('evenements/<int:evenement_id>/', views.evenement_detail, name='evenement_detail'),
     # Gestion des historiques de thèmes
     path('gestion/historique-themes/', views.gestion_historique_themes, name='gestion_historique_themes'),
     path('gestion/historique-theme/create/', views.create_edit_historique_theme, {'membre_id': None}, name='create_historique_theme_general'),

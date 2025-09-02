@@ -5,7 +5,6 @@
 {% block extra_css %}
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/admin.css' %}">
-
 {% endblock %}
 
 {% block header_content %}
@@ -14,7 +13,6 @@
     <div class="header-line"></div>
     <p class="page-subtitle fade-in delay-200">Administer laboratory member profiles</p>
 </div>
-
 {% endblock %}
 
 {% block content %}
@@ -27,19 +25,19 @@
                         <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" >Member Management</a></li>
-                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}" class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Member Management</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}" class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}" class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}" class="active">Article Categories</a></li>
                         <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
                         <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
                         <li class="menu-divider">Content Management</li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" class="active">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}" class="active">Presentations</a></li>
+                        
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
@@ -47,7 +45,12 @@
             <div class="admin-content">
                 <div class="admin-header">
                     <h2>Member Management</h2>
-                    <!-- Ajout du bouton pour créer un nouveau membre -->
+                    {% if profils_en_attente > 0 %}
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            {{ profils_en_attente }} profile{{ profils_en_attente|pluralize }} awaiting validation
+                        </div>
+                    {% endif %}
                     <div class="admin-actions">
                         <a href="{% url 'labo:create_membre' %}" class="btn btn-primary">
                             <i class="fas fa-plus"></i> Add a member
@@ -63,6 +66,15 @@
                                 <option value="">All members</option>
                                 <option value="false" {% if est_ancien == 'false' %}selected{% endif %}>Active members</option>
                                 <option value="true" {% if est_ancien == 'true' %}selected{% endif %}>Former members</option>
+                            </select>
+                        </div>
+                        
+                        <div class="filter-group">
+                            <label>Profile Validation</label>
+                            <select name="validation" onchange="this.form.submit()">
+                                <option value="">All profiles</option>
+                                <option value="en_attente" {% if validation_profil == 'en_attente' %}selected{% endif %}>Awaiting validation</option>
+                                <option value="valide" {% if validation_profil == 'valide' %}selected{% endif %}>Validated profiles</option>
                             </select>
                         </div>
                         
@@ -98,6 +110,7 @@
                                 <th>Title</th>
                                 <th>Theme</th>
                                 <th>Status</th>
+                                <th>Validation</th>
                                 <th>Arrival date</th>
                                 <th>Actions</th>
                             </tr>
@@ -119,28 +132,74 @@
                                         </div>
                                     </td>
                                     <td>{{ membre.titre }}</td>
-                                    <td>{% if membre.theme %}{{ membre.theme.nom }}{% else %}<span class="empty-value">Not specified</span>{% endif %}</td>
+                                    <td>
+                                        {% if membre.themes.exists %}
+                                            {% for theme in membre.themes.all %}
+                                                <span class="theme-badge">{{ theme.nom }}</span>
+                                                {% if not forloop.last %}, {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            <span class="text-muted">Aucun thème</span>
+                                        {% endif %}
+                                    </td>
+
                                     <td>
                                         {% if membre.est_responsable %}<span class="status-badge responsable">Manager</span>{% endif %}
                                         {% if membre.est_ancien %}<span class="status-badge ancien">Former</span>{% else %}<span class="status-badge actif">Active</span>{% endif %}
                                     </td>
+                                    <td>
+                                        {% if membre.profil_valide %}
+                                            <span class="status-badge valide">Validated</span>
+                                            {% if membre.date_validation_profil %}
+                                                <small class="validation-date">{{ membre.date_validation_profil|date:"d/m/Y" }}</small>
+                                            {% endif %}
+                                        {% else %}
+                                            <span class="status-badge en-attente">Pending</span>
+                                        {% endif %}
+                                    </td>
                                     <td>{{ membre.date_arrivee|date:"d/m/Y" }}</td>
                                     <td class="cell-actions">
-                                        <a href="{% url 'labo:membre_detail' membre.id %}" class="table-action" title="View profile"><i class="fas fa-eye"></i></a>
-                                        <a href="{% url 'labo:edit_membre' membre.id %}" class="table-action" title="Edit"><i class="fas fa-edit"></i></a>
+                                        <a href="{% url 'labo:membre_detail' membre.id %}" class="table-action" title="View profile">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{% url 'labo:edit_membre' membre.id %}" class="table-action" title="Edit">
+                                            <i class="fas fa-edit"></i>
+                                        </a>
+                                        
+                                        {% if not membre.profil_valide %}
+                                            <button class="table-action btn-validate-profile" 
+                                                    data-id="{{ membre.id }}" 
+                                                    data-nom="{{ membre.user.first_name }} {{ membre.user.last_name }}"
+                                                    title="Validate profile">
+                                                <i class="fas fa-check text-success"></i>
+                                            </button>
+                                            <button class="table-action btn-reject-profile" 
+                                                    data-id="{{ membre.id }}" 
+                                                    data-nom="{{ membre.user.first_name }} {{ membre.user.last_name }}"
+                                                    title="Reject profile">
+                                                <i class="fas fa-times text-danger"></i>
+                                            </button>
+                                        {% else %}
+                                            <button class="table-action btn-invalidate-profile" 
+                                                    data-id="{{ membre.id }}" 
+                                                    data-nom="{{ membre.user.first_name }} {{ membre.user.last_name }}"
+                                                    title="Invalidate profile">
+                                                <i class="fas fa-ban text-warning"></i>
+                                            </button>
+                                        {% endif %}
+                                        
                                         <button class="table-action btn-delete-item" 
                                                 data-id="{{ membre.id }}" 
-                                                data-nom="{{ membre.user.first_name }}" 
+                                                data-nom="{{ membre.user.first_name }} {{ membre.user.last_name }}" 
                                                 data-type="membre"
-                                                title="Delete" >
+                                                title="Delete">
                                             <i class="fas fa-trash"></i>
                                         </button>
                                     </td>
-                                    
                                 </tr>
                             {% empty %}
                                 <tr>
-                                    <td colspan="6" class="empty-table">No members found.</td>
+                                    <td colspan="7" class="empty-table">No members found.</td>
                                 </tr>
                             {% endfor %}
                         </tbody>
@@ -172,7 +231,52 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de validation de profil -->
+<div id="validate-profile-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Validate Profile</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Do you want to validate the profile of "<span id="profile-name"></span>"?</p>
+            <p class="info">The profile will be publicly visible after validation.</p>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="validate-profile-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="valider">
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" class="btn btn-success">Validate</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de rejet de profil -->
+<div id="reject-profile-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Reject Profile</h3>
+            <span class="modal-close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Do you want to reject the profile of "<span id="reject-profile-name"></span>"?</p>
+            <p class="warning">The profile will not be publicly visible.</p>
+        </div>
+        <div class="modal-footer">
+            <form method="post" action="" id="reject-profile-form">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="rejeter">
+                <button type="button" class="btn btn-secondary modal-close-btn">Cancel</button>
+                <button type="submit" class="btn btn-danger">Reject</button>
+            </form>
+        </div>
+    </div>
+</div>
 {% endblock %}
+
 {% block extra_js %}
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -183,6 +287,19 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteForm = document.getElementById('delete-form');
     const deleteButtons = document.querySelectorAll('.btn-delete-item');
     const modalCloseButtons = document.querySelectorAll('.modal-close, .modal-close-btn');
+    
+    // Variables pour les modals de validation
+    const validateModal = document.getElementById('validate-profile-modal');
+    const rejectModal = document.getElementById('reject-profile-modal');
+    const profileNameSpan = document.getElementById('profile-name');
+    const rejectProfileNameSpan = document.getElementById('reject-profile-name');
+    const validateForm = document.getElementById('validate-profile-form');
+    const rejectForm = document.getElementById('reject-profile-form');
+
+    // Boutons de validation/rejet
+    const validateButtons = document.querySelectorAll('.btn-validate-profile');
+    const rejectButtons = document.querySelectorAll('.btn-reject-profile');
+    const invalidateButtons = document.querySelectorAll('.btn-invalidate-profile');
     
     // Ouvrir la modal de suppression
     deleteButtons.forEach(button => {
@@ -198,21 +315,61 @@ document.addEventListener('DOMContentLoaded', function() {
             deleteModal.style.display = 'block';
         });
     });
-    
-    // Fermer la modal
-    modalCloseButtons.forEach(button => {
+
+    // Ouvrir modal de validation
+    validateButtons.forEach(button => {
         button.addEventListener('click', function() {
-            deleteModal.style.display = 'none';
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            validateForm.action = "{% url 'labo:valider_profil_membre' 0 %}".replace('0', id);
+            profileNameSpan.textContent = nom;
+            validateModal.style.display = 'block';
+        });
+    });
+
+    // Ouvrir modal de rejet
+    rejectButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            rejectForm.action = "{% url 'labo:valider_profil_membre' 0 %}".replace('0', id);
+            rejectProfileNameSpan.textContent = nom;
+            rejectModal.style.display = 'block';
+        });
+    });
+
+    // Invalider un profil (même action que rejeter)
+    invalidateButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.getAttribute('data-id');
+            const nom = this.getAttribute('data-nom');
+            rejectForm.action = "{% url 'labo:valider_profil_membre' 0 %}".replace('0', id);
+            rejectProfileNameSpan.textContent = nom;
+            rejectModal.style.display = 'block';
         });
     });
     
-    // Fermer la modal en cliquant à l'extérieur
+    // Fermer les modals
+    modalCloseButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            deleteModal.style.display = 'none';
+            validateModal.style.display = 'none';
+            rejectModal.style.display = 'none';
+        });
+    });
+    
+    // Fermer les modals en cliquant à l'extérieur
     window.addEventListener('click', function(event) {
         if (event.target == deleteModal) {
             deleteModal.style.display = 'none';
         }
+        if (event.target == validateModal) {
+            validateModal.style.display = 'none';
+        }
+        if (event.target == rejectModal) {
+            rejectModal.style.display = 'none';
+        }
     });
 });
 </script>
-
 {% endblock %}

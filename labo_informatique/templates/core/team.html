@@ -2,16 +2,41 @@
 {% load static %}
 {% block title %}Our team | Computer Science Laboratory{% endblock %}
 {% block extra_css %}
-<link rel="stylesheet" href="{% static "css/team.css" %} ">
-{% endblock %}
-{% block header_content %}
+<link rel="stylesheet" href="{% static "css/team.css" %}">
+<style>
+/* Styles pour les thèmes multiples */
+.member-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px;
+    margin-bottom: 8px;
+}
 
+.theme-tag {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    font-size: 11px;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-weight: 500;
+}
+
+.member-theme {
+    color: var(--color-gray-600);
+    font-size: var(--font-size-sm);
+    font-style: italic;
+}
+</style>
+{% endblock %}
+
+{% block header_content %}
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">Laboratory Students</h1>
     <div class="header-line"></div>
-    <p class="page-subtitle fade-in delay-200">computer science research and technological innovations</p>
+    <p class="page-subtitle fade-in delay-200">Computer science research and technological innovations</p>
 </div>
 {% endblock %}
+
 {% block content %}
 <section class="team-filters">
     <div class="container">
@@ -19,7 +44,7 @@
         <div class="filter-buttons">
             <button class="filter-btn active" data-filter="all">All</button>
             {% for theme in themes %}
-                <button class="filter-btn" data-filter="{{ theme.id }}">{{ theme.nom }}</button>
+            <button class="filter-btn" data-filter="{{ theme.id }}">{{ theme.nom }}</button>
             {% endfor %}
         </div>
     </div>
@@ -29,7 +54,8 @@
     <div class="container">
         <div class="members-grid">
             {% for membre in membres %}
-            <div class="member-card" data-themes="{{ membre.theme.id }}">
+            <div class="member-card" 
+                 data-themes="{% for theme in membre.themes.all %}{{ theme.id }}{% if not forloop.last %},{% endif %}{% endfor %}">
                 <div class="member-photo">
                     {% if membre.photo %}
                         <img src="{{ membre.photo.url }}" alt="{{ membre.user.first_name }} {{ membre.user.last_name }}">
@@ -43,16 +69,30 @@
                 <div class="member-info">
                     <h3>{{ membre.user.first_name }} {{ membre.user.last_name }}</h3>
                     <p class="member-title">{{ membre.titre }}</p>
-                    <p class="member-theme">{% if membre.theme_actuel %}{{ membre.theme_actuel.nom }}{% endif %}</p>
+                    
+                    <!-- Affichage des thèmes multiples -->
+                    {% if membre.themes.exists %}
+                        <div class="member-themes">
+                            {% for theme in membre.themes.all %}
+                                <span class="theme-tag">{{ theme.nom }}</span>
+                            {% endfor %}
+                        </div>
+                    {% elif membre.theme %}
+                        <!-- Fallback sur l'ancien système pour compatibilité -->
+                        <p class="member-theme">{{ membre.theme.nom }}</p>
+                    {% else %}
+                        <p class="member-theme">No research theme</p>
+                    {% endif %}
+                    
                     <div class="member-links">
                         {% if membre.linkedin %}
-                            <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
+                        <a href="{{ membre.linkedin }}" target="_blank" class="social-link"><i class="fab fa-linkedin"></i></a>
                         {% endif %}
                         {% if membre.github %}
-                            <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
+                        <a href="{{ membre.github }}" target="_blank" class="social-link"><i class="fab fa-github"></i></a>
                         {% endif %}
                         {% if membre.portfolio %}
-                            <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i></a>
+                        <a href="{{ membre.portfolio }}" target="_blank" class="social-link"><i class="fas fa-globe"></i></a>
                         {% endif %}
                     </div>
                     <a href="{% url 'labo:membre_detail' membre.id %}" class="btn-details">View profile</a>
@@ -69,5 +109,40 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/team.js" %} "></script>
+<script>
+// Script de filtrage adapté pour les thèmes multiples
+document.addEventListener('DOMContentLoaded', function() {
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const memberCards = document.querySelectorAll('.member-card');
+
+    filterButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            // Retirer la classe active de tous les boutons
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            // Ajouter la classe active au bouton cliqué
+            this.classList.add('active');
+
+            const filterValue = this.dataset.filter;
+
+            memberCards.forEach(card => {
+                if (filterValue === 'all') {
+                    // Afficher toutes les cartes
+                    card.style.display = 'block';
+                    card.style.opacity = '1';
+                } else {
+                    // Vérifier si la carte contient le thème filtré
+                    const cardThemes = card.dataset.themes.split(',');
+                    if (cardThemes.includes(filterValue)) {
+                        card.style.display = 'block';
+                        card.style.opacity = '1';
+                    } else {
+                        card.style.display = 'none';
+                        card.style.opacity = '0';
+                    }
+                }
+            });
+        });
+    });
+});
+</script>
 {% endblock %}

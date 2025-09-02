@@ -10,7 +10,7 @@
 <div class="hero">
     <div class="hero-content">
         <h1 class="hero-title">  Beta Lab</h1>
-        <p class="hero-subtitle"> computer science research laboratory and technological innovations</p>
+        <p class="hero-subtitle"> Computer science research laboratory and technological innovations</p>
         <div class="hero-buttons">
             <a href="{% url 'labo:liste_presentations' %}" class="btn btn-primary">Discover our work</a>
             <a href="{% url 'labo:contact' %}" class="btn btn-secondary">Contact us</a>
@@ -46,6 +46,9 @@
                 <p>No upcoming events are planned at the moment.</p>
             </div>
             {% endfor %}
+        </div>
+        <div class="section-action">
+            <a href="{% url 'labo:liste_evenements' %}" class="btn btn-primary">View all events</a>
         </div>
     </div>
 </section>
@@ -198,7 +201,7 @@
         <h2 class="section-title">Laboratory Management</h2>
         <div class="team-grid">
             {% for membre in membres1 %}
-                {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' or membre.user.first_name == 'ALain' or membre.user.last_name == 'TCHANA' or membre.user.first_name == 'Parfait' or membre.user.last_name == 'Bessala' %}
+                {% if membre.titre == 'Directeur' or membre.titre == 'Directrice' or membre.user.first_name == 'ALain' or membre.user.last_name == 'TCHANA' or membre.user.first_name == 'Parfait' or membre.user.last_name == 'BESSALA' %}
                 <div class="team-card">
                     <div class="team-photo">
                         {% if membre.photo %}

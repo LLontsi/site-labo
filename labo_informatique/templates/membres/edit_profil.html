@@ -4,6 +4,99 @@
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static "css/forms.css" %} ">
+<style>
+.themes-checkbox-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    padding: 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.theme-checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.theme-checkbox-label:hover {
+    background: #f0f9ff;
+    border-color: #00a8e8;
+    transform: translateY(-1px);
+}
+
+.theme-checkbox {
+    display: none;
+}
+
+.theme-checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.theme-checkbox:checked + .theme-checkbox-custom {
+    background: linear-gradient(135deg, #00a8e8, #ff6b6b);
+    border-color: #00a8e8;
+}
+
+.theme-checkbox:checked + .theme-checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.theme-checkbox:checked ~ .theme-name {
+    font-weight: 600;
+    color: #00a8e8;
+}
+
+.theme-name {
+    font-size: 14px;
+    color: #374151;
+    transition: all 0.3s ease;
+}
+
+.themes-preview {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.theme-badge {
+    background: linear-gradient(135deg, #00a8e8, #ff6b6b);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 {% endblock %}
 
 {% block header_content %}
@@ -34,8 +127,24 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="{{ form.theme.id_for_label }}">Research theme</label>
-                    {{ form.theme }}
+                    <label>Research Themes</label>
+                    <div class="themes-checkbox-container">
+                        {% for theme in themes %}
+                            <label class="theme-checkbox-label">
+                                <input type="checkbox" 
+                                       name="themes" 
+                                       value="{{ theme.id }}"
+                                       {% if theme in user_themes %}checked{% endif %}
+                                       class="theme-checkbox">
+                                <span class="theme-checkbox-custom"></span>
+                                <span class="theme-name">{{ theme.nom }}</span>
+                            </label>
+                        {% endfor %}
+                    </div>
+                    <div class="form-help">Select one or more research themes that match your interests.</div>
+                    <div class="themes-preview" id="themes-preview">
+                        <!-- Les thèmes sélectionnés apparaîtront ici -->
+                    </div>
                     {% if form.theme.errors %}
                         <div class="form-error">{{ form.theme.errors.0 }}</div>
                     {% endif %}
@@ -109,4 +218,68 @@
         </div>
     </div>
 </section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion des thèmes multiples avec checkboxes
+        const themeCheckboxes = document.querySelectorAll('.theme-checkbox');
+        const themesPreview = document.getElementById('themes-preview');
+        
+        if (themeCheckboxes.length > 0 && themesPreview) {
+            function updateThemesPreview() {
+                const checkedBoxes = Array.from(themeCheckboxes).filter(cb => cb.checked);
+                themesPreview.innerHTML = '';
+                
+                checkedBoxes.forEach(checkbox => {
+                    const themeName = checkbox.parentNode.querySelector('.theme-name').textContent;
+                    const badge = document.createElement('span');
+                    badge.className = 'theme-badge';
+                    badge.textContent = themeName.trim();
+                    themesPreview.appendChild(badge);
+                });
+            }
+            
+            // Mettre à jour l'aperçu au chargement
+            updateThemesPreview();
+            
+            // Écouter les changements sur chaque checkbox
+            themeCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateThemesPreview);
+            });
+        }
+
+        // Photo preview
+        const photoInput = document.querySelector('input[type="file"]');
+        if (photoInput) {
+            photoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    const currentPhotoDiv = document.querySelector('.current-photo');
+                    
+                    reader.onload = function(e) {
+                        if (currentPhotoDiv) {
+                            const img = currentPhotoDiv.querySelector('img');
+                            if (img) {
+                                img.src = e.target.result;
+                            }
+                        } else {
+                            // Créer un aperçu si pas de photo actuelle
+                            const preview = document.createElement('div');
+                            preview.className = 'current-photo';
+                            preview.innerHTML = `
+                                <img src="${e.target.result}" alt="Photo Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px;">
+                                <p>Photo Preview</p>
+                            `;
+                            photoInput.parentNode.insertBefore(preview, photoInput);
+                        }
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
+                }
+            });
+        }
+    });
+</script>
 {% endblock %}

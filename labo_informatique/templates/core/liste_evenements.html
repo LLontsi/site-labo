@@ -1,0 +1,214 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Events - Beta Lab{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static "css/events.css" %}">
+{% endblock %}
+
+{% block header_content %}
+<div class="page-header animated-gradient">
+    <h1 class="page-title fade-in">Laboratory Events</h1>
+    <div class="header-line"></div>
+    <p class="page-subtitle fade-in delay-200">Discover our conferences, seminars, workshops and scientific events</p>
+</div>
+{% endblock %}
+
+{% block content %}
+<!-- Section statistiques et filtres -->
+<section class="events-filters">
+    <div class="container">
+        <div class="events-stats">
+            <div class="events-stat-card">
+                <div class="events-stat-number">{{ nb_evenements_total }}</div>
+                <div class="events-stat-label">Total Events</div>
+            </div>
+            <div class="events-stat-card">
+                <div class="events-stat-number">{{ nb_evenements_futurs }}</div>
+                <div class="events-stat-label">Upcoming</div>
+            </div>
+            <div class="events-stat-card">
+                <div class="events-stat-number">{{ nb_evenements_passes }}</div>
+                <div class="events-stat-label">Past Events</div>
+            </div>
+        </div>
+        
+        <!-- Filtres -->
+        <div class="events-filter-container">
+            <form method="get" class="events-filter-form">
+                <div class="events-filter-group">
+                    <label class="events-filter-label">Event Type</label>
+                    <select name="type" class="events-filter-select" onchange="this.form.submit()">
+                        <option value="">All types</option>
+                        {% for value, label in types_evenements %}
+                            <option value="{{ value }}" {% if type_filtre == value %}selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <a href="{% url 'labo:liste_evenements' %}" class="events-filter-reset">
+                    <i class="fas fa-times"></i> Reset filters
+                </a>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Événements à venir -->
+{% if evenements_futurs %}
+<section class="events-section upcoming-section">
+    <div class="container">
+        <div class="events-category">
+            <h2 class="events-category-title" data-count="{{ evenements_futurs|length }}">
+                <i class="fas fa-calendar-plus"></i>
+                <span class="title-text">Upcoming Events</span>
+            </h2>
+            <div class="events-grid">
+                {% for evenement in evenements_futurs %}
+                <div class="event-card">
+                    <div class="event-image">
+                        {% if evenement.image %}
+                            <img src="{{ evenement.image.url }}" alt="{{ evenement.titre }}">
+                        {% else %}
+                            <div class="event-image-placeholder">
+                                {% if evenement.type_evenement == 'conference' %}
+                                    <i class="fas fa-users"></i>
+                                {% elif evenement.type_evenement == 'seminaire' %}
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                {% elif evenement.type_evenement == 'hackathon' %}
+                                    <i class="fas fa-code"></i>
+                                {% elif evenement.type_evenement == 'atelier' %}
+                                    <i class="fas fa-tools"></i>
+                                {% else %}
+                                    <i class="fas fa-calendar"></i>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <div class="event-type-badge">{{ evenement.get_type_evenement_display }}</div>
+                    </div>
+                    
+                    <div class="event-content">
+                        <div class="event-date-header">
+                            <div class="event-date-circle">
+                                <span class="event-date-day">{{ evenement.date_debut|date:"d" }}</span>
+                                <span class="event-date-month">{{ evenement.date_debut|date:"M" }}</span>
+                            </div>
+                            <div class="event-date-info">
+                                <div class="event-date-range">
+                                    {{ evenement.date_debut|date:"d F Y" }}
+                                    {% if evenement.date_fin != evenement.date_debut %}
+                                        - {{ evenement.date_fin|date:"d F Y" }}
+                                    {% endif %}
+                                </div>
+                                <div class="event-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ evenement.lieu }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="event-title">{{ evenement.titre }}</h3>
+                        <p class="event-description">{{ evenement.description|truncatechars:150 }}</p>
+                        
+                        <div class="event-footer">
+                            <span class="event-status upcoming">Upcoming</span>
+                            <a href="{% url 'labo:evenement_detail' evenement.id %}" class="event-link">
+                                Learn more <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Événements passés -->
+{% if evenements_passes %}
+<section class="events-section past-section">
+    <div class="container">
+        <div class="events-category">
+            <h2 class="events-category-title" data-count="{{ evenements_passes|length }}">
+                <i class="fas fa-history"></i>
+                <span class="title-text">Past Events</span>
+            </h2>
+            <div class="events-grid">
+                {% for evenement in evenements_passes %}
+                <div class="event-card">
+                    <div class="event-image">
+                        {% if evenement.image %}
+                            <img src="{{ evenement.image.url }}" alt="{{ evenement.titre }}">
+                        {% else %}
+                            <div class="event-image-placeholder">
+                                {% if evenement.type_evenement == 'conference' %}
+                                    <i class="fas fa-users"></i>
+                                {% elif evenement.type_evenement == 'seminaire' %}
+                                    <i class="fas fa-chalkboard-teacher"></i>
+                                {% elif evenement.type_evenement == 'hackathon' %}
+                                    <i class="fas fa-code"></i>
+                                {% elif evenement.type_evenement == 'atelier' %}
+                                    <i class="fas fa-tools"></i>
+                                {% else %}
+                                    <i class="fas fa-calendar"></i>
+                                {% endif %}
+                            </div>
+                        {% endif %}
+                        <div class="event-type-badge">{{ evenement.get_type_evenement_display }}</div>
+                    </div>
+                    
+                    <div class="event-content">
+                        <div class="event-date-header">
+                            <div class="event-date-circle">
+                                <span class="event-date-day">{{ evenement.date_debut|date:"d" }}</span>
+                                <span class="event-date-month">{{ evenement.date_debut|date:"M" }}</span>
+                            </div>
+                            <div class="event-date-info">
+                                <div class="event-date-range">
+                                    {{ evenement.date_debut|date:"d F Y" }}
+                                    {% if evenement.date_fin != evenement.date_debut %}
+                                        - {{ evenement.date_fin|date:"d F Y" }}
+                                    {% endif %}
+                                </div>
+                                <div class="event-location">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    {{ evenement.lieu }}
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <h3 class="event-title">{{ evenement.titre }}</h3>
+                        <p class="event-description">{{ evenement.description|truncatechars:150 }}</p>
+                        
+                        <div class="event-footer">
+                            <span class="event-status past">Past Event</span>
+                            <a href="{% url 'labo:evenement_detail' evenement.id %}" class="event-link">
+                                View details <i class="fas fa-arrow-right"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Message si aucun événement -->
+{% if not evenements_futurs and not evenements_passes %}
+<section class="events-section">
+    <div class="container">
+        <div class="events-empty">
+            <i class="fas fa-calendar-times"></i>
+            <h3>No events available</h3>
+            <p>No events are scheduled at the moment. Please check back later.</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static "js/events.js" %}"></script>
+{% endblock %}

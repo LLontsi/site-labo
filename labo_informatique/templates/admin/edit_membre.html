@@ -6,6 +6,99 @@
 {% load static %}
 <link rel="stylesheet" href="{% static 'css/admin.css' %}">
 <link rel="stylesheet" href="{% static 'css/forms.css' %}">
+<style>
+.themes-checkbox-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 12px;
+    padding: 12px;
+    border: 2px solid #d1d5db;
+    border-radius: 8px;
+    background: #f9fafb;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.theme-checkbox-label {
+    display: flex;
+    align-items: center;
+    padding: 8px 12px;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 1px solid #e5e7eb;
+}
+
+.theme-checkbox-label:hover {
+    background: #f0f9ff;
+    border-color: #00a8e8;
+    transform: translateY(-1px);
+}
+
+.theme-checkbox {
+    display: none;
+}
+
+.theme-checkbox-custom {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #d1d5db;
+    border-radius: 4px;
+    margin-right: 8px;
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.theme-checkbox:checked + .theme-checkbox-custom {
+    background: linear-gradient(135deg, #00a8e8, #ff6b6b);
+    border-color: #00a8e8;
+}
+
+.theme-checkbox:checked + .theme-checkbox-custom::after {
+    content: '✓';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-weight: bold;
+    font-size: 12px;
+}
+
+.theme-checkbox:checked ~ .theme-name {
+    font-weight: 600;
+    color: #00a8e8;
+}
+
+.theme-name {
+    font-size: 14px;
+    color: #374151;
+    transition: all 0.3s ease;
+}
+
+.themes-preview {
+    margin-top: 12px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+}
+
+.theme-badge {
+    background: linear-gradient(135deg, #00a8e8, #ff6b6b);
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+    animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+</style>
 {% endblock %}
 
 {% block header_content %}
@@ -26,19 +119,19 @@
                         <h3>Administration Menu</h3>
                     </div>
                     <ul>
-                        <li><a href="{% url 'labo:admin_dashboard' %}"class="active">Dashboard</a></li>
-                        <li><a href="{% url 'labo:gestion_membres' %}" >Member Management</a></li>
-                        <li><a href="{% url 'labo:gestion_invitations' %}"class="active">Invitations</a></li>
-                        <li><a href="{% url 'labo:gestion_collaborateurs' %}"class="active">Collaborators</a></li>
-                        <li><a href="{% url 'labo:gestion_categories' %}"class="active" >Article Categories</a></li>
+                        <li><a href="{% url 'labo:admin_dashboard' %}" class="active">Dashboard</a></li>
+                        <li><a href="{% url 'labo:gestion_membres' %}">Member Management</a></li>
+                        <li><a href="{% url 'labo:gestion_invitations' %}" class="active">Invitations</a></li>
+                        <li><a href="{% url 'labo:gestion_collaborateurs' %}" class="active">Collaborators</a></li>
+                        <li><a href="{% url 'labo:gestion_categories' %}" class="active">Article Categories</a></li>
                         <li><a href="{% url 'labo:gestion_themes' %}" class="active">Research Themes</a></li>
                         <li><a href="{% url 'labo:gestion_historique_themes' %}" class="active">Theme History</a></li>
-                         <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
+                        <li><a href="{% url 'labo:gestion_projets' %}" class="active">Project Management</a></li>
                         <li class="menu-divider">Content Management</li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}"class="active">Articles</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}"class="active">Presentations</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}"class="active">Testimonials</a></li>
-                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}"class="active">Events</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='articles' %}" class="active">Articles</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='presentations' %}" class="active">Presentations</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='temoignages' %}" class="active">Testimonials</a></li>
+                        <li><a href="{% url 'labo:gestion_contenu' type_contenu='evenements' %}" class="active">Events</a></li>
                     </ul>
                 </div>
             </div>
@@ -84,13 +177,24 @@
                         </div>
                         
                         <div class="form-group">
-                            <label for="theme">Research Theme</label>
-                            <select id="theme" name="theme">
-                                <option value="">No theme</option>
+                            <label>Research Themes</label>
+                            <div class="themes-checkbox-container">
                                 {% for theme in themes %}
-                                    <option value="{{ theme.id }}" {% if membre.theme.id == theme.id %}selected{% endif %}>{{ theme.nom }}</option>
+                                    <label class="theme-checkbox-label">
+                                        <input type="checkbox" 
+                                               name="themes" 
+                                               value="{{ theme.id }}"
+                                               {% if theme in membre.themes.all %}checked{% endif %}
+                                               class="theme-checkbox">
+                                        <span class="theme-checkbox-custom"></span>
+                                        <span class="theme-name">{{ theme.nom }}</span>
+                                    </label>
                                 {% endfor %}
-                            </select>
+                            </div>
+                            <div class="form-help">Select one or more research themes for this member.</div>
+                            <div class="themes-preview" id="themes-preview">
+                                <!-- Les thèmes sélectionnés apparaîtront ici -->
+                            </div>
                         </div>
                         
                         <div class="form-group">
@@ -161,13 +265,14 @@
                                 </div>
                             </div>
                         </div>
+                        
                         <!-- Field for former member status -->
-                        <div class="form-group" id="statut_ancien_group" style="display: none;">
+                        <div class="form-group" id="statut_ancien_group" {% if not membre.est_ancien %}style="display: none;"{% endif %}>
                             <label for="statut_ancien">Former Member Status</label>
                             <select id="statut_ancien" name="statut_ancien">
                                 <option value="">Choose a status</option>
-                                <option value="parti">Has left the laboratory</option>
-                                <option value="assistant">Remains as supervision assistant</option>
+                                <option value="parti" {% if membre.statut_ancien == 'parti' %}selected{% endif %}>Has left the laboratory</option>
+                                <option value="assistant" {% if membre.statut_ancien == 'assistant' %}selected{% endif %}>Remains as supervision assistant</option>
                             </select>
                             <div class="form-help">Specify whether the former member remains involved in the laboratory or has left.</div>
                         </div>
@@ -178,14 +283,14 @@
                                 <input type="date" id="date_arrivee" name="date_arrivee" value="{{ membre.date_arrivee|date:'Y-m-d' }}" required>
                             </div>
                             
-                            <div class="form-group form-col" id="date_depart_group" {% if not membre.est_ancien %}style="display: none;"{% endif %}>
+                            <div class="form-group form-col" id="date_depart_group" {% if not membre.est_ancien or membre.statut_ancien != 'parti' %}style="display: none;"{% endif %}>
                                 <label for="date_depart">Departure Date</label>
                                 <input type="date" id="date_depart" name="date_depart" value="{{ membre.date_depart|date:'Y-m-d'|default:'' }}">
                             </div>
                         </div>
                         
                         <div class="form-actions">
-                            <button type="submit" class="btn btn-primary">Save</button>
+                            <button type="submit" class="btn btn-primary">Save Changes</button>
                             <a href="{% url 'labo:gestion_membres' %}" class="btn btn-secondary">Cancel</a>
                         </div>
                     </form>
@@ -196,56 +301,107 @@
 </section>
 {% endblock %}
 
-
 {% block extra_js %}
 <script>
-    function toggleAncien(checkbox) {
-        const dateDepartGroup = document.getElementById('date_depart_group');
-        const statutAncienGroup = document.getElementById('statut_ancien_group');
-        const statutAncienSelect = document.getElementById('statut_ancien');
+    document.addEventListener('DOMContentLoaded', function() {
+        // Gestion des thèmes multiples avec checkboxes
+        const themeCheckboxes = document.querySelectorAll('.theme-checkbox');
+        const themesPreview = document.getElementById('themes-preview');
         
-        if (checkbox.checked) {
-            statutAncienGroup.style.display = 'block';
-            // Listen for former member status changes
-            statutAncienSelect.addEventListener('change', function() {
-                if (this.value === 'parti') {
-                    dateDepartGroup.style.display = 'block';
-                    document.getElementById('date_depart').required = true;
-                } else if (this.value === 'assistant') {
-                    dateDepartGroup.style.display = 'none';
-                    document.getElementById('date_depart').required = false;
-                    document.getElementById('date_depart').value = '';
+        if (themeCheckboxes.length > 0 && themesPreview) {
+            function updateThemesPreview() {
+                const checkedBoxes = Array.from(themeCheckboxes).filter(cb => cb.checked);
+                themesPreview.innerHTML = '';
+                
+                checkedBoxes.forEach(checkbox => {
+                    const themeName = checkbox.parentNode.querySelector('.theme-name').textContent;
+                    const badge = document.createElement('span');
+                    badge.className = 'theme-badge';
+                    badge.textContent = themeName.trim();
+                    themesPreview.appendChild(badge);
+                });
+            }
+            
+            // Mettre à jour l'aperçu au chargement
+            updateThemesPreview();
+            
+            // Écouter les changements sur chaque checkbox
+            themeCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateThemesPreview);
+            });
+        }
+        
+        // Gestion des anciens membres
+        function toggleAncien(checkbox) {
+            const dateDepartGroup = document.getElementById('date_depart_group');
+            const statutAncienGroup = document.getElementById('statut_ancien_group');
+            const statutAncienSelect = document.getElementById('statut_ancien');
+            
+            if (checkbox.checked) {
+                statutAncienGroup.style.display = 'block';
+                
+                function handleStatutChange() {
+                    if (statutAncienSelect.value === 'parti') {
+                        dateDepartGroup.style.display = 'block';
+                        document.getElementById('date_depart').required = true;
+                    } else {
+                        dateDepartGroup.style.display = 'none';
+                        document.getElementById('date_depart').required = false;
+                        document.getElementById('date_depart').value = '';
+                    }
+                }
+                
+                // Vérifier le statut initial
+                handleStatutChange();
+                
+                // Écouter les changements
+                statutAncienSelect.addEventListener('change', handleStatutChange);
+            } else {
+                statutAncienGroup.style.display = 'none';
+                dateDepartGroup.style.display = 'none';
+                statutAncienSelect.value = '';
+                document.getElementById('date_depart').required = false;
+                document.getElementById('date_depart').value = '';
+            }
+        }
+        
+        // Initialiser l'état des anciens membres
+        const estAncienCheckbox = document.getElementById('est_ancien');
+        toggleAncien(estAncienCheckbox);
+        estAncienCheckbox.addEventListener('change', function() {
+            toggleAncien(this);
+        });
+        
+        // Aperçu photo
+        const photoInput = document.getElementById('photo');
+        if (photoInput) {
+            photoInput.addEventListener('change', function() {
+                if (this.files && this.files[0]) {
+                    const reader = new FileReader();
+                    const currentPhotoDiv = document.querySelector('.current-photo');
+                    
+                    reader.onload = function(e) {
+                        if (currentPhotoDiv) {
+                            const img = currentPhotoDiv.querySelector('img');
+                            if (img) {
+                                img.src = e.target.result;
+                            }
+                        } else {
+                            // Créer un aperçu si pas de photo actuelle
+                            const preview = document.createElement('div');
+                            preview.className = 'current-photo';
+                            preview.innerHTML = `
+                                <img src="${e.target.result}" alt="Photo Preview" style="max-width: 150px; max-height: 150px; border-radius: 8px;">
+                                <p>Photo Preview</p>
+                            `;
+                            photoInput.parentNode.insertBefore(preview, photoInput);
+                        }
+                    }
+                    
+                    reader.readAsDataURL(this.files[0]);
                 }
             });
-        } else {
-            statutAncienGroup.style.display = 'none';
-            dateDepartGroup.style.display = 'none';
-            statutAncienSelect.value = '';
-            document.getElementById('date_depart').required = false;
-            document.getElementById('date_depart').value = '';
         }
-    }
-    
-    // Photo preview
-    document.addEventListener('DOMContentLoaded', function() {
-        const photoInput = document.getElementById('photo');
-        const previewContainer = document.getElementById('photo-preview');
-        const previewImage = document.getElementById('preview-image');
-        
-        photoInput.addEventListener('change', function() {
-            if (this.files && this.files[0]) {
-                const reader = new FileReader();
-                
-                reader.onload = function(e) {
-                    previewImage.src = e.target.result;
-                    previewContainer.style.display = 'block';
-                }
-                
-                reader.readAsDataURL(this.files[0]);
-            } else {
-                previewContainer.style.display = 'none';
-            }
-        });
     });
 </script>
 {% endblock %}

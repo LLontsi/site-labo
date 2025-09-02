@@ -28,7 +28,18 @@ class Membre(models.Model):
     photo = models.ImageField(upload_to='membres/photos/', blank=True, null=True)
     titre = models.CharField(max_length=100)
     bio = models.TextField()
-    theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, blank=True)
+    
+    # MODIFICATION : Thèmes multiples
+    themes = models.ManyToManyField(
+        Theme, 
+        blank=True,
+        help_text="Thèmes de recherche du membre",
+        related_name='membres'
+    )
+    
+    # Garde l'ancien champ pour compatibilité (peut être supprimé après migration)
+    theme = models.ForeignKey(Theme, on_delete=models.SET_NULL, null=True, blank=True, help_text="Thème principal (obsolète)")
+    
     linkedin = models.URLField(blank=True, null=True)
     github = models.URLField(blank=True, null=True)
     portfolio = models.URLField(blank=True, null=True)
@@ -45,6 +56,25 @@ class Membre(models.Model):
         help_text="Statut de l'ancien membre"
     )
     
+    # Champs de validation du profil
+    profil_valide = models.BooleanField(
+        default=False,
+        help_text="Le profil a-t-il été validé par un administrateur ?"
+    )
+    date_validation_profil = models.DateTimeField(
+        blank=True, 
+        null=True,
+        help_text="Date de validation du profil"
+    )
+    validateur_profil = models.ForeignKey(
+        User,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='profils_valides',
+        help_text="Administrateur qui a validé le profil"
+    )
+    
     def __str__(self):
         return f"{self.user.first_name} {self.user.last_name}"
     
@@ -52,12 +82,21 @@ class Membre(models.Model):
         verbose_name = "Membre"
         verbose_name_plural = "Membres"
         
+    def get_themes_actuels(self):
+        """Retourne les thèmes de recherche actuels"""
+        return self.themes.all()
+    
     def get_theme_actuel(self):
-        """Retourne le thème de recherche actuel"""
+        """Retourne le thème de recherche actuel (pour compatibilité)"""
+        # Priorise les nouveaux thèmes multiples
+        if self.themes.exists():
+            return self.themes.first()
+        
+        # Fallback sur l'ancien champ
         historique_actuel = self.historique_themes.filter(date_fin__isnull=True).first()
         if historique_actuel:
             return historique_actuel.theme
-        return self.theme  # Fallback sur l'ancien champ
+        return self.theme
     
     def get_historique_themes_complet(self):
         """Retourne l'historique complet des thèmes"""
@@ -310,11 +349,12 @@ class Projet(models.Model):
     """Projets du laboratoire."""
     
     STATUT_CHOICES = [
-        ('en_cours', 'En cours'),
-        ('termine', 'Terminé'),
-        ('suspendu', 'Suspendu'),
-        ('annule', 'Annulé'),
-    ]
+    ('in_progress', 'In Progress'),
+    ('completed', 'Completed'),
+    ('suspended', 'Suspended'),
+    ('cancelled', 'Cancelled'),
+]
+
     
     titre = models.CharField(max_length=200)
     description = models.TextField()

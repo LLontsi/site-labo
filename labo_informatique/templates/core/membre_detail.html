@@ -3,20 +3,57 @@
 {% block title %}{{ membre.user.first_name }} {{ membre.user.last_name }} - Beta Lab Laboratory{% endblock %}
 
 {% block extra_css %}
-<link rel="stylesheet" href="{% static "css/membre_detail.css" %} ">
+<link rel="stylesheet" href="{% static "css/membre_detail.css" %}">
+<style>
+/* Styles pour les thèmes multiples */
+.current-themes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+.theme-badge {
+    background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+    color: white;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.theme-duration {
+    color: var(--color-gray-600);
+    font-size: 11px;
+    margin-top: 4px;
+}
+
+.themes-overview {
+    background: rgba(var(--color-primary-rgb), 0.05);
+    border-left: 4px solid var(--color-primary);
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.themes-overview h4 {
+    margin: 0 0 8px 0;
+    color: var(--color-primary);
+    font-size: 14px;
+}
+</style>
 {% endblock %}
 
 {% block header_content %}
 <div class="page-header animated-gradient">
     <h1 class="page-title fade-in">Members</h1>
     <div class="header-line"></div>
-   
-
+    
     <div class="page-title">
         <h1>{{ membre.user.first_name }} {{ membre.user.last_name }}</h1>
         <p>{{ membre.titre }}</p>
     </div>
-    <p class="page-subtitle fade-in delay-200">computer science research and technological innovations</p>
+    <p class="page-subtitle fade-in delay-200">Computer science research and technological innovations</p>
 </div>
 {% endblock %}
 
@@ -33,19 +70,28 @@
                     {% endif %}
                 </div>
                 <div class="profile-info">
+                    <!-- Section thèmes de recherche actuels -->
                     <div class="info-block">
-                        <h3>Current research theme</h3>
-                        <p>
-                            {% if theme_actuel %}
+                        <h3>Current research themes</h3>
+                        {% if membre.themes.exists %}
+                            <div class="current-themes">
+                                {% for theme in membre.themes.all %}
+                                    <span class="theme-badge">{{ theme.nom }}</span>
+                                {% endfor %}
+                            </div>
+                        {% elif theme_actuel %}
+                            <!-- Fallback sur l'ancien système -->
+                            <p>
                                 {{ theme_actuel.nom }}
                                 {% if duree_theme_actuel %}
                                     <small class="theme-duration">({{ duree_theme_actuel }} months)</small>
                                 {% endif %}
-                            {% else %}
-                                Not specified
-                            {% endif %}
-                        </p>
+                            </p>
+                        {% else %}
+                            <p>Not specified</p>
+                        {% endif %}
                     </div>
+                    
                     <div class="info-block">
                         <h3>At the laboratory since</h3>
                         <p>{{ membre.date_arrivee|date:"F Y" }}</p>
@@ -82,6 +128,20 @@
                         {{ membre.bio|linebreaks }}
                     </div>
                 </div>
+                
+                <!-- Section résumé des thèmes si il y en a plusieurs -->
+                {% if membre.themes.count > 1 %}
+                <div class="themes-overview">
+                    <h4><i class="fas fa-flask"></i> Research Areas Overview</h4>
+                    <p>This member contributes to {{ membre.themes.count }} research themes:</p>
+                    <ul style="margin: 8px 0; padding-left: 20px;">
+                        {% for theme in membre.themes.all %}
+                            <li>{{ theme.nom }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
+                
                 <!-- Section Historique des thèmes -->
                 {% if historique_themes %}
                 <div class="themes-section">
@@ -113,6 +173,7 @@
                     </div>
                 </div>
                 {% endif %}
+                
                 <div class="presentations-section">
                     <h2>Presentations</h2>
                     {% if presentations %}
@@ -143,6 +204,7 @@
                         </div>
                     {% endif %}
                 </div>
+                
                 <div class="projects-section">
                     <h2>Projects participation</h2>
                     {% if projets_participant %}
@@ -150,7 +212,9 @@
                             {% for projet in projets_participant %}
                                 <div class="project-card">
                                     <h3>{{ projet.titre }}</h3>
-                                    <p class="project-theme">{{ projet.theme.nom }}</p>
+                                    {% if projet.theme %}
+                                        <p class="project-theme">{{ projet.theme.nom }}</p>
+                                    {% endif %}
                                     <p class="project-description">{{ projet.description|truncatechars:120 }}</p>
                                     <a href="{% url 'labo:projet_detail' projet.id %}" class="btn-view">View project</a>
                                 </div>
@@ -162,6 +226,7 @@
                         </div>
                     {% endif %}
                 </div>
+                
                 <div class="articles-section">
                     <h2>Articles</h2>
                     {% if articles %}
@@ -230,5 +295,5 @@
 {% endblock %}
 
 {% block extra_js %}
-<script src="{% static "js/membre_detail.js" %} "></script>
+<script src="{% static "js/membre_detail.js" %}"></script>
 {% endblock %}
